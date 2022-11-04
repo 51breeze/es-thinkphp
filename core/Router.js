@@ -1,0 +1,27 @@
+const Core = require("./Core");
+const PATH = require('path');
+class Router extends Core.Router{
+    make( object ){
+        const filename = 'route';
+        const items = object.items.map( item=>{
+            const {className, action, path, method, params} = item;
+            const controller = className+'@'+action;
+            if( params && params.length>0 ){
+                const args = params.map( item=>{
+                    const name = `:${item.name}`;
+                    return item.required ? name : `[${name}]`
+                }).join('/');
+                return `Route::${method}('${path}/${args}$', '${controller}');`
+            }
+            return `Route::${method}('${path}$', '${controller}');`
+        });
+        const file = PATH.join(object.file, filename+'.php' );
+        const content = [
+            '<?php',
+            'use think\\facade\\Route;'
+        ].concat(items).join('\r\n');
+        return {file,content};
+    }
+
+}
+module.exports = Router;

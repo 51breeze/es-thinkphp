@@ -1,6 +1,12 @@
 const Core = require("./Core");
 const Polyfill = require('./Polyfill');
+const Router = require('./Router');
+const routerInstance = new Router();
 class Builder extends Core.Builder{
+    getRouterInstance(){
+        return routerInstance;
+    }
+
     getPolyfillModule( id ){
         const module = Polyfill.modules.get( id );
         if( module )return module;

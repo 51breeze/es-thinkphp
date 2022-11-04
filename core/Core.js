@@ -4,6 +4,7 @@ const Token = require('../../es-php/core/Token');
 const Polyfill = require('../../es-php/core/Polyfill');
 const ClassBuilder = require('../../es-php/core/ClassBuilder');
 const Constant = require('../../es-php/core/Constant');
+const Router = require('../../es-php/core/Router');
 
 // const plugin = require('es-php/index');
 // const builder = require('es-php/core/Builder');
@@ -17,5 +18,6 @@ module.exports={
     Polyfill,
     Token,
     ClassBuilder,
-    Constant
+    Constant,
+    Router
 }
