@@ -14,7 +14,35 @@ fs.readdirSync( dirname ).forEach( (filename)=>{
 
 const defaultConfig ={
     framework:'thinkphp',
-    version:"6.0.0"
+    version:"6.0.0",
+    resolve:{
+        useFolderAsNamespace:true,
+        publicPath:'public',
+        mapping:{
+            folder:{
+               
+            },
+            route:{
+              
+            },
+            namespace:{
+                'server.application.Model':'think',
+                'server.database.Db':'think.facade',
+                'server.database.ConnectionInterface':'think.db',
+                'server.database.BaseQuery':'think.db',
+                'server.components.Collection':'think',
+                'server.components.Paginator':'think',
+                'server.http.Session':'think',
+                'server.http.Request':'think',
+                'server.http.Response':'think',
+                'server.http.Response':'think',
+                'server.kernel.Env':'think',
+                'server.kernel.App':'think',
+                'server.kernel.Container':'think',
+            },
+            externals:['PHPUnit.Framework.TestCase'],
+        }
+    },
 }
 
 const pkg = require("./package.json");
