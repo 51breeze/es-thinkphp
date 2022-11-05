@@ -1,175 +1,11 @@
-
-package think.facade{
+package server.database{
 
     declare static class Db{
 
-        static table( name:string ):think.db.BaseQuery;
+        static table( name:string ):BaseQuery;
 
-        static name( name:string ):think.db.BaseQuery;
+        static name( name:string ):BaseQuery;
     }
-
-    declare static class Session{
-
-        /**
-        * 设置数据
-        * @access public
-        * @param array $data
-        * @return void
-        */
-        setData(data:array): void
-
-
-        /**
-        * session初始化
-        * @access public
-        * @return void
-        */
-        init():void
-
-        /**
-        * 设置SessionName
-        * @access public
-        * @param string $name session_name
-        * @return void
-        */
-        setName(name:string):void
-
-        /**
-        * 获取sessionName
-        * @access public
-        * @return string
-        */
-        getName():string
-
-
-        /**
-        * session_id设置
-        * @access public
-        * @param string $id session_id
-        * @return void
-        */
-        setId(id:string): void
-
-
-        /**
-        * 获取session_id
-        * @access public
-        * @return string
-        */
-        getId(): string
-
-        /**
-        * 获取所有数据
-        * @return array
-        */
-        all(): array
-
-        /**
-        * session设置
-        * @access public
-        * @param string $name  session名称
-        * @param mixed  $value session值
-        * @return void
-        */
-        set(name:string, value:any): void
-
-        /**
-        * session获取
-        * @access public
-        * @param string $name    session名称
-        * @param mixed  $default 默认值
-        * @return mixed
-        */
-        get<T>(name:string, default?:T):T
-
-        /**
-        * session获取并删除
-        * @access public
-        * @param string $name session名称
-        * @return mixed
-        */
-        pull(name:string)
-
-        /**
-        * 添加数据到一个session数组
-        * @access public
-        * @param string $key
-        * @param mixed  $value
-        * @return void
-        */
-        push(key:string, value:any): void
-
-
-        /**
-        * 判断session数据
-        * @access public
-        * @param string $name session名称
-        * @return bool
-        */
-        has(name:string): boolean
-
-        /**
-        * 删除session数据
-        * @access public
-        * @param string $name session名称
-        * @return void
-        */
-        delete(name:string): void
-
-        /**
-        * 清空session数据
-        * @access public
-        * @return void
-        */
-        clear(): void
-
-        /**
-        * 销毁session
-        */
-        destroy(): void
-
-        /**
-        * 重新生成session id
-        * @param bool $destroy
-        */
-        regenerate(destroy:boolean = false): void
-
-        /**
-        * 保存session数据
-        * @access public
-        * @return void
-        */
-        save(): void
-
-        /**
-        * session设置 下一次请求有效
-        * @access public
-        * @param string $name  session名称
-        * @param mixed  $value session值
-        * @return void
-        */
-        flash(name:string, value:any): void
-
-        /**
-        * 将本次闪存数据推迟到下次请求
-        *
-        * @return void
-        */
-        reflash(): void
-
-        /**
-        * 清空当前请求的session数据
-        * @access public
-        * @return void
-        */
-        clearFlashData(): void
-
-    }
-
-}
-
-
-package think.db{
 
     declare interface ConnectionInterface{
 
@@ -546,7 +382,7 @@ package think.db{
         * @return Paginator
         * @throws Exception
         */
-        public paginate(listRows:any = null, simple:boolean = false): think.Paginator
+        public paginate(listRows:any = null, simple:boolean = false): server.components.Paginator
         
 
         /**
@@ -558,7 +394,7 @@ package think.db{
         * @return Paginator
         * @throws Exception
         */
-        public paginateX(listRows = null,  key:string = null, sort:string = null): think.Paginator
+        public paginateX(listRows = null,  key:string = null, sort:string = null): server.components.Paginator
 
         /**
         * 根据最后ID查询更多N个数据
@@ -762,7 +598,7 @@ package think.db{
         * @throws ModelNotFoundException
         * @throws DataNotFoundException
         */
-        public select(data = null): think.Collection
+        public select(data = null): server.components.Collection
     
 
         /**
@@ -813,65 +649,11 @@ package think.db{
         protected getModelUpdateCondition(options:array):any;
 
     }
-
 }
 
+package server.components{
 
-package think{
-
-    declare class Env{
-
-        /**
-        * 环境变量数据
-        * @var array
-        */
-        protected data:array;
-
-        /**
-        * 数据转换映射
-        * @var array
-        */
-        protected convert:array 
-
-        /**
-        * 读取环境变量定义文件
-        * @access public
-        * @param string $file 环境变量定义文件
-        * @return void
-        */
-        public load(file:string): void
-
-
-        /**
-        * 获取环境变量值
-        * @access public
-        * @param string $name    环境变量名
-        * @param mixed  $default 默认值
-        * @return mixed
-        */
-        public get(name:string, default?:any)
-
-        protected getEnv( name:string, default?:any)
-
-        /**
-        * 设置环境变量值
-        * @access public
-        * @param string|array $env   环境变量
-        * @param mixed        $value 值
-        * @return void
-        */
-        public set(name:string, default?:any): void
-
-        /**
-        * 检测是否存在环境变量
-        * @access public
-        * @param string $name 参数名
-        * @return bool
-        */
-        public has(name:string): boolean
-    }
-
-    declare class Collection{
+     declare class Collection{
 
         constructor(items:array = []);
 
@@ -1119,11 +901,9 @@ package think{
         *
         * @return Collection|\think\model\Collection
         */
-        public getCollection():think.Collection
-
+        public getCollection():Collection
 
         public isEmpty(): boolean
-
 
         /**
         * 给每个元素执行个回调
@@ -1149,9 +929,169 @@ package think{
 
     }
 
+}
+
+package server.http{
+
+    declare static class Session{
+
+        /**
+        * 设置数据
+        * @access public
+        * @param array $data
+        * @return void
+        */
+        setData(data:array): void
+
+
+        /**
+        * session初始化
+        * @access public
+        * @return void
+        */
+        init():void
+
+        /**
+        * 设置SessionName
+        * @access public
+        * @param string $name session_name
+        * @return void
+        */
+        setName(name:string):void
+
+        /**
+        * 获取sessionName
+        * @access public
+        * @return string
+        */
+        getName():string
+
+
+        /**
+        * session_id设置
+        * @access public
+        * @param string $id session_id
+        * @return void
+        */
+        setId(id:string): void
+
+
+        /**
+        * 获取session_id
+        * @access public
+        * @return string
+        */
+        getId(): string
+
+        /**
+        * 获取所有数据
+        * @return array
+        */
+        all(): array
+
+        /**
+        * session设置
+        * @access public
+        * @param string $name  session名称
+        * @param mixed  $value session值
+        * @return void
+        */
+        set(name:string, value:any): void
+
+        /**
+        * session获取
+        * @access public
+        * @param string $name    session名称
+        * @param mixed  $default 默认值
+        * @return mixed
+        */
+        get<T>(name:string, default?:T):T
+
+        /**
+        * session获取并删除
+        * @access public
+        * @param string $name session名称
+        * @return mixed
+        */
+        pull(name:string)
+
+        /**
+        * 添加数据到一个session数组
+        * @access public
+        * @param string $key
+        * @param mixed  $value
+        * @return void
+        */
+        push(key:string, value:any): void
+
+
+        /**
+        * 判断session数据
+        * @access public
+        * @param string $name session名称
+        * @return bool
+        */
+        has(name:string): boolean
+
+        /**
+        * 删除session数据
+        * @access public
+        * @param string $name session名称
+        * @return void
+        */
+        delete(name:string): void
+
+        /**
+        * 清空session数据
+        * @access public
+        * @return void
+        */
+        clear(): void
+
+        /**
+        * 销毁session
+        */
+        destroy(): void
+
+        /**
+        * 重新生成session id
+        * @param bool $destroy
+        */
+        regenerate(destroy:boolean = false): void
+
+        /**
+        * 保存session数据
+        * @access public
+        * @return void
+        */
+        save(): void
+
+        /**
+        * session设置 下一次请求有效
+        * @access public
+        * @param string $name  session名称
+        * @param mixed  $value session值
+        * @return void
+        */
+        flash(name:string, value:any): void
+
+        /**
+        * 将本次闪存数据推迟到下次请求
+        *
+        * @return void
+        */
+        reflash(): void
+
+        /**
+        * 清空当前请求的session数据
+        * @access public
+        * @return void
+        */
+        clearFlashData(): void
+
+    }
 
     declare class Request{
-
 
         /**
         * 获取当前包含协议的域名
@@ -1890,7 +1830,7 @@ package think{
         * @param Session session 数据
         * @return this
         */
-        public  withSession(session:think.facade.Session):this
+        public  withSession(session:server.http.Session):this
 
         /**
         * 设置SERVER数据
@@ -1914,7 +1854,7 @@ package think{
         * @param Env env 数据
         * @return this
         */
-        public  withEnv(env:Env):this
+        public  withEnv(env:server.kernel.Env):this
 
         /**
         * 设置php://input数据
@@ -2201,6 +2141,61 @@ package think{
         */
         getCode(): int
 
+    }
+}
+
+package server.kernel{
+
+    declare class Env{
+
+        /**
+        * 环境变量数据
+        * @var array
+        */
+        protected data:array;
+
+        /**
+        * 数据转换映射
+        * @var array
+        */
+        protected convert:array 
+
+        /**
+        * 读取环境变量定义文件
+        * @access public
+        * @param string $file 环境变量定义文件
+        * @return void
+        */
+        public load(file:string): void
+
+
+        /**
+        * 获取环境变量值
+        * @access public
+        * @param string $name    环境变量名
+        * @param mixed  $default 默认值
+        * @return mixed
+        */
+        public get(name:string, default?:any)
+
+        protected getEnv( name:string, default?:any)
+
+        /**
+        * 设置环境变量值
+        * @access public
+        * @param string|array $env   环境变量
+        * @param mixed        $value 值
+        * @return void
+        */
+        public set(name:string, default?:any): void
+
+        /**
+        * 检测是否存在环境变量
+        * @access public
+        * @param string $name 参数名
+        * @return bool
+        */
+        public has(name:string): boolean
     }
 
     declare class Container{
@@ -2601,58 +2596,7 @@ package think{
     }
 }
 
-package app{
-
-    declare class BaseController{
-
-        /**
-        * Request实例
-        * @var \think\Request
-        */
-        protected const request: think.Request
-
-        /**
-        * 应用实例
-        * @var \think\App
-        */
-        protected const app: think.App;
-
-        /**
-        * 是否批量验证
-        * @var bool
-        */
-        protected batchValidate = false;
-
-        /**
-        * 控制器中间件
-        * @var array
-        */
-        protected middleware = [];
-
-        public constructor(app:think.App)
-
-        protected initialize();
-
-        /**
-        * 验证数据
-        * @access protected
-        * @param  array        $data     数据
-        * @param  string|array $validate 验证器名或者验证规则数组
-        * @param  array        $message  提示信息
-        * @param  bool         $batch    是否批量验证
-        * @return array|string|true
-        * @throws ValidateException
-        */
-        protected validate(data:array, validate:array | string, message:array = [], batch:boolean = false)
-
-    }
-
-    declare class AuthController extends BaseController {}
-
-}
-
-
-package web{
+package server.application{
 
     /**
     * 控制器的基类，所有业务逻辑层都应该继承 Controller 类
@@ -2660,9 +2604,11 @@ package web{
     @Define(type=controller)
     declare class Controller{}
 
-
+    /**
+    * 模型基类，所有业务模型层都应该继承 Model 类
+    */
     @Define(type=model)
-    declare class Model{
+    class Model{
         protected name:string;
         protected table:string;
         protected suffix:string;

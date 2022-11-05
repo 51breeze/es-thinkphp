@@ -1,6 +1,6 @@
-package web.controller.test;
+package controller.test;
 
-import web.Controller;
+import server.application.Controller;
 
 class TestIndex extends Controller{
 

@@ -18,12 +18,26 @@ const defaultConfig ={
     resolve:{
         useFolderAsNamespace:true,
         publicPath:'public',
+        excludes:['server.application.Model'],
         mapping:{
             folder:{
-               
+                '*/*.es::controller':'app/controller',
+                '*/*.es::router':'app/route',
+                '*/*.es::lang':'app/lang',
+                '*/*.es::config':'app/config',
+                '*/*.es::model':'app/model',
+                '*/*/***.es::controller':'app/controller/%1/%...',
+                '*/*/***.es::router':'app/route/%1',
+                '*/*/***.es::lang':'app/%0/lang/%...',
+                '*/*/***.es::model':'app/%0/model/%...',
+                'config/***.es::general':'app/config/%...',
+                '****.es::general':'app/%0',
+                '****::asset':'public/static/%...',
+                'root':'app/',
             },
             route:{
-              
+                '*/*.es::controller':'%filename',
+                '*/*/***.es::controller':'%0/%...',
             },
             namespace:{
                 'server.application.Model':'think',
@@ -43,6 +57,7 @@ const defaultConfig ={
             externals:['PHPUnit.Framework.TestCase'],
         }
     },
+    includes:['./config/*']
 }
 
 const pkg = require("./package.json");

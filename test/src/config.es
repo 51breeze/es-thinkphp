@@ -1,12 +1,12 @@
-const config = {};
+import model.Person;
 
+const config = [];
+config['env'] = 'dev'
 
-config.env = 'prod';
+export * as prod from './config_prod.es';
 
-function top(a, b){
-    return 'dd';
-}
+export var name = 'yejun'
 
-export {top}
+export {Person};
 
 export default config;

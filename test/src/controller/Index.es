@@ -1,10 +1,10 @@
-package web.controller;
+package controller;
 
-import web.Controller;
+import server.application.Controller;
 
-import web.controller.test.TestIndex
+import controller.test.TestIndex
 
-import web.model.Person;
+import model.Person;
 
 import config from '../config.es';
 
@@ -18,6 +18,8 @@ class Index extends Controller{
 
       @Get
       public getList(){
+
+            new TestIndex();
 
            const person = new Person();
            return person.name123;
