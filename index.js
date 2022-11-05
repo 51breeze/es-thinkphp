@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const Builder = require("./core/Builder");
 const Core = require("./core/Core");
-const PluginPHP = Core.Plugin
-
+const {exec} = require("child_process");
+const PluginPHP = Core.Plugin;
 const {merge} = require("lodash");
 const modules = new Map();
 const dirname = path.join(__dirname,"tokens");
@@ -83,7 +83,24 @@ function registerError(define, cn, en){
     
 }
 
+function createProject(projectPath, version='6.x.x'){
+    return new Promise((resolve,reject)=>{
+        const name = path.basename( projectPath );
+        exec(`composer create-project topthink/think=${version} ${name}`,{cwd:path.dirname( projectPath ),stdio: 'inherit'}, (error, stdout, stderr)=>{
+            if( error ){
+                reject( error )
+            }else{
+                resolve( stdout );
+            }
+        });
+    });
+}
+
 class Plugin extends PluginPHP{
+
+    static init(projectPath, version){
+        return createProject(projectPath, version);
+    }
 
     constructor(compiler,options){
         options = merge({},defaultConfig, options);

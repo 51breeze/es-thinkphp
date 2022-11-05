@@ -5,6 +5,7 @@
   "main": "index.js",
   "typings": "./types",
   "scripts": {
+    "init": "node ./test/init.js",
     "dev-test": "jasmine ./test/index.js",
     "dev-run": "node ./test/phptest.js",
     "dev-test-run": "npm run dev-test & npm run dev-run"
