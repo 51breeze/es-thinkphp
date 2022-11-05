@@ -1,4 +1,4 @@
-import model.Person;
+import app.model.Person;
 
 const config = [];
 config['env'] = 'dev'

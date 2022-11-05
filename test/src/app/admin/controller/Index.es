@@ -1,8 +1,8 @@
-package controller.test;
+package app.admin.controller;
 
 import server.application.Controller;
 
-class TestIndex extends Controller{
+class Index extends Controller{
 
       @Get
       public getList(){

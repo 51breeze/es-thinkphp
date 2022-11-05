@@ -11,7 +11,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 50000;
 describe('compile file', function() {
     
     const creator = new compiler.Creator();
-    creator.startByFile("./controller/Index.es").then( compilation=>{
+    creator.startByFile("./app").then( compilation=>{
         it('should compile success and build', function(done) {
             const errors = compilation.compiler.errors.filter( error=>error.code < 1 );
             compilation.compiler.errors.forEach( error=>{

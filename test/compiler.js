@@ -27,11 +27,12 @@ class Creator {
     factor(file,source){
         return new Promise((resolved,reject)=>{
             const compiler = this.compiler;
-            const compilation=file ? compiler.createCompilation(file) : new Compilation( compiler );
+            const compilation=file ? compiler.createCompilation(file, null, false, true) : new Compilation( compiler );
             try{
                 compilation.parser(source);
                 compilation.checker();
-                if(compilation.stack){
+                const errors = compiler.errors.filter( error=> error.kind === 0 )
+                if( !errors.length ){
                     resolved(compilation);
                 }else{
                     reject({compilation,errors:compiler.errors});

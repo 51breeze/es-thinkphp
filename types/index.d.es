@@ -2608,7 +2608,7 @@ package server.application{
     * 模型基类，所有业务模型层都应该继承 Model 类
     */
     @Define(type=model)
-    class Model{
+    declare Model{
         protected name:string;
         protected table:string;
         protected suffix:string;
