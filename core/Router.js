@@ -2,7 +2,7 @@ const Core = require("./Core");
 const PATH = require('path');
 class Router extends Core.Router{
     make( object ){
-        const filename = 'route';
+        const filename = 'app';
         const items = object.items.map( item=>{
             const {className, action, path, method, params} = item;
             const controller = className+'@'+action;
@@ -13,7 +13,11 @@ class Router extends Core.Router{
                 }).join('/');
                 return `Route::${method}('${path}/${args}$', '${controller}');`
             }
-            return `Route::${method}('${path}$', '${controller}');`
+            if( path && path !=='/' ){
+                return `Route::${method}('${path}$', '${controller}');`
+            }else{
+                return `Route::${method}('/', '${controller}');`
+            }
         });
         const file = PATH.join(object.file, filename+'.php' );
         const content = [

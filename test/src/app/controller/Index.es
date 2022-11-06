@@ -15,10 +15,11 @@ class Index extends Controller{
       file:string;
       
 
-      @Get
+      @Get('/')
       public getList(){
            const person = new Person();
-           return person.name123;
+           console.log( config );
+           return `<h1>Hello, World!</h1><div>My name is ${person.myName}</div>`;
       }
 
 }

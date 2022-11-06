@@ -55,7 +55,8 @@ const defaultConfig ={
             },
             route:{
                 '*/*.es::controller':'%filename',
-                '*/*/***.es::controller':'%...',
+                '*/*/*.es::controller':'/%filename',
+                '*/*/*/***.es::controller':'/%1/%filename',
             },
             namespace:{
                 'server.application.Model':'think',
