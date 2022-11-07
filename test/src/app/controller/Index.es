@@ -4,7 +4,7 @@ import server.application.Controller;
 
 import app.model.Person;
 
-import config from '../../config.es';
+import {Person as _Person} from '../../config.es';
 
 import "../../assets/main.js";
 import "../../assets/style.css";
@@ -18,7 +18,8 @@ class Index extends Controller{
       @Get('/')
       public getList(){
            const person = new Person();
-           console.log( config );
+           
+           console.log( _Person  );
            return `<h1>Hello, World!</h1><div>My name is ${person.myName}</div>`;
       }
 
