@@ -2636,7 +2636,7 @@ package server.application{
         * @access protected
         * @return array
         */
-        protected checkAllowFields(): array;
+        protected checkAllowFields(): string[];
 
         /**
         * 保存写入数据
