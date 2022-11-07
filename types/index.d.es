@@ -2617,6 +2617,83 @@ package server.application{
         protected query:string;
         protected field:string[];
         protected schema:array;
+
+
+         /**
+        * 调用反射执行模型方法 支持参数绑定
+        * @access public
+        * @param mixed $method
+        * @param array $vars 参数
+        * @return mixed
+        */
+        invoke<T>(method:()=>T, vars?:any[]):T;
+
+        /**
+        * 获取当前模型名称
+        * @access public
+        * @return string
+        */
+        getName(): string;
+
+        /**
+        * 创建新的模型实例
+        * @access public
+        * @param array $data       数据
+        * @param mixed $where      更新条件
+        * @param array $options    参数
+        * @return Model
+        */
+        newInstance(data:array, where?:any, options?:array ): Model
+
+        /**
+        * 设置模型的更新条件
+        * @access protected
+        * @param mixed $where 更新条件
+        * @return void
+        */
+        setUpdateWhere(where:string | {[key:string]:string|number}): void
+
+        /**
+        * 设置当前模型的数据库连接
+        * @access public
+        * @param string $connection 数据表连接标识
+        * @return $this
+        */
+        setConnection(connection:string)
+
+
+        /**
+        * 获取当前模型的数据库连接标识
+        * @access public
+        * @return string
+        */
+        getConnection():string
+
+
+        /**
+        * 设置当前模型数据表的后缀
+        * @access public
+        * @param string $suffix 数据表后缀
+        * @return $this
+        */
+        setSuffix(suffix:string)
+
+        /**
+        * 获取当前模型的数据表后缀
+        * @access public
+        * @return string
+        */
+        getSuffix(): string
+
+        /**
+        * 获取当前模型的数据库查询对象
+        * @access public
+        * @param array $scope 设置不使用的全局查询范围
+        * @return Query
+        */
+        db(scope:[]): BaseQuery
+
+        protected select(felid?:string | array):any;
     }
 
 }

@@ -4,7 +4,7 @@ const Builder = require("./core/Builder");
 const Core = require("./core/Core");
 const {exec} = require("child_process");
 const PluginPHP = Core.Plugin;
-const {merge} = require("lodash");
+const merge = require("lodash/merge");
 const modules = new Map();
 const dirname = path.join(__dirname,"tokens");
 fs.readdirSync( dirname ).forEach( (filename)=>{
@@ -76,7 +76,10 @@ const defaultConfig ={
             externals:['PHPUnit.Framework.TestCase'],
         }
     },
-    includes:['./config/*']
+    includes:[
+        './config/*',
+        '.env',
+    ]
 }
 
 const pkg = require("./package.json");
