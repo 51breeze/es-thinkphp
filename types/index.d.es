@@ -1,11 +1,13 @@
 package server.database{
 
+    import server.database.concern.BaseQuery;
+
     declare static class Db{
-
         static table( name:string ):BaseQuery;
-
         static name( name:string ):BaseQuery;
     }
+
+    declare interface PDOStatement{}
 
     declare interface ConnectionInterface{
 
@@ -21,14 +23,14 @@ package server.database{
         * @param $table
         * @return BaseQuery
         */
-        public table(table);
+        public table(table):BaseQuery
 
         /**
         * 指定表名开始查询(不带前缀)
         * @param $name
         * @return BaseQuery
         */
-        public name(name);
+        public name(name):BaseQuery
 
         /**
         * 连接数据库方法
@@ -68,7 +70,7 @@ package server.database{
         * @access public
         * @return $this
         */
-        public close();
+        public close():this
 
         /**
         * 查找单条记录
@@ -177,6 +179,12 @@ package server.database{
         public getLastSql(): string;
 
     }
+}
+
+package server.database.concern{
+
+    declare type FindDataItemType = string | number;
+    declare type FindDataType = FindDataItemType | FindDataItemType[];
 
     declare class BaseQuery{
 
@@ -192,7 +200,7 @@ package server.database{
         * @access public
         * @return ConnectionInterface
         */
-        public getConnection():ConnectionInterface
+        public getConnection():server.database.ConnectionInterface
 
         /**
         * 指定当前数据表名（不含前缀）
@@ -610,7 +618,7 @@ package server.database{
         * @throws ModelNotFoundException
         * @throws DataNotFoundException
         */
-        public find(data):any
+        public find(data:FindDataType):any
     
 
         /**
@@ -638,7 +646,7 @@ package server.database{
         * @return void
         * @throws Exception
         */
-        public parsePkWhere(data): void
+        public parsePkWhere(data:FindDataType): void
     
 
         /**
@@ -649,6 +657,1093 @@ package server.database{
         protected getModelUpdateCondition(options:array):any;
 
     }
+
+    /**
+    * PDO数据查询类
+    */
+    declare class Query extends BaseQuery implements JoinAndViewQuery,JoinAndViewQuery{
+
+
+        /**
+        * 表达式方式指定Field排序
+        * @access public
+        * @param string $field 排序字段
+        * @param array  $bind  参数绑定
+        * @return $this
+        */
+        orderRaw(field:string, bind?:[]):this
+        
+
+        /**
+        * 表达式方式指定查询字段
+        * @access public
+        * @param string $field 字段名
+        * @return $this
+        */
+        fieldRaw(field:string):this
+        
+
+        /**
+        * 指定Field排序 orderField('id',[1,2,3],'desc')
+        * @access public
+        * @param string $field  排序字段
+        * @param array  $values 排序值
+        * @param string $order  排序 desc/asc
+        * @return $this
+        */
+        orderField(field:string, values:string|number[], order?:'desc'|'asc'):this
+        
+        /**
+        * 随机排序
+        * @access public
+        * @return $this
+        */
+        orderRand():this
+    
+        /**
+        * 使用表达式设置数据
+        * @access public
+        * @param string $field 字段名
+        * @param string $value 字段值
+        * @return $this
+        */
+        exp(field:string, value:string):this
+    
+
+        /**
+        * 表达式方式指定当前操作的数据表
+        * @access public
+        * @param mixed $table 表名
+        * @return $this
+        */
+        tableRaw(table:string):this
+    
+
+        /**
+        * 获取执行的SQL语句而不进行实际的查询
+        * @access public
+        * @param bool $fetch 是否返回sql
+        * @return $this|Fetch
+        */
+        fetchSql(fetch?:boolean):this
+    
+
+        /**
+        * 批处理执行SQL语句
+        * 批处理的指令都认为是execute操作
+        * @access public
+        * @param array $sql SQL批处理指令
+        * @return bool
+        */
+        batchQuery(sql?:array): boolean
+        
+
+        /**
+        * USING支持 用于多表删除
+        * @access public
+        * @param mixed $using USING
+        * @return $this
+        */
+        using(using:any):this
+        
+
+        /**
+        * 存储过程调用
+        * @access public
+        * @param bool $procedure 是否为存储过程查询
+        * @return $this
+        */
+        procedure(procedure?:boolean):this
+    
+
+        /**
+        * 指定group查询
+        * @access public
+        * @param string|array $group GROUP
+        * @return $this
+        */
+        group(group:string|string[]):this
+    
+
+        /**
+        * 指定having查询
+        * @access public
+        * @param string $having having
+        * @return $this
+        */
+        having(having:string):this
+    
+
+        /**
+        * 指定distinct查询
+        * @access public
+        * @param bool $distinct 是否唯一
+        * @return $this
+        */
+        distinct(distinct?:boolean):this
+        
+
+        /**
+        * 指定强制索引
+        * @access public
+        * @param string $force 索引名称
+        * @return $this
+        */
+        force(force:string):this
+    
+
+        /**
+        * 查询注释
+        * @access public
+        * @param string $comment 注释
+        * @return $this
+        */
+        comment(comment:string):this
+    
+
+        /**
+        * 设置是否REPLACE
+        * @access public
+        * @param bool $replace 是否使用REPLACE写入数据
+        * @return $this
+        */
+        replace(replace?:boolean):this
+    
+
+        /**
+        * 设置当前查询所在的分区
+        * @access public
+        * @param string|array $partition 分区名称
+        * @return $this
+        */
+        partition(partition:string|string[]):this
+    
+
+        /**
+        * 设置DUPLICATE
+        * @access public
+        * @param array|string|Raw $duplicate DUPLICATE信息
+        * @return $this
+        */
+        duplicate(duplicate:array|string|Raw):this
+    
+
+        /**
+        * 设置查询的额外参数
+        * @access public
+        * @param string $extra 额外信息
+        * @return $this
+        */
+        extra(extra:string):this
+    
+
+        /**
+        * 创建子查询SQL
+        * @access public
+        * @param bool $sub 是否添加括号
+        * @return string
+        * @throws Exception
+        */
+        buildSql(sub:boolean): string
+    
+        /**
+        * 获取当前数据表的主键
+        * @access public
+        * @return string|array
+        */
+        getPk():string|array
+    
+
+        /**
+        * 指定数据表自增主键
+        * @access public
+        * @param string $autoinc 自增键
+        * @return $this
+        */
+        autoinc(autoinc:string):this;
+    
+
+        /**
+        * 获取当前数据表的自增主键
+        * @access public
+        * @return string|null
+        */
+        getAutoInc():string|null
+    
+
+        /**
+        * 字段值增长
+        * @access public
+        * @param string  $field    字段名
+        * @param float   $step     增长值
+        * @return $this
+        */
+        inc(field:string, step?:float):this;
+    
+
+        /**
+        * 字段值减少
+        * @access public
+        * @param string  $field    字段名
+        * @param float   $step     增长值
+        * @return $this
+        */
+        dec(field:string, step?:float):this;
+    
+
+        /**
+        * 获取当前的查询标识
+        * @access public
+        * @param mixed $data 要序列化的数据
+        * @return string
+        */
+        getQueryGuid(data?): string
+    
+
+        /**
+        * 执行查询但只返回PDOStatement对象
+        * @access public
+        * @return PDOStatement
+        */
+        getPdo(): server.database.PDOStatement
+    
+        /**
+        * 使用游标查找记录
+        * @access public
+        * @param mixed $data 数据
+        * @return \Generator
+        */
+        cursor(data?)
+        
+
+        /**
+        * 分批数据返回处理
+        * @access public
+        * @param integer      $count    每次处理的数据数量
+        * @param callable     $callback 处理回调方法
+        * @param string|array $column   分批处理的字段名
+        * @param string       $order    字段排序
+        * @return bool
+        * @throws Exception
+        */
+        chunk<T>(count:int, callable:(result:T[])=>void, column?:string|string[], order?:'asc'|'desc'): boolean
+    }
+
+}
+
+
+package server.database.concern{
+    declare type QueryWhereExpressionType = '=' | '<>' | '<' | '<=' | '>' | '>=' | 'REGEXP' | 'NOT REGEXP' | 'regexp' | 'not regexp';
+    declare type QueryWhereFieldValueType = string | number | null | Raw;
+    declare type QueryWhereFieldWrapType = [string, QueryWhereExpressionType, QueryWhereFieldValueType]
+    declare type QueryWhereFieldType = string | Raw | QueryWhereFieldWrapType[] | (query:BaseQuery)=>void;
+    declare type QueryWhereFieldQuickType = string;
+    declare type QueryWhereLogicType = 'AND' | 'OR' | 'XOR' | 'and' | 'or' | 'xor' ;
+    declare class Raw{
+        constructor(value:string, bind?:[]);
+        /**
+        * 获取表达式
+        *
+        * @return string
+        */
+        getValue(): string
+    
+        /**
+        * 获取参数绑定
+        *
+        * @return string
+        */
+        getBind(): array;
+    }
+
+    /**
+    * 事务支持
+    */
+    declare interface Transaction{
+
+        /**
+        * 执行数据库Xa事务
+        * @access public
+        * @param  callable $callback 数据操作方法回调
+        * @param  array    $dbs      多个查询对象或者连接对象
+        * @return mixed
+        * @throws PDOException
+        * @throws \Exception
+        * @throws \Throwable
+        */
+        transactionXa(callback:()=>void, dbs?:array):any;
+
+
+        /**
+        * 执行数据库事务
+        * @access public
+        * @param callable $callback 数据操作方法回调
+        * @return mixed
+        */
+        transaction(callback:()=>void)
+
+        /**
+        * 启动事务
+        * @access public
+        * @return void
+        */
+        startTrans(): void
+
+        /**
+        * 用于非自动提交状态下面的查询提交
+        * @access public
+        * @return void
+        * @throws PDOException
+        */
+        commit(): void
+
+
+        /**
+        * 事务回滚
+        * @access public
+        * @return void
+        * @throws PDOException
+        */
+        rollback(): void
+
+        /**
+        * 启动XA事务
+        * @access public
+        * @param  string $xid XA事务id
+        * @return void
+        */
+        startTransXa(xid:string): void
+
+
+        /**
+        * 预编译XA事务
+        * @access public
+        * @param  string $xid XA事务id
+        * @return void
+        */
+        prepareXa(xid:string): void
+
+
+        /**
+        * 提交XA事务
+        * @access public
+        * @param  string $xid XA事务id
+        * @return void
+        */
+        commitXa(xid:string): void
+
+
+        /**
+        * 回滚XA事务
+        * @access public
+        * @param  string $xid XA事务id
+        * @return void
+        */
+        rollbackXa(xid:string): void
+
+    }
+    
+    declare type QueryWhereTimeExpressionType = 'today' | 'yesterday' | 'week'  | 'last week' | 'month'  | 'last month' | 'year' | 'last year'
+    declare type QueryWhereTimeUnitType = 'day' | 'month' | 'year' | 'week' | 'hour' | 'minute' | 'second'
+
+    /**
+    * 时间查询支持
+    */
+    declare interface TimeFieldQuery{
+
+        /**
+        * 添加日期或者时间查询规则
+        * @access public
+        * @param array $rule 时间表达式
+        * @return $this
+        */
+        timeRule(rule:{[key:string]:[string,string]}):this
+
+        /**
+        * 查询日期或者时间
+        * @access public
+        * @param string       $field 日期字段名
+        * @param string       $op    比较运算符或者表达式
+        * @param string|array $range 比较范围
+        * @param string       $logic AND OR
+        * @return $this
+        */
+        whereTime(field:string, op:QueryWhereExpressionType, range:string | [string,string], logic?:QueryWhereLogicType):this
+
+        /**
+        * 查询某个时间间隔数据
+        * @access public
+        * @param string $field    日期字段名
+        * @param string $start    开始时间
+        * @param string $interval 时间间隔单位 day/month/year/week/hour/minute/second
+        * @param int    $step     间隔
+        * @param string $logic    AND OR
+        * @return $this
+        */
+        whereTimeInterval(field:string, start:string, interval:QueryWhereTimeUnitType, step?:int,  logic?:QueryWhereLogicType ):this
+
+        /**
+        * 查询月数据 whereMonth('time_field', '2018-1')
+        * @access public
+        * @param string $field 日期字段名
+        * @param string $month 月份信息
+        * @param int    $step  间隔
+        * @param string $logic AND OR
+        * @return $this
+        */
+        whereMonth(field:string, month?:string, step?:int,  logic?:QueryWhereLogicType):this
+
+        /**
+        * 查询周数据 whereWeek('time_field', '2018-1-1') 从2018-1-1开始的一周数据
+        * @access public
+        * @param string $field 日期字段名
+        * @param string $week  周信息
+        * @param int    $step  间隔
+        * @param string $logic AND OR
+        * @return $this
+        */
+        whereWeek(field:string, week?:string, step?:int, logic?:QueryWhereLogicType):this
+
+        /**
+        * 查询年数据 whereYear('time_field', '2018')
+        * @access public
+        * @param string $field 日期字段名
+        * @param string $year  年份信息
+        * @param int    $step     间隔
+        * @param string $logic AND OR
+        * @return $this
+        */
+        whereYear(field:string, year?:string, step?:int, logic?:QueryWhereLogicType):this
+
+        /**
+        * 查询日数据 whereDay('time_field', '2018-1-1')
+        * @access public
+        * @param string $field 日期字段名
+        * @param string $day   日期信息
+        * @param int    $step     间隔
+        * @param string $logic AND OR
+        * @return $this
+        */
+        whereDay(field:string, day?:string, step?:int, logic?:QueryWhereLogicType):this
+
+        /**
+        * 查询日期或者时间范围 whereBetweenTime('time_field', '2018-1-1','2018-1-15')
+        * @access public
+        * @param string     $field     日期字段名
+        * @param string|int $startTime 开始时间
+        * @param string|int $endTime   结束时间
+        * @param string     $logic     AND OR
+        * @return $this
+        */
+        whereBetweenTime(field:string, startTime:string|number, endTime:string|number, logic?:QueryWhereLogicType):this
+
+        /**
+        * 查询日期或者时间范围 whereNotBetweenTime('time_field', '2018-1-1','2018-1-15')
+        * @access public
+        * @param string     $field     日期字段名
+        * @param string|int $startTime 开始时间
+        * @param string|int $endTime   结束时间
+        * @return $this
+        */
+        whereNotBetweenTime(field:string, startTime:string|number, endTime:string|number):this
+
+        /**
+        * 查询当前时间在两个时间字段范围 whereBetweenTimeField('start_time', 'end_time')
+        * @access public
+        * @param string $startField 开始时间字段
+        * @param string $endField   结束时间字段
+        * @return $this
+        */
+        whereBetweenTimeField(start:string, end:string):this
+
+        /**
+        * 查询当前时间不在两个时间字段范围 whereNotBetweenTimeField('start_time', 'end_time')
+        * @access public
+        * @param string $startField 开始时间字段
+        * @param string $endField   结束时间字段
+        * @return $this
+        */
+        whereNotBetweenTimeField(start:string, end:string):this
+
+    }
+
+    
+    /**
+    * 数据字段信息
+    */
+    declare interface TableFieldInfo{
+
+        /**
+        * 获取数据表字段信息
+        * @access public
+        * @param string $tableName 数据表名
+        * @return array
+        */
+        getTableFields(tableName:string): string[];
+
+        /**
+        * 获取详细字段类型信息
+        * @access public
+        * @param string $tableName 数据表名称
+        * @return array
+        */
+        getFields(tableName:string): string[];
+
+        /**
+        * 获取字段类型信息
+        * @access public
+        * @return array
+        */
+        getFieldsType(): string[];
+
+        /**
+        * 获取字段类型信息
+        * @access public
+        * @param string $field 字段名
+        * @return string|null
+        */
+        getFieldType(field:string):string|null
+
+        /**
+        * 获取字段类型信息
+        * @access public
+        * @return array
+        */
+        getFieldsBindType(): string[];
+
+        /**
+        * 获取字段类型信息
+        * @access public
+        * @param string $field 字段名
+        * @return int
+        */
+        getFieldBindType(field:string): number
+    }
+
+    /**
+    * 查询数据处理
+    */
+    declare interface ResultOperation{
+
+        /**
+        * 设置数据处理（支持模型）
+        * @access public
+        * @param callable $filter 数据处理Callable
+        * @param string   $index  索引（唯一）
+        * @return $this
+        */
+        filter(filter:(result:any[], option?)=>boolean, index?:string):this;
+
+        /**
+        * 是否允许返回空数据（或空模型）
+        * @access public
+        * @param bool $allowEmpty 是否允许为空
+        * @return $this
+        */
+        allowEmpty(allowEmpty?:boolean):this;
+
+        /**
+        * 设置查询数据不存在是否抛出异常
+        * @access public
+        * @param bool $fail 数据不存在是否抛出异常
+        * @return $this
+        */
+        failException(fail?:boolean):this;
+
+        /**
+        * 处理数据
+        * @access protected
+        * @param array $result 查询数据
+        * @return void
+        */
+        protected result(result:any[]): void
+
+        /**
+        * 处理数据集
+        * @access public
+        * @param array $resultSet 数据集
+        * @param bool  $toCollection 是否转为对象
+        * @return void
+        */
+        protected resultSet(resultSet:any[], toCollection?:boolean): void
+
+        /**
+        * 使用获取器处理数据
+        * @access protected
+        * @param array $result   查询数据
+        * @param array $withAttr 字段获取器
+        * @return void
+        */
+        protected getResultAttr(result:any[], withAttr?:array): void
+
+        /**
+        * 处理空数据
+        * @access protected
+        * @return array|Model|null|static
+        * @throws DbException
+        * @throws ModelNotFoundException
+        * @throws DataNotFoundException
+        */
+        protected resultToEmpty()
+
+        /**
+        * 查找单条记录 不存在返回空数据（或者空模型）
+        * @access public
+        * @param mixed $data 数据
+        * @return array|Model|static|mixed
+        */
+        public findOrEmpty(data?:any)
+
+
+        /**
+        * JSON字段数据转换
+        * @access protected
+        * @param array $result 查询数据
+        * @return void
+        */
+        protected jsonResult(result:array): void
+
+
+        /**
+        * 查询失败 抛出异常
+        * @access protected
+        * @return void
+        * @throws ModelNotFoundException
+        * @throws DataNotFoundException
+        */
+        protected throwNotFound(): void
+
+
+        /**
+        * 查找多条记录 如果不存在则抛出异常
+        * @access public
+        * @param array|string|Query|Closure $data 数据
+        * @return array|Collection|static[]
+        * @throws ModelNotFoundException
+        * @throws DataNotFoundException
+        */
+        public selectOrFail(data?:any)
+
+
+        /**
+        * 查找单条记录 如果不存在则抛出异常
+        * @access public
+        * @param array|string|Query|Closure $data 数据
+        * @return array|Model|static|mixed
+        * @throws ModelNotFoundException
+        * @throws DataNotFoundException
+        */
+        public findOrFail(data?:FindDataType|Query|(()=>any))
+
+    }
+
+    declare type JoinTableType = string | [] | Raw;
+    declare type JoinTableBindType = string|number[];
+
+        
+    /**
+    * JOIN和VIEW查询
+    */
+    declare interface JoinAndViewQuery{
+
+        /**
+        * 查询SQL组装 join
+        * @access public
+        * @param mixed  $join      关联的表名
+        * @param mixed  $condition 条件
+        * @param string $type      JOIN类型
+        * @param array  $bind      参数绑定
+        * @return $this
+        */
+        join(join:JoinTableType, condition?:string, type?:string, bind?:JoinTableBindType):this;
+        
+
+        /**
+        * LEFT JOIN
+        * @access public
+        * @param mixed $join      关联的表名
+        * @param mixed $condition 条件
+        * @param array $bind      参数绑定
+        * @return $this
+        */
+        leftJoin(join:JoinTableType, condition?:string, bind?:JoinTableBindType):this;
+    
+        /**
+        * RIGHT JOIN
+        * @access public
+        * @param mixed $join      关联的表名
+        * @param mixed $condition 条件
+        * @param array $bind      参数绑定
+        * @return $this
+        */
+        rightJoin(join:JoinTableType, condition?:string, bind?:JoinTableBindType):this;
+    
+        /**
+        * FULL JOIN
+        * @access public
+        * @param mixed $join      关联的表名
+        * @param mixed $condition 条件
+        * @param array $bind      参数绑定
+        * @return $this
+        */
+        fullJoin(join:JoinTableType, condition?:string, bind?:JoinTableBindType):this;
+    
+        /**
+        * 指定JOIN查询字段
+        * @access public
+        * @param string|array $join  数据表
+        * @param string|array $field 查询字段
+        * @param string       $on    JOIN条件
+        * @param string       $type  JOIN类型
+        * @param array        $bind  参数绑定
+        * @return $this
+        */
+        view(join:JoinTableType, field?:string|string[], on?:string, type?:string,  bind?:JoinTableBindType):this
+    }
+    
+    /**
+    * 聚合查询
+    */
+    declare interface AggregateQuery{
+        /**
+        * COUNT查询
+        * @access public
+        * @param string|Raw $field 字段名
+        * @return int
+        */
+        count(field:string|Raw): int
+    
+        /**
+        * SUM查询
+        * @access public
+        * @param string|Raw $field 字段名
+        * @return float
+        */
+        sum(field:string|Raw): float
+
+        /**
+        * MIN查询
+        * @access public
+        * @param string|Raw $field 字段名
+        * @param bool       $force 强制转为数字类型
+        * @return mixed
+        */
+        min(field:string|Raw, force?:boolean)
+
+        /**
+        * MAX查询
+        * @access public
+        * @param string|Raw $field 字段名
+        * @param bool       $force 强制转为数字类型
+        * @return mixed
+        */
+        max(field:string|Raw, force?:boolean)
+
+        /**
+        * AVG查询
+        * @access public
+        * @param string|Raw $field 字段名
+        * @return float
+        */
+        avg(field:string|Raw): float
+    }
+}
+
+
+
+package server.database.concern{
+
+    import server.database.concern.BaseQuery;
+
+    declare class WhereQuery{
+
+        /**
+        * 指定AND查询条件
+        * @access public
+        * @param mixed $field     查询字段
+        * @param mixed $op        查询表达式
+        * @param mixed $condition 查询条件
+        * @return $this
+        */
+        where(field:QueryWhereFieldType, op?:QueryWhereExpressionType, condition?:QueryWhereFieldValueType):this;
+    
+
+        /**
+        * 解析Query对象查询条件
+        * @access public
+        * @param BaseQuery $query 查询对象
+        * @return void
+        */
+        protected parseQueryWhere(query:BaseQuery): void
+        
+        /**
+        * 指定OR查询条件
+        * @access public
+        * @param mixed $field     查询字段
+        * @param mixed $op        查询表达式
+        * @param mixed $condition 查询条件
+        * @return $this
+        */
+        whereOr(field:QueryWhereFieldType, op?:QueryWhereExpressionType, condition?:QueryWhereFieldValueType):this;
+        
+
+        /**
+        * 指定XOR查询条件
+        * @access public
+        * @param mixed $field     查询字段
+        * @param mixed $op        查询表达式
+        * @param mixed $condition 查询条件
+        * @return $this
+        */
+        whereXor(field:QueryWhereFieldType, op?:QueryWhereExpressionType, condition?:QueryWhereFieldValueType):this;
+        
+
+        /**
+        * 指定Null查询条件
+        * @access public
+        * @param mixed  $field 查询字段
+        * @param string $logic 查询逻辑 and or xor
+        * @return $this
+        */
+        whereNull(field:QueryWhereFieldQuickType, logic?:QueryWhereLogicType):this;
+        
+
+        /**
+        * 指定NotNull查询条件
+        * @access public
+        * @param mixed  $field 查询字段
+        * @param string $logic 查询逻辑 and or xor
+        * @return $this
+        */
+        whereNotNull(field:QueryWhereFieldQuickType, logic?:QueryWhereLogicType):this;
+    
+
+        /**
+        * 指定Exists查询条件
+        * @access public
+        * @param mixed  $condition 查询条件
+        * @param string $logic     查询逻辑 and or xor
+        * @return $this
+        */
+        whereExists(condition:QueryWhereFieldQuickType, logic?:QueryWhereLogicType):this;
+    
+
+        /**
+        * 指定NotExists查询条件
+        * @access public
+        * @param mixed  $condition 查询条件
+        * @param string $logic     查询逻辑 and or xor
+        * @return $this
+        */
+        whereNotExists(condition:QueryWhereFieldQuickType, logic?:QueryWhereLogicType):this;
+        
+
+        /**
+        * 指定In查询条件
+        * @access public
+        * @param mixed  $field     查询字段
+        * @param mixed  $condition 查询条件
+        * @param string $logic     查询逻辑 and or xor
+        * @return $this
+        */
+        whereIn(field:QueryWhereFieldQuickType, condition:QueryWhereFieldValueType, logic?:QueryWhereLogicType):this;
+        
+        /**
+        * 指定NotIn查询条件
+        * @access public
+        * @param mixed  $field     查询字段
+        * @param mixed  $condition 查询条件
+        * @param string $logic     查询逻辑 and or xor
+        * @return $this
+        */
+        whereNotIn(field:QueryWhereFieldQuickType, condition:QueryWhereFieldValueType, logic?:QueryWhereLogicType):this;
+        
+
+        /**
+        * 指定Like查询条件
+        * @access public
+        * @param mixed  $field     查询字段
+        * @param mixed  $condition 查询条件
+        * @param string $logic     查询逻辑 and or xor
+        * @return $this
+        */
+        whereLike(field:QueryWhereFieldQuickType, condition:QueryWhereFieldValueType, logic?:QueryWhereLogicType):this;
+        
+
+        /**
+        * 指定NotLike查询条件
+        * @access public
+        * @param mixed  $field     查询字段
+        * @param mixed  $condition 查询条件
+        * @param string $logic     查询逻辑 and or xor
+        * @return $this
+        */
+        whereNotLike(field:QueryWhereFieldQuickType, condition:QueryWhereFieldValueType, logic?:QueryWhereLogicType):this;
+
+        /**
+        * 指定Between查询条件
+        * @access public
+        * @param mixed  $field     查询字段
+        * @param mixed  $condition 查询条件
+        * @param string $logic     查询逻辑 and or xor
+        * @return $this
+        */
+        whereBetween(field:QueryWhereFieldQuickType, condition:QueryWhereFieldValueType, logic?:QueryWhereLogicType):this;
+        
+        /**
+        * 指定NotBetween查询条件
+        * @access public
+        * @param mixed  $field     查询字段
+        * @param mixed  $condition 查询条件
+        * @param string $logic     查询逻辑 and or xor
+        * @return $this
+        */
+        whereNotBetween(field:QueryWhereFieldQuickType, condition:QueryWhereFieldValueType, logic?:QueryWhereLogicType):this;
+        
+
+        /**
+        * 指定FIND_IN_SET查询条件
+        * @access public
+        * @param mixed  $field     查询字段
+        * @param mixed  $condition 查询条件
+        * @param string $logic     查询逻辑 and or xor
+        * @return $this
+        */
+        whereFindInSet(field:QueryWhereFieldQuickType, condition:QueryWhereFieldValueType, logic?:QueryWhereLogicType):this;
+        
+
+        /**
+        * 比较两个字段
+        * @access public
+        * @param string $field1   查询字段
+        * @param string $operator 比较操作符
+        * @param string $field2   比较字段
+        * @param string $logic    查询逻辑 and or xor
+        * @return $this
+        */
+        whereColumn(field:string, operator:QueryWhereExpressionType, field2:string, logic?:QueryWhereLogicType):this;
+    
+
+        /**
+        * 设置软删除字段及条件
+        * @access public
+        * @param string $field     查询字段
+        * @param mixed  $condition 查询条件
+        * @return $this
+        */
+        useSoftDelete(field:string, condition?:QueryWhereFieldValueType):this;
+    
+
+        /**
+        * 指定Exp查询条件
+        * @access public
+        * @param mixed  $field 查询字段
+        * @param string $where 查询条件
+        * @param array  $bind  参数绑定
+        * @param string $logic 查询逻辑 and or xor
+        * @return $this
+        */
+        whereExp(field:string, where:string, bind?:QueryWhereFieldValueType[], logic?:QueryWhereLogicType):this;
+    
+        /**
+        * 指定字段Raw查询
+        * @access public
+        * @param string $field     查询字段表达式
+        * @param mixed  $op        查询表达式
+        * @param string $condition 查询条件
+        * @param string $logic     查询逻辑 and or xor
+        * @return $this
+        */
+        whereFieldRaw(field:string, op:QueryWhereExpressionType, condition:QueryWhereFieldValueType, logic?:QueryWhereLogicType):this;
+    
+        /**
+        * 指定表达式查询条件
+        * @access public
+        * @param string $where 查询条件
+        * @param array  $bind  参数绑定
+        * @param string $logic 查询逻辑 and or xor
+        * @return $this
+        */
+        whereRaw(where:string, bind?:QueryWhereFieldValueType[], logic?:QueryWhereLogicType):this;
+    
+
+        /**
+        * 指定表达式查询条件 OR
+        * @access public
+        * @param string $where 查询条件
+        * @param array  $bind  参数绑定
+        * @return $this
+        */
+        whereOrRaw(where:string, bind?:QueryWhereFieldValueType[]):this;
+        
+
+        /**
+        * 分析查询表达式
+        * @access protected
+        * @param string $logic     查询逻辑 and or xor
+        * @param mixed  $field     查询字段
+        * @param mixed  $op        查询表达式
+        * @param mixed  $condition 查询条件
+        * @param array  $param     查询参数
+        * @param bool   $strict    严格模式
+        * @return $this
+        */
+        parseWhereExp(logic:QueryWhereLogicType, field:QueryWhereFieldType, op:QueryWhereExpressionType, condition:QueryWhereFieldValueType, param?:[], strict?:boolean):this
+        
+
+        /**
+        * 分析查询表达式
+        * @access protected
+        * @param string $logic     查询逻辑 and or xor
+        * @param mixed  $field     查询字段
+        * @param mixed  $op        查询表达式
+        * @param mixed  $condition 查询条件
+        * @param array  $param     查询参数
+        * @return array
+        */
+        parseWhereItem(logic:QueryWhereLogicType, field:QueryWhereFieldType, op:QueryWhereExpressionType, condition:QueryWhereFieldValueType, param?:[]): array
+    
+
+        /**
+        * 相等查询的主键处理
+        * @access protected
+        * @param string $field 字段名
+        * @param mixed  $value 字段值
+        * @return array
+        */
+        protected whereEq(field:string, value:QueryWhereFieldValueType): array
+    
+        /**
+        * 数组批量查询
+        * @access protected
+        * @param array  $field 批量查询
+        * @param string $logic 查询逻辑 and or xor
+        * @return $this
+        */
+        protected parseArrayWhereItems(field:{[key:string]:QueryWhereFieldValueType}[], logic:QueryWhereLogicType):this
+    
+
+        /**
+        * 去除某个查询条件
+        * @access public
+        * @param string $field 查询字段
+        * @param string $logic 查询逻辑 and or xor
+        * @return $this
+        */
+        removeWhereField(field:string, logic:QueryWhereLogicType):this
+    
+
+        /**
+        * 条件查询
+        * @access public
+        * @param mixed         $condition 满足条件（支持闭包）
+        * @param Closure|array $query     满足条件后执行的查询表达式（闭包或数组）
+        * @param Closure|array $otherwise 不满足条件后执行
+        * @return $this
+        */
+        when(condition:((query:WhereQuery)=>any) | boolean, query:(()=>void) | QueryWhereFieldWrapType[], otherwise?:(()=>void) | QueryWhereFieldWrapType[]):this
+    }
+   
 }
 
 package server.components{
@@ -2596,17 +3691,12 @@ package server.kernel{
     }
 }
 
-package server.database.query.internal{
-    declare type QueryWhereLogicType = '=' | '!=' | '<' | '<=' | '>' | '>=';
-    declare type QueryWhereItemType = [string, QueryWhereLogicType, string|number ];
-    declare type QueryWhereType = QueryWhereItemType[];
-}
 
 package server.application{
 
-    import server.database.query.internal.QueryWhereType;
     import server.components.Collection;
-    import server.database.BaseQuery;
+    import server.database.concern.BaseQuery;
+    import server.database.concern.QueryWhereFieldType;
 
     /**
     * 控制器的基类，所有业务逻辑层都应该继承 Controller 类
@@ -2618,7 +3708,7 @@ package server.application{
     * 模型基类，所有业务模型层都应该继承 Model 类
     */
     @Define(type=model)
-    declare Model{
+    declare class Model{
         protected name:string;
         protected table:string;
         protected suffix:string;
@@ -2803,9 +3893,7 @@ package server.application{
         * @access public
         * @return mixed
         */
-        getWhere():QueryWhereType;
-
-
+        getWhere():QueryWhereFieldType;
 
          /**
         * 保存多个数据到当前数据对象
@@ -2817,7 +3905,6 @@ package server.application{
         */
         saveAll(dataSet?:array,replace?:boolean):Collection;
     
-
         /**
         * 删除当前的记录
         * @access public
