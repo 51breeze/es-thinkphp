@@ -1,22 +1,283 @@
-package server.database{
+package server.psr.log{
 
-    import server.database.concern.BaseQuery;
-
-    declare static class Db{
-        static table( name:string ):BaseQuery;
-        static name( name:string ):BaseQuery;
-    }
-
-    declare interface PDOStatement{}
-
-    declare interface ConnectionInterface{
+    /**
+    * Describes a logger instance.
+    *
+    * The message MUST be a string or object implementing __toString().
+    *
+    * The message MAY contain placeholders in the form: {foo} where foo
+    * will be replaced by the context data in key "foo".
+    *
+    * The context array can contain arbitrary data. The only assumption that
+    * can be made by implementors is that if an Exception instance is given
+    * to produce a stack trace, it MUST be in a key named "exception".
+    *
+    * See https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
+    * for the full interface specification.
+    */
+    declare interface LoggerInterface{
 
         /**
-        * 获取当前连接器类对应的Query类
-        * @access public
-        * @return string
+        * System is unusable.
+        *
+        * @param string  $message
+        * @param mixed[] $context
+        *
+        * @return void
         */
-        public getQueryClass(): string;
+        emergency(message:string, context?:array );
+
+        /**
+        * Action must be taken immediately.
+        *
+        * Example: Entire website down, database unavailable, etc. This should
+        * trigger the SMS alerts and wake you up.
+        *
+        * @param string  $message
+        * @param mixed[] $context
+        *
+        * @return void
+        */
+        alert(message:string, context?:array);
+
+        /**
+        * Critical conditions.
+        *
+        * Example: Application component unavailable, unexpected exception.
+        *
+        * @param string  $message
+        * @param mixed[] $context
+        *
+        * @return void
+        */
+        critical(message:string, context?:array);
+
+        /**
+        * Runtime errors that do not require immediate action but should typically
+        * be logged and monitored.
+        *
+        * @param string  $message
+        * @param mixed[] $context
+        *
+        * @return void
+        */
+        error(message:string, context?:array);
+
+        /**
+        * Exceptional occurrences that are not errors.
+        *
+        * Example: Use of deprecated APIs, poor use of an API, undesirable things
+        * that are not necessarily wrong.
+        *
+        * @param string  $message
+        * @param mixed[] $context
+        *
+        * @return void
+        */
+        warning(message:string, context?:array);
+
+        /**
+        * Normal but significant events.
+        *
+        * @param string  $message
+        * @param mixed[] $context
+        *
+        * @return void
+        */
+        notice(message:string, context?:array);
+
+        /**
+        * Interesting events.
+        *
+        * Example: User logs in, SQL logs.
+        *
+        * @param string  $message
+        * @param mixed[] $context
+        *
+        * @return void
+        */
+        info(message:string, context?:array);
+
+        /**
+        * Detailed debug information.
+        *
+        * @param string  $message
+        * @param mixed[] $context
+        *
+        * @return void
+        */
+        debug(message:string, context?:array);
+
+        /**
+        * Logs with an arbitrary level.
+        *
+        * @param mixed   $level
+        * @param string  $message
+        * @param mixed[] $context
+        *
+        * @return void
+        *
+        * @throws \Psr\Log\InvalidArgumentException
+        */
+        log(message:string, context?:array);
+    }
+}
+
+package server.psr.simpleCache{
+
+    declare interface CacheInterface{
+        /**
+        * Fetches a value from the cache.
+        *
+        * @param string $key     The unique key of this item in the cache.
+        * @param mixed  $default Default value to return if the key does not exist.
+        *
+        * @return mixed The value of the item from the cache, or $default in case of cache miss.
+        *
+        * @throws \Psr\SimpleCache\InvalidArgumentException
+        *   MUST be thrown if the $key string is not a legal value.
+        */
+        get(key:string, default?);
+
+        /**
+        * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
+        *
+        * @param string                 $key   The key of the item to store.
+        * @param mixed                  $value The value of the item to store, must be serializable.
+        * @param null|int|\DateInterval $ttl   Optional. The TTL value of this item. If no value is sent and
+        *                                      the driver supports TTL then the library may set a default value
+        *                                      for it or let the driver take care of that.
+        *
+        * @return bool True on success and false on failure.
+        *
+        * @throws \Psr\SimpleCache\InvalidArgumentException
+        *   MUST be thrown if the $key string is not a legal value.
+        */
+        set(key:string, value:any, ttl?:any);
+
+        /**
+        * Delete an item from the cache by its unique key.
+        *
+        * @param string $key The unique cache key of the item to delete.
+        *
+        * @return bool True if the item was successfully removed. False if there was an error.
+        *
+        * @throws \Psr\SimpleCache\InvalidArgumentException
+        *   MUST be thrown if the $key string is not a legal value.
+        */
+        delete(key:string);
+
+        /**
+        * Wipes clean the entire cache's keys.
+        *
+        * @return bool True on success and false on failure.
+        */
+        clear();
+
+        /**
+        * Obtains multiple cache items by their unique keys.
+        *
+        * @param iterable $keys    A list of keys that can obtained in a single operation.
+        * @param mixed    $default Default value to return for keys that do not exist.
+        *
+        * @return iterable A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
+        *
+        * @throws \Psr\SimpleCache\InvalidArgumentException
+        *   MUST be thrown if $keys is neither an array nor a Traversable,
+        *   or if any of the $keys are not a legal value.
+        */
+        getMultiple(keys:string[], default?):string[]
+
+        /**
+        * Persists a set of key => value pairs in the cache, with an optional TTL.
+        *
+        * @param iterable               $values A list of key => value pairs for a multiple-set operation.
+        * @param null|int|\DateInterval $ttl    Optional. The TTL value of this item. If no value is sent and
+        *                                       the driver supports TTL then the library may set a default value
+        *                                       for it or let the driver take care of that.
+        *
+        * @return bool True on success and false on failure.
+        *
+        * @throws \Psr\SimpleCache\InvalidArgumentException
+        *   MUST be thrown if $values is neither an array nor a Traversable,
+        *   or if any of the $values are not a legal value.
+        */
+        setMultiple(values:{[key:string]:any}, ttl?);
+
+        /**
+        * Deletes multiple cache items in a single operation.
+        *
+        * @param iterable $keys A list of string-based keys to be deleted.
+        *
+        * @return bool True if the items were successfully removed. False if there was an error.
+        *
+        * @throws \Psr\SimpleCache\InvalidArgumentException
+        *   MUST be thrown if $keys is neither an array nor a Traversable,
+        *   or if any of the $keys are not a legal value.
+        */
+        deleteMultiple(keys:string[]);
+
+        /**
+        * Determines whether an item is present in the cache.
+        *
+        * NOTE: It is recommended that has() is only to be used for cache warming type purposes
+        * and not to be used within your live applications operations for get/set, as this method
+        * is subject to a race condition where your has() will return true and immediately after,
+        * another script can remove it making the state of your app out of date.
+        *
+        * @param string $key The cache item key.
+        *
+        * @return bool
+        *
+        * @throws \Psr\SimpleCache\InvalidArgumentException
+        *   MUST be thrown if the $key string is not a legal value.
+        */
+        has(key:string);
+
+    }
+}
+
+package server.database{
+
+    declare interface Config{
+        // 数据库类型
+        type:'mysql' | 'mongo' | 'oracle' | 'pgsql' | 'sqlite' | 'sqlsrv'
+        // 服务器地址
+        hostname:string
+        // 数据库名
+        database:string
+        // 用户名
+        username:string
+        // 密码
+        password:string
+        // 端口
+        hostport?:uint
+        // 数据库连接参数
+        params?:string[]
+        // 数据库编码默认采用utf8
+        charset?:string
+        // 数据库表前缀
+        prefix?:string
+        // 数据库部署方式:0 集中式(单一服务器),1 分布式(主从服务器)
+        deploy?:int
+        // 数据库读写是否分离 主从式有效
+        rw_separate?:boolean
+        // 读写分离后 主服务器数量
+        master_num?:int
+        // 指定从服务器序号
+        slave_no?:string
+        // 是否严格检查字段是否存在
+        fields_strict?:boolean
+        // 是否需要断线重连
+        break_reconnect?:boolean
+        // 监听SQL
+        trigger_sql?:boolean
+        // 开启字段缓存
+        fields_cache?:boolean
+    }
+
+    import server.database.concern.BaseQuery;
+    declare interface Convenient{
 
         /**
         * 指定表名开始查询
@@ -33,13 +294,198 @@ package server.database{
         public name(name):BaseQuery
 
         /**
+        * 执行数据库事务
+        * @access public
+        * @param callable $callback 数据操作方法回调
+        * @return mixed
+        */
+        public transaction<T>(callback:(connection:Connection)=>T):T;
+
+        /**
+        * 启动事务
+        * @access public
+        * @return void
+        */
+        public startTrans();
+
+        /**
+        * 用于非自动提交状态下面的查询提交
+        * @access public
+        * @return void
+        */
+        public commit();
+
+        /**
+        * 事务回滚
+        * @access public
+        * @return void
+        */
+        public rollback();
+
+        /**
+        * 获取最近一次查询的sql语句
+        * @access public
+        * @return string
+        */
+        public getLastSql(): string;
+    }
+
+
+    import server.database.concern.BaseQuery;
+    import server.psr.simpleCache.CacheInterface;
+    import server.psr.log.LoggerInterface;
+    import server.database.concern.Raw;
+    import server.database.Connection;
+    declare interface DbManager{
+
+        /**
+        * 初始化配置参数
+        * @access public
+        * @param array $config 连接配置
+        * @return void
+        */
+        setConfig(config:Config | {[type:string]:Config} ):void
+
+        /**
+        * 设置缓存对象
+        * @access public
+        * @param CacheInterface $cache 缓存对象
+        * @return void
+        */
+        setCache(cache:CacheInterface):void
+
+        /**
+        * 设置日志对象
+        * @access public
+        * @param LoggerInterface $log 日志对象
+        * @return void
+        */
+        setLog(log:LoggerInterface):void
+
+        /**
+        * 记录SQL日志
+        * @access protected
+        * @param string $log  SQL日志信息
+        * @param string $type 日志类型
+        * @return void
+        */
+        log(log:string, type?:string ):void
+
+        /**
+        * 获得查询日志（没有设置日志对象使用）
+        * @access public
+        * @param bool $clear 是否清空
+        * @return array
+        */
+        getDbLog(clear?:boolean): string[]
+
+        /**
+        * 获取配置参数
+        * @access public
+        * @param string $name    配置参数
+        * @param mixed  $default 默认值
+        * @return mixed
+        */
+        getConfig(name?:string, default?):any;
+
+        /**
+        * 创建/切换数据库连接查询
+        * @access public
+        * @param string|null $name  连接配置标识
+        * @param bool        $force 强制重新连接
+        * @return ConnectionInterface
+        */
+        connect(name?:string, force?:boolean):Connection
+
+        /**
+        * 使用表达式设置数据
+        * @access public
+        * @param string $value 表达式
+        * @return Raw
+        */
+        raw(value:string):Raw
+
+        /**
+        * 更新查询次数
+        * @access public
+        * @return void
+        */
+        updateQueryTimes():void
+
+        /**
+        * 重置查询次数
+        * @access public
+        * @return void
+        */
+        clearQueryTimes():void
+
+        /**
+        * 获得查询次数
+        * @access public
+        * @return integer
+        */
+        getQueryTimes(): int
+
+        /**
+        * 监听SQL执行
+        * @access public
+        * @param callable $callback 回调方法
+        * @return void
+        */
+        listen(callback:(args)=>void): void
+
+        /**
+        * 获取监听SQL执行
+        * @access public
+        * @return array
+        */
+        getListen(): any[]
+
+        /**
+        * 注册回调方法
+        * @access public
+        * @param string   $event    事件名
+        * @param callable $callback 回调方法
+        * @return void
+        */
+        event(event:string, callback:(...args)=>void): void
+
+        /**
+        * 触发事件
+        * @access public
+        * @param string $event  事件名
+        * @param mixed  $params 传入参数
+        * @return mixed
+        */
+        trigger(event:string, params?):any;
+    }
+
+    declare static class Db implements DbManager, Convenient{}
+
+    declare interface PDOStatement{}
+   
+    import server.database.concern.BaseQuery;
+    import server.database.DbManager;
+    import server.psr.simpleCache.CacheInterface;
+    import server.database.Config;
+    import server.database.Convenient;
+    declare interface Connection implements Convenient{
+
+        /**
+        * 获取当前连接器类对应的Query类
+        * @access public
+        * @return string
+        */
+        public getQueryClass<T>(): class<T>;
+
+        /**
         * 连接数据库方法
         * @access public
         * @param array   $config  接参数
         * @param integer $linkNum 连接序号
         * @return mixed
         */
-        public connect(config:array = [], linkNum:int = 0);
+        public connect(config?:Config, linkNum:int = 0);
 
         /**
         * 设置当前的数据库Db对象
@@ -47,7 +493,7 @@ package server.database{
         * @param DbManager $db
         * @return void
         */
-        public setDb(db);
+        public setDb(db:DbManager);
 
         /**
         * 设置当前的缓存对象
@@ -55,7 +501,7 @@ package server.database{
         * @param CacheInterface $cache
         * @return void
         */
-        public setCache(cache);
+        public setCache(cache:CacheInterface);
 
         /**
         * 获取数据库的配置参数
@@ -63,7 +509,7 @@ package server.database{
         * @param string $config 配置名称
         * @return mixed
         */
-        public getConfig(config:string = '');
+        public getConfig(config?:string):Config
 
         /**
         * 关闭数据库（或者重新连接）
@@ -95,7 +541,7 @@ package server.database{
         * @param boolean $getLastInsID 返回自增主键
         * @return mixed
         */
-        public insert(query:BaseQuery, getLastInsID:boolean = false);
+        public insert(query:BaseQuery, getLastInsID?:boolean);
 
         /**
         * 批量插入记录
@@ -104,7 +550,7 @@ package server.database{
         * @param mixed   $dataSet 数据集
         * @return integer
         */
-        public insertAll(query:BaseQuery, dataSet:array = []): int;
+        public insertAll(query:BaseQuery, dataSet?:array): int;
 
         /**
         * 更新记录
@@ -140,44 +586,7 @@ package server.database{
         * @param string $key    索引
         * @return array
         */
-        public column(query:BaseQuery, column:string | array, key:string = ''): array;
-
-        /**
-        * 执行数据库事务
-        * @access public
-        * @param callable $callback 数据操作方法回调
-        * @return mixed
-        */
-        public transaction(callback:()=>any);
-
-        /**
-        * 启动事务
-        * @access public
-        * @return void
-        */
-        public startTrans();
-
-        /**
-        * 用于非自动提交状态下面的查询提交
-        * @access public
-        * @return void
-        */
-        public commit();
-
-        /**
-        * 事务回滚
-        * @access public
-        * @return void
-        */
-        public rollback();
-
-        /**
-        * 获取最近一次查询的sql语句
-        * @access public
-        * @return string
-        */
-        public getLastSql(): string;
-
+        public column(query:BaseQuery, column:string | array, key?:string): array;
     }
 }
 
@@ -200,7 +609,7 @@ package server.database.concern{
         * @access public
         * @return ConnectionInterface
         */
-        public getConnection():server.database.ConnectionInterface
+        public getConnection():server.database.Connection
 
         /**
         * 指定当前数据表名（不含前缀）
@@ -691,7 +1100,7 @@ package server.database.concern{
         * @param string $order  排序 desc/asc
         * @return $this
         */
-        orderField(field:string, values:string|number[], order?:'desc'|'asc'):this
+        orderField(field:string, values:(string|number)[], order?:'desc'|'asc'):this
         
         /**
         * 随机排序
@@ -956,6 +1365,8 @@ package server.database.concern{
         getBind(): array;
     }
 
+    import server.database.Connection;
+
     /**
     * 事务支持
     */
@@ -971,7 +1382,7 @@ package server.database.concern{
         * @throws \Exception
         * @throws \Throwable
         */
-        transactionXa(callback:()=>void, dbs?:array):any;
+        transactionXa<T>(callback:(connection:Connection)=>T, dbs?:array):T;
 
 
         /**
@@ -980,7 +1391,7 @@ package server.database.concern{
         * @param callable $callback 数据操作方法回调
         * @return mixed
         */
-        transaction(callback:()=>void)
+        transaction<T>(callback:(connection:Connection)=>T):T
 
         /**
         * 启动事务
@@ -1040,7 +1451,6 @@ package server.database.concern{
         * @return void
         */
         rollbackXa(xid:string): void
-
     }
     
     declare type QueryWhereTimeExpressionType = 'today' | 'yesterday' | 'week'  | 'last week' | 'month'  | 'last month' | 'year' | 'last year'
@@ -3523,21 +3933,6 @@ package server.kernel{
         * @return mixed
         */
         getObjectParam(className:string, vars:array ):any
-        __set($name, $value)
-
-        __get($name)
-
-        __isset($name): boolean
-
-        __unset($name)
-
-        offsetExists($key): boolean
-
-        offsetGet($key)
-
-        offsetSet($key, $value)
-
-        offsetUnset($key)
 
         //Countable
         count(): int
@@ -3694,15 +4089,16 @@ package server.kernel{
 
 package server.application{
 
-    import server.components.Collection;
-    import server.database.concern.BaseQuery;
-    import server.database.concern.QueryWhereFieldType;
-
     /**
-    * 控制器的基类，所有业务逻辑层都应该继承 Controller 类
+    * 控制器的基类
+    * 所有业务逻辑层都应该继承 Controller 类
     */
     @Define(type=controller)
     declare class Controller{}
+
+    import server.components.Collection;
+    import server.database.concern.BaseQuery;
+    import server.database.concern.QueryWhereFieldType;
 
     /**
     * 模型基类，所有业务模型层都应该继承 Model 类
@@ -3743,8 +4139,7 @@ package server.application{
         */
         protected insertData(sequence?:string): boolean
 
-
-         /**
+        /**
         * 调用反射执行模型方法 支持参数绑定
         * @access public
         * @param mixed $method
