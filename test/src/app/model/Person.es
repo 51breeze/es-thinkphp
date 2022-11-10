@@ -7,7 +7,7 @@ class Person extends Model {
     protected name:string = 'admin';
     get myName(){
 
-        Db.table('sss');
+         console.log( Db.table('admin').select() );
        
 
         const res = this.select();
