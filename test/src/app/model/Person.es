@@ -14,9 +14,7 @@ class Person extends Model {
 
          console.log( Db.table('admin').where({id:2}).select() );
 
-       //  Db.table('admin')
-       
-
+        // Db.table('admin')
         // const res = this.select();
         // console.log( res );
 

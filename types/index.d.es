@@ -4469,5 +4469,8 @@ package server.application{
 
     }
 
+}
 
+package server.utils{
+    declare function env(name:string,defaultValue?:any):void;
 }
