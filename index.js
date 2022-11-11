@@ -72,6 +72,7 @@ const defaultConfig ={
                 'server.kernel.Env':'think',
                 'server.kernel.App':'think',
                 'server.kernel.Container':'think',
+                'server.utils.env':'',
             },
             externals:['PHPUnit.Framework.TestCase'],
         }

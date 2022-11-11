@@ -3807,6 +3807,157 @@ package server.http{
         getCode(): int
 
     }
+
+    declare class Xml extends Response{
+
+    }
+
+    declare class Html extends Response{
+
+    }
+
+    declare class Json extends Response{
+
+    }
+
+    declare class Jsonp extends Response{
+
+    }
+
+    /**
+    * Redirect Response
+    */
+    declare class Redirect extends Response{
+
+        /**
+        * 重定向传值（通过Session）
+        * @access protected
+        * @param  string|array  $name 变量名或者数组
+        * @param  mixed         $value 值
+        * @return $this
+        */
+        with(name:string | array, value?):this;
+
+
+        /**
+        * 记住当前url后跳转
+        * @access public
+        * @return $this
+        */
+         remember(complete:boolean):this;
+
+
+        /**
+        * 跳转到上次记住的url
+        * @access public
+        * @return $this
+        */
+        restore():this;
+    
+    }
+
+    /**
+    * File Response
+    */
+    declare class File extends Response{
+
+        constructor(data:string, code:number);
+
+        /**
+        * 设置是否为内容 必须配合mimeType方法使用
+        * @access public
+        * @param  bool $content
+        * @return $this
+        */
+        isContent(content?:boolean):this;
+
+        /**
+        * 设置有效期
+        * @access public
+        * @param  integer $expire 有效期
+        * @return $this
+        */
+        expire(expire:number):this;
+
+        /**
+        * 设置文件类型
+        * @access public
+        * @param  string $filename 文件名
+        * @return $this
+        */
+        mimeType(mimeType:string):this;
+
+        /**
+        * 设置文件强制下载
+        * @access public
+        * @param  bool $force 强制浏览器下载
+        * @return $this
+        */
+        force(force:boolean):this;
+
+        /**
+        * 获取文件类型信息
+        * @access public
+        * @param  string $filename 文件名
+        * @return string
+        */
+        protected getMimeType(filename:string): string
+
+        /**
+        * 设置下载文件的显示名称
+        * @access public
+        * @param  string $filename 文件名
+        * @param  bool   $extension 后缀自动识别
+        * @return $this
+        */
+        name(filename:string, extension?:boolean):this;
+    }
+
+
+
+    /**
+    * View Response
+    */
+    declare class View extends Response{
+    
+        /**
+        * 获取视图变量
+        * @access public
+        * @param  string $name 模板变量
+        * @return mixed
+        */
+        getVars(name?:string):any;
+
+
+        /**
+        * 模板变量赋值
+        * @access public
+        * @param  string|array $name  模板变量
+        * @param  mixed        $value 变量值
+        * @return $this
+        */
+        assign(name:string, value?):this;
+
+
+        /**
+        * 视图内容过滤
+        * @access public
+        * @param callable $filter
+        * @return $this
+        */
+        filter(filter:(...args)=>boolean):this;
+
+
+        /**
+        * 检查模板是否存在
+        * @access public
+        * @param  string  $name 模板名
+        * @return bool
+        */
+        exists(name:string): boolean
+    }
+
+
 }
 
 package server.kernel{
@@ -4468,9 +4619,322 @@ package server.application{
         delete(): boolean;
 
     }
-
 }
 
-package server.utils{
-    declare function env(name:string,defaultValue?:any):void;
-}
+declare type ScalarType = string | number | boolean | regexp;
+declare type ArrayScalarType = ScalarType[];
+declare type HeaderType = {[key:string]:string};
+
+/**
+* 获取环境变量值
+* @access public
+* @param string $name    环境变量名（支持二级 .号分割）
+* @param string $default 默认值
+* @return mixed
+*/
+declare function env<T=ScalarType | ArrayScalarType>(name:string,defaultValue?:any):T;
+
+/**
+* 抛出HTTP异常
+* @param integer|Response $code    状态码 或者 Response对象实例
+* @param string           $message 错误信息
+* @param array            $header  参数
+*/
+declare function abort(code:server.http.Response | number , message?:string, header?:HeaderType):void;
+
+/**
+* 快速获取容器中的实例 支持依赖注入
+* @template T
+* @param string|class-string<T> $name        类名或标识 默认获取当前应用实例
+* @param array                  $args        参数
+* @param bool                   $newInstance 是否每次创建新的实例
+* @return T|object|App
+*/
+declare function app(name?:string, args?:any[], newInstance?:boolean);
+
+/**
+* 绑定一个类到容器
+* @param string|array $abstract 类标识、接口（支持批量绑定）
+* @param mixed        $concrete 要绑定的类、闭包或者实例
+* @return Container
+*/
+declare function bind(abstracts:class<any>|class<any>[], concrete?:class<any>|(...args)=>void):server.kernel.Container
+
+/**
+* 缓存管理
+* @param string $name    缓存名称
+* @param mixed  $value   缓存值
+* @param mixed  $options 缓存参数
+* @param string $tag     缓存标签
+* @return mixed
+*/
+declare function cache(name?:string, value?:any, options?, tag?:string):any;
+
+/**
+* 获取和设置配置参数
+* @param string|array $name  参数名
+* @param mixed        $value 参数值
+* @return mixed
+*/
+declare function config(name:string|string[], value?):any;
+
+/**
+* Cookie管理
+* @param string $name   cookie名称
+* @param mixed  $value  cookie值
+* @param mixed  $option 参数
+* @return mixed
+*/
+declare function cookie(name?:string, value?, option?):any;
+
+/**
+* 获取\think\response\Download对象实例
+* @param string $filename 要下载的文件
+* @param string $name     显示文件名
+* @param bool   $content  是否为内容
+* @param int    $expire   有效期（秒）
+* @return \think\response\File
+*/
+declare function download(filename:string, name?:string, content?:boolean, expire?:number): server.http.File
+
+/**
+* 浏览器友好的变量输出
+* @param mixed $vars 要输出的变量
+* @return void
+*/
+declare function dump(...vars):void;
+
+/**
+* 触发事件
+* @param mixed $event 事件名（或者类名）
+* @param mixed $args  参数
+* @return mixed
+*/
+declare function event(event:string, $args?):any;
+
+/**
+* 调试变量并且中断输出
+* @param mixed $vars 调试变量或者信息
+*/
+declare function halt(...vars):void;
+
+/**
+* 获取输入数据 支持默认值和过滤
+* @param string $key     获取的变量名
+* @param mixed  $default 默认值
+* @param string $filter  过滤方法
+* @return mixed
+*/
+declare function input(key?:string, default?, filter:(...args)=>boolean):any;
+
+/**
+* 调用反射实例化对象或者执行方法 支持依赖注入
+* @param mixed $call 类名或者callable
+* @param array $args 参数
+* @return mixed
+*/
+declare function invoke(call:(...args)=>any, args?:array ):any;
+
+/**
+* 获取\think\response\Json对象实例
+* @param mixed $data    返回的数据
+* @param int   $code    状态码
+* @param array $header  头部
+* @param array $options 参数
+* @return \think\response\Json
+*/
+declare function json(data:any, code:number, header:{[key:string]:string}, options?:array): server.http.Json
+
+/**
+* 获取\think\response\Jsonp对象实例
+* @param mixed $data    返回的数据
+* @param int   $code    状态码
+* @param array $header  头部
+* @param array $options 参数
+* @return \think\response\Jsonp
+*/
+declare  function jsonp(data:any, code:number, header:{[key:string]:string}, options?:array): server.http.Jsonp
+
+/**
+* 获取语言变量值
+* @param string $name 语言变量名
+* @param array  $vars 动态变量值
+* @param string $lang 语言
+* @return mixed
+*/
+declare function lang(name:string, vars:array, lang?:string):any;
+
+/**
+* 字符串命名风格转换
+* type 0 将Java风格转换为C的风格 1 将C风格转换为Java的风格
+* @param string $name    字符串
+* @param int    $type    转换类型
+* @param bool   $ucfirst 首字母是否大写（驼峰规则）
+* @return string
+*/
+declare function parse_name(name:string, type:number, ucfirst:boolean): string
+
+/**
+* 获取\think\response\Redirect对象实例
+* @param string $url  重定向地址
+* @param int    $code 状态码
+* @return \think\response\Redirect
+*/
+declare  function redirect(url:string, code:number): server.http.Redirect
+
+/**
+* 获取当前Request对象实例
+* @return Request
+*/
+declare  function request(): server.http.Request
+
+/**
+* 创建普通 Response 对象实例
+* @param mixed      $data   输出数据
+* @param int|string $code   状态码
+* @param array      $header 头信息
+* @param string     $type
+* @return Response
+*/
+declare function response(data:any, code?:number, header?:{[key:string]:string}, type?:string): server.http.Response
+
+/**
+* Session管理
+* @param string $name  session名称
+* @param mixed  $value session值
+* @return mixed
+*/
+declare  function session(name:string, value?):any
+
+/**
+* 获取Token令牌
+* @param string $name 令牌名称
+* @param mixed  $type 令牌生成方法
+* @return string
+*/
+declare function token(name?:string, type?:string): string
+
+/**
+* 生成令牌隐藏表单
+* @param string $name 令牌名称
+* @param mixed  $type 令牌生成方法
+* @return string
+*/
+declare function token_field(name?:string, type?:string): string
+
+/**
+* 生成令牌meta
+* @param string $name 令牌名称
+* @param mixed  $type 令牌生成方法
+* @return string
+*/
+declare function token_meta(name?:string, type?:string): string
+
+/**
+* 记录日志信息
+* @param mixed  $log   log信息 支持字符串和数组
+* @param string $level 日志级别
+* @return array|void
+*/
+declare function trace(log?:string, level?:string ):array
+
+declare interface UrlBuild{};
+declare interface Validate{};
+
+/**
+* Url生成
+* @param string      $url    路由地址
+* @param array       $vars   变量
+* @param bool|string $suffix 生成的URL后缀
+* @param bool|string $domain 域名
+* @return UrlBuild
+*/
+declare function url(url:string, vars?:array, suffix?:boolean, domain?:boolean): UrlBuild;
+
+/**
+* 生成验证对象
+* @param string|array $validate      验证器类名或者验证规则数组
+* @param array        $message       错误提示信息
+* @param bool         $batch         是否批量验证
+* @param bool         $failException 是否抛出异常
+* @return Validate
+*/
+declare function validate(validate:string, message?:array, batch?:boolean, failException?:boolean): Validate;
+
+/**
+* 渲染模板输出
+* @param string   $template 模板文件
+* @param array    $vars     模板变量
+* @param int      $code     状态码
+* @param callable $filter   内容过滤
+* @return \think\response\View
+*/
+declare function view(template?:string, vars?:array, code?:number, filter:(...args)=>boolean): server.http.View;
+
+/**
+* 渲染模板输出
+* @param string   $content 渲染内容
+* @param array    $vars    模板变量
+* @param int      $code    状态码
+* @param callable $filter  内容过滤
+* @return \think\response\View
+*/
+declare function display(content?:string, vars?:array, code?:number, filter:(...args)=>boolean): server.http.View
+
+/**
+* 获取\think\response\Xml对象实例
+* @param mixed $data    返回的数据
+* @param int   $code    状态码
+* @param array $header  头部
+* @param array $options 参数
+* @return \think\response\Xml
+*/
+declare function xml(data:array, code?:number, header?:{[key:string]:string}, options?:array): server.http.Xml
+
+/**
+* 获取当前应用目录
+*
+* @param string $path
+* @return string
+*/
+declare function app_path(path?:string):string
+
+/**
+* 获取应用基础目录
+*
+* @param string $path
+* @return string
+*/
+declare function base_path(path?:string):string
+
+/**
+* 获取应用配置目录
+*
+* @param string $path
+* @return string
+*/
+declare function config_path(path?:string):string
+
+/**
+* 获取web根目录
+*
+* @param string $path
+* @return string
+*/
+declare function public_path(path?:string):string
+
+/**
+* 获取应用运行时目录
+*
+* @param string $path
+* @return string
+*/
+declare function runtime_path(path?:string):string
+
+/**
+* 获取项目根目录
+*
+* @param string $path
+* @return string
+*/
+declare function root_path(path?:string):string

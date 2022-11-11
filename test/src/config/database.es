@@ -1,6 +1,3 @@
-
-import server.utils.env;
-
 // 默认使用的数据库连接配置
 export const driver = env('database.driver', 'mysql');
 
