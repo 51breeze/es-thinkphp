@@ -276,7 +276,7 @@ package server.database{
         fields_cache?:boolean
     }
 
-    import server.database.concern.BaseQuery;
+    import server.database.concern.Query;
     declare interface Convenient{
 
         /**
@@ -284,14 +284,14 @@ package server.database{
         * @param $table
         * @return BaseQuery
         */
-        public table(table):BaseQuery
+        public table(table):Query
 
         /**
         * 指定表名开始查询(不带前缀)
         * @param $name
         * @return BaseQuery
         */
-        public name(name):BaseQuery
+        public name(name):Query
 
         /**
         * 执行数据库事务
@@ -590,12 +590,213 @@ package server.database{
     }
 }
 
+package server.database.model{
+
+    declare interface Model{
+
+    }
+}
+
 package server.database.concern{
 
     declare type FindDataItemType = string | number;
     declare type FindDataType = FindDataItemType | FindDataItemType[];
+   
 
-    declare class BaseQuery{
+    import server.database.model.Model;
+
+    /**
+    * 模型及关联查询
+    */
+    declare interface ModelRelationQuery{
+
+        /**
+        * 指定模型
+        * @access public
+        * @param Model $model 模型对象实例
+        * @return $this
+        */
+        model(model:Model):this
+    
+
+        /**
+        * 获取当前的模型对象
+        * @access public
+        * @return Model|null
+        */
+        getModel():Model|null;
+    
+
+        /**
+        * 设置需要隐藏的输出属性
+        * @access public
+        * @param  array $hidden   属性列表
+        * @return $this
+        */
+        hidden(hidden?:array):this
+    
+    
+        /**
+        * 设置需要输出的属性
+        * @access public
+        * @param  array $visible
+        * @return $this
+        */
+        visible(visible?:array):this
+    
+        /**
+        * 设置需要附加的输出属性
+        * @access public
+        * @param  array $append   属性列表
+        * @return $this
+        */
+        append(append?:array):this
+    
+
+        /**
+        * 添加查询范围
+        * @access public
+        * @param array|string|Closure $scope 查询范围定义
+        * @param array                $args  参数
+        * @return $this
+        */
+        scope(scope:string | array | ((...args)=>void), ...args):this
+    
+
+        /**
+        * 设置关联查询
+        * @access public
+        * @param array $relation 关联名称
+        * @return $this
+        */
+        relation(relation:array):this
+
+        /**
+        * 使用搜索器条件搜索字段
+        * @access public
+        * @param string|array  $fields 搜索字段
+        * @param mixed         $data   搜索数据
+        * @param string        $prefix 字段前缀标识
+        * @return $this
+        */
+        withSearch(fields:string|array, data?:any, prefix?:string):this
+    
+
+        /**
+        * 设置数据字段获取器
+        * @access public
+        * @param string|array  $name     字段名
+        * @param callable      $callback 闭包获取器
+        * @return $this
+        */
+        withAttr(name:string|array, callback?:(...args)=>void):this
+    
+
+        /**
+        * 关联预载入 In方式
+        * @access public
+        * @param array|string $with 关联方法名称
+        * @return $this
+        */
+        with(withs:string|array):this;
+
+        /**
+        * 关联预载入 JOIN方式
+        * @access protected
+        * @param array|string $with     关联方法名
+        * @param string       $joinType JOIN方式
+        * @return $this
+        */
+        withJoin(withs:string|array, joinType?:string):this
+
+        /**
+        * 关联缓存
+        * @access public
+        * @param string|array|bool $relation 关联方法名
+        * @param mixed             $key    缓存key
+        * @param integer|\DateTime $expire 缓存有效期
+        * @param string            $tag    缓存标签
+        * @return $this
+        */
+        withCache(relation?:string|array|boolean, key?:any, expire?:string|number, tag?:string):this
+    
+
+        /**
+        * 关联统计
+        * @access public
+        * @param string|array $relation 关联方法名
+        * @param bool         $subQuery 是否使用子查询
+        * @return $this
+        */
+        withCount(relation:string|array, subQuery?:boolean):this
+
+        /**
+        * 关联统计Sum
+        * @access public
+        * @param string|array $relation 关联方法名
+        * @param string       $field    字段
+        * @param bool         $subQuery 是否使用子查询
+        * @return $this
+        */
+        withSum(relation:string|array, field:string, subQuery?:boolean):this
+
+        /**
+        * 关联统计Max
+        * @access public
+        * @param string|array $relation 关联方法名
+        * @param string       $field    字段
+        * @param bool         $subQuery 是否使用子查询
+        * @return $this
+        */
+        withMax(relation:string|array, field:string, subQuery?:boolean):this
+
+        /**
+        * 关联统计Min
+        * @access public
+        * @param string|array $relation 关联方法名
+        * @param string       $field    字段
+        * @param bool         $subQuery 是否使用子查询
+        * @return $this
+        */
+        withMin(relation:string|array, field:string, subQuery?:boolean):this
+
+        /**
+        * 关联统计Avg
+        * @access public
+        * @param string|array $relation 关联方法名
+        * @param string       $field    字段
+        * @param bool         $subQuery 是否使用子查询
+        * @return $this
+        */
+        withAvg(relation:string|array, field:string, subQuery?:boolean):this
+
+        /**
+        * 根据关联条件查询当前模型
+        * @access public
+        * @param  string  $relation 关联方法名
+        * @param  mixed   $operator 比较操作符
+        * @param  integer $count    个数
+        * @param  string  $id       关联表的统计字段
+        * @param  string  $joinType JOIN类型
+        * @return $this
+        */
+        has(relation:string|array, operator='>=', count = 1, id = '*', joinType = '')
+
+        /**
+        * 根据关联条件查询当前模型
+        * @access public
+        * @param  string $relation 关联方法名
+        * @param  mixed  $where    查询条件（数组或者闭包）
+        * @param  mixed  $fields   字段
+        * @param  string $joinType JOIN类型
+        * @return $this
+        */
+        hasWhere(relation:string, where?:array|(name?:string)=>void, fields?:string, joinType?:string) 
+
+    }
+
+
+    declare class BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,ResultOperation,Transaction,ModelRelationQuery{
 
         /**
         * 创建一个新的查询对象
@@ -920,7 +1121,7 @@ package server.database.concern{
         * @param string $name 参数名
         * @return mixed
         */
-        public getOptions(name = ''):any
+        public getOptions(name:string):any
 
         /**
         * 设置当前的查询参数
@@ -929,7 +1130,7 @@ package server.database.concern{
         * @param mixed  $value  参数值
         * @return $this
         */
-        public setOption( option:string, value:any):this
+        public setOption(option:string, value:any):this
 
         /**
         * 设置当前字段添加的表别名
@@ -937,7 +1138,7 @@ package server.database.concern{
         * @param string $via 临时表别名
         * @return $this
         */
-        public via( via:string = ''):this
+        public via( via:string ):this
 
         /**
         * 保存记录 自动判断insert或者update
@@ -946,8 +1147,7 @@ package server.database.concern{
         * @param bool  $forceInsert 是否强制insert
         * @return integer
         */
-        public save( data:array = [],forceInsert:boolean = false):int
-
+        public save(data?:array,forceInsert:boolean = false):int
 
         /**
         * 插入记录
@@ -956,8 +1156,7 @@ package server.database.concern{
         * @param boolean $getLastInsID 返回自增主键
         * @return integer|string
         */
-        public insert(data:array = [], getLastInsID:boolean=false):int | string
-
+        public insert(data:array, getLastInsID:boolean=false):int | string
 
         /**
         * 插入记录并获取自增ID
@@ -974,9 +1173,8 @@ package server.database.concern{
         * @param integer $limit   每次写入数据限制
         * @return integer
         */
-        public insertAll( dataSet:array = [], limit:int = 0): int
+        public insertAll(dataSet:array, limit:int = 0): int
     
-
         /**
         * 通过Select方式插入记录
         * @access public
@@ -993,7 +1191,7 @@ package server.database.concern{
         * @return integer
         * @throws Exception
         */
-        public update( data:array = []): int
+        public update(data?:array): int
         
 
         /**
@@ -1003,7 +1201,7 @@ package server.database.concern{
         * @return int
         * @throws Exception
         */
-        public delete(data = null): int
+        public delete(data?): int
     
 
         /**
@@ -1015,7 +1213,7 @@ package server.database.concern{
         * @throws ModelNotFoundException
         * @throws DataNotFoundException
         */
-        public select(data = null): server.components.Collection
+        public select(data?): server.components.Collection
     
 
         /**
@@ -1070,7 +1268,7 @@ package server.database.concern{
     /**
     * PDO数据查询类
     */
-    declare class Query extends BaseQuery implements JoinAndViewQuery,JoinAndViewQuery{
+    declare class Query extends BaseQuery implements JoinAndViewQuery,ParamsBind,TableFieldInfo{
 
 
         /**
@@ -1080,7 +1278,7 @@ package server.database.concern{
         * @param array  $bind  参数绑定
         * @return $this
         */
-        orderRaw(field:string, bind?:[]):this
+        orderRaw(field:string, bind?:any[]):this
         
 
         /**
@@ -1345,7 +1543,7 @@ package server.database.concern{
     declare type QueryWhereExpressionType = '=' | '<>' | '<' | '<=' | '>' | '>=' | 'REGEXP' | 'NOT REGEXP' | 'regexp' | 'not regexp';
     declare type QueryWhereFieldValueType = string | number | null | Raw;
     declare type QueryWhereFieldWrapType = [string, QueryWhereExpressionType, QueryWhereFieldValueType]
-    declare type QueryWhereFieldType = string | Raw | QueryWhereFieldWrapType[] | (query:BaseQuery)=>void;
+    declare type QueryWhereFieldType = string | Raw | QueryWhereFieldWrapType[] | {[key:string]:QueryWhereFieldValueType} | (query:BaseQuery)=>void;
     declare type QueryWhereFieldQuickType = string;
     declare type QueryWhereLogicType = 'AND' | 'OR' | 'XOR' | 'and' | 'or' | 'xor' ;
     declare class Raw{
@@ -1660,41 +1858,6 @@ package server.database.concern{
         */
         failException(fail?:boolean):this;
 
-        /**
-        * 处理数据
-        * @access protected
-        * @param array $result 查询数据
-        * @return void
-        */
-        protected result(result:any[]): void
-
-        /**
-        * 处理数据集
-        * @access public
-        * @param array $resultSet 数据集
-        * @param bool  $toCollection 是否转为对象
-        * @return void
-        */
-        protected resultSet(resultSet:any[], toCollection?:boolean): void
-
-        /**
-        * 使用获取器处理数据
-        * @access protected
-        * @param array $result   查询数据
-        * @param array $withAttr 字段获取器
-        * @return void
-        */
-        protected getResultAttr(result:any[], withAttr?:array): void
-
-        /**
-        * 处理空数据
-        * @access protected
-        * @return array|Model|null|static
-        * @throws DbException
-        * @throws ModelNotFoundException
-        * @throws DataNotFoundException
-        */
-        protected resultToEmpty()
 
         /**
         * 查找单条记录 不存在返回空数据（或者空模型）
@@ -1702,27 +1865,7 @@ package server.database.concern{
         * @param mixed $data 数据
         * @return array|Model|static|mixed
         */
-        public findOrEmpty(data?:any)
-
-
-        /**
-        * JSON字段数据转换
-        * @access protected
-        * @param array $result 查询数据
-        * @return void
-        */
-        protected jsonResult(result:array): void
-
-
-        /**
-        * 查询失败 抛出异常
-        * @access protected
-        * @return void
-        * @throws ModelNotFoundException
-        * @throws DataNotFoundException
-        */
-        protected throwNotFound(): void
-
+        findOrEmpty(data?:any):any;
 
         /**
         * 查找多条记录 如果不存在则抛出异常
@@ -1732,8 +1875,7 @@ package server.database.concern{
         * @throws ModelNotFoundException
         * @throws DataNotFoundException
         */
-        public selectOrFail(data?:any)
-
+        selectOrFail(data?:any):any
 
         /**
         * 查找单条记录 如果不存在则抛出异常
@@ -1743,8 +1885,7 @@ package server.database.concern{
         * @throws ModelNotFoundException
         * @throws DataNotFoundException
         */
-        public findOrFail(data?:FindDataType|Query|(()=>any))
-
+        findOrFail(data?:FindDataType|Query|(()=>any)):any;
     }
 
     declare type JoinTableType = string | [] | Raw;
@@ -1860,12 +2001,58 @@ package server.database.concern{
 }
 
 
-
 package server.database.concern{
 
-    import server.database.concern.BaseQuery;
+    /**
+    * 参数绑定支持
+    */
+    declare interface ParamsBind{
 
-    declare class WhereQuery{
+        /**
+        * 批量参数绑定
+        * @access public
+        * @param array $value 绑定变量值
+        * @return $this
+        */
+        bind(value:array):this
+
+        /**
+        * 单个参数绑定
+        * @access public
+        * @param mixed   $value 绑定变量值
+        * @param integer $type  绑定类型
+        * @param string  $name  绑定标识
+        * @return string
+        */
+        bindValue(value, type?:int, name?:string):string
+
+        /**
+        * 检测参数是否已经绑定
+        * @access public
+        * @param string $key 参数名
+        * @return bool
+        */
+        isBind(key:string):boolean
+
+        /**
+        * 参数绑定
+        * @access public
+        * @param string $sql  绑定的sql表达式
+        * @param array  $bind 参数绑定
+        * @return void
+        */
+        bindParams(sql:string, bind:array): void
+
+        /**
+        * 获取绑定的参数 并清空
+        * @access public
+        * @param bool $clear 是否清空绑定数据
+        * @return array
+        */
+        getBind(clear?:boolean): array
+    }
+
+    declare interface WhereQuery{
 
         /**
         * 指定AND查询条件
@@ -1877,14 +2064,6 @@ package server.database.concern{
         */
         where(field:QueryWhereFieldType, op?:QueryWhereExpressionType, condition?:QueryWhereFieldValueType):this;
     
-
-        /**
-        * 解析Query对象查询条件
-        * @access public
-        * @param BaseQuery $query 查询对象
-        * @return void
-        */
-        protected parseQueryWhere(query:BaseQuery): void
         
         /**
         * 指定OR查询条件
@@ -2112,25 +2291,6 @@ package server.database.concern{
         * @return array
         */
         parseWhereItem(logic:QueryWhereLogicType, field:QueryWhereFieldType, op:QueryWhereExpressionType, condition:QueryWhereFieldValueType, param?:[]): array
-    
-
-        /**
-        * 相等查询的主键处理
-        * @access protected
-        * @param string $field 字段名
-        * @param mixed  $value 字段值
-        * @return array
-        */
-        protected whereEq(field:string, value:QueryWhereFieldValueType): array
-    
-        /**
-        * 数组批量查询
-        * @access protected
-        * @param array  $field 批量查询
-        * @param string $logic 查询逻辑 and or xor
-        * @return $this
-        */
-        protected parseArrayWhereItems(field:{[key:string]:QueryWhereFieldValueType}[], logic:QueryWhereLogicType):this
     
 
         /**
