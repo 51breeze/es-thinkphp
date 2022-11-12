@@ -1,6 +1,5 @@
 @Reference('./DbManager.d.es');
 @Reference('./Config.d.es');
-@Reference('./Convenient.d.es');
 @Reference('./concern/BaseQuery.d.es');
 @Reference('../../psr/CacheInterface.d.es');
 
@@ -9,14 +8,64 @@ package server.database;
 import server.database.concern.BaseQuery;
 import server.psr.CacheInterface;
 
-declare interface Connection implements Convenient{
+declare interface Connection<QC=BaseQuery>{
+
+      /**
+      * 指定表名开始查询
+      * @param $table
+      * @return BaseQuery
+      */
+      table(table):QC
+
+      /**
+      * 指定表名开始查询(不带前缀)
+      * @param $name
+      * @return BaseQuery
+      */
+      name(name):QC
+
+      /**
+      * 执行数据库事务
+      * @access public
+      * @param callable $callback 数据操作方法回调
+      * @return mixed
+      */
+      transaction<T>(callback:(connection:Connection)=>T):T;
+
+      /**
+      * 启动事务
+      * @access public
+      * @return void
+      */
+      startTrans();
+
+      /**
+      * 用于非自动提交状态下面的查询提交
+      * @access public
+      * @return void
+      */
+      commit();
+
+      /**
+      * 事务回滚
+      * @access public
+      * @return void
+      */
+      rollback();
+
+      /**
+      * 获取最近一次查询的sql语句
+      * @access public
+      * @return string
+      */
+      getLastSql(): string;
 
       /**
       * 获取当前连接器类对应的Query类
       * @access public
       * @return string
       */
-      public getQueryClass<T>(): class<T>;
+      getQueryClass<T=QC>(): class<T>;
 
       /**
       * 连接数据库方法
@@ -25,7 +74,7 @@ declare interface Connection implements Convenient{
       * @param integer $linkNum 连接序号
       * @return mixed
       */
-      public connect(config?:Config, linkNum:int = 0);
+      connect(config?:Config, linkNum:int = 0);
 
       /**
       * 设置当前的数据库Db对象
@@ -33,7 +82,7 @@ declare interface Connection implements Convenient{
       * @param DbManager $db
       * @return void
       */
-      public setDb(db:DbManager);
+      setDb(db:DbManager);
 
       /**
       * 设置当前的缓存对象
@@ -41,7 +90,7 @@ declare interface Connection implements Convenient{
       * @param CacheInterface $cache
       * @return void
       */
-      public setCache(cache:CacheInterface);
+      setCache(cache:CacheInterface);
 
       /**
       * 获取数据库的配置参数
@@ -49,14 +98,14 @@ declare interface Connection implements Convenient{
       * @param string $config 配置名称
       * @return mixed
       */
-      public getConfig(config?:string):Config
+      getConfig(config?:string):Config
 
       /**
       * 关闭数据库（或者重新连接）
       * @access public
       * @return $this
       */
-      public close():this
+      close():this
 
       /**
       * 查找单条记录
@@ -64,7 +113,7 @@ declare interface Connection implements Convenient{
       * @param BaseQuery $query 查询对象
       * @return array
       */
-      public find(query:BaseQuery): array;
+      find(query:QC): array;
 
       /**
       * 查找记录
@@ -72,7 +121,7 @@ declare interface Connection implements Convenient{
       * @param BaseQuery $query 查询对象
       * @return array
       */
-      public select(query:BaseQuery): array;
+      select(query:QC): array;
 
       /**
       * 插入记录
@@ -81,7 +130,7 @@ declare interface Connection implements Convenient{
       * @param boolean $getLastInsID 返回自增主键
       * @return mixed
       */
-      public insert(query:BaseQuery, getLastInsID?:boolean);
+      insert(query:QC, getLastInsID?:boolean);
 
       /**
       * 批量插入记录
@@ -90,7 +139,7 @@ declare interface Connection implements Convenient{
       * @param mixed   $dataSet 数据集
       * @return integer
       */
-      public insertAll(query:BaseQuery, dataSet?:array): int;
+      insertAll(query:QC, dataSet?:array): int;
 
       /**
       * 更新记录
@@ -98,7 +147,7 @@ declare interface Connection implements Convenient{
       * @param BaseQuery $query 查询对象
       * @return integer
       */
-      public update(query:BaseQuery): int;
+      update(query:QC): int;
 
       /**
       * 删除记录
@@ -106,7 +155,7 @@ declare interface Connection implements Convenient{
       * @param BaseQuery $query 查询对象
       * @return int
       */
-      public delete(query:BaseQuery): int;
+      delete(query:QC): int;
 
       /**
       * 得到某个字段的值
@@ -116,7 +165,7 @@ declare interface Connection implements Convenient{
       * @param mixed  $default 默认值
       * @return mixed
       */
-      public value(query:BaseQuery, field:string, defaultValue:any = null);
+      value(query:QC, field:string, defaultValue:any = null);
 
       /**
       * 得到某个列的数组
@@ -126,7 +175,7 @@ declare interface Connection implements Convenient{
       * @param string $key    索引
       * @return array
       */
-      public column(query:BaseQuery, column:string | array, key?:string): array;
+      column(query:QC, column:string | array, key?:string): array;
 }
 
 declare interface PDOStatement{}

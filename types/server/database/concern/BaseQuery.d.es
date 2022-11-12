@@ -10,7 +10,7 @@
 
 package server.database.concern;
 
-declare class BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,ResultOperation,Transaction,ModelRelationQuery{
+declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,ResultOperation,Transaction,ModelRelationQuery{
 
       /**
       * 创建一个新的查询对象

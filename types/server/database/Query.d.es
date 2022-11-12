@@ -3,7 +3,6 @@
 @Reference('./concern/ParamsBind.d.es');
 @Reference('./concern/TableFieldInfo.d.es');
 
-
 package server.database;
 
 import server.database.concern.BaseQuery;
@@ -14,7 +13,7 @@ import server.database.concern.TableFieldInfo;
 /**
 * PDO数据查询类
 */
-declare class Query extends BaseQuery implements JoinAndViewQuery,ParamsBind,TableFieldInfo{
+declare interface Query extends BaseQuery implements JoinAndViewQuery,ParamsBind,TableFieldInfo{
 
 
       /**

@@ -2,10 +2,6 @@
 
 package server.database.concern;
 
-declare type FindDataItemType = string | number;
-declare type FindDataType = FindDataItemType | FindDataItemType[];
-   
-
 import server.database.Model;
 
 /**
