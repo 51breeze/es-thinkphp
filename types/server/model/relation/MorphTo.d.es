@@ -76,7 +76,7 @@ declare class MorphTo extends Relation
      * @param  ?Query $query Query对象
      * @return Query
      */
-    hasWhere(where?:MappingType<string|number>, fields?:MappingType<string>, joinType?:string, query?:Query): Query
+    hasWhere(where?:ArrayMappingType<string|number>, fields?:ArrayMappingType<string>, joinType?:string, query?:Query): Query
     
 
     /**
@@ -113,7 +113,7 @@ declare class MorphTo extends Relation
      * @return void
      * @throws Exception
      */
-    eagerlyResultSet(resultSet:MappingType<ScalarValueType>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
+    eagerlyResultSet(resultSet:ArrayMappingType<ScalarValueType>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
 
     /**
      * 预载入关联查询

@@ -59,7 +59,7 @@ declare class MorphMany extends Relation
      * @param  array   $cache       关联缓存
      * @return void
      */
-    eagerlyResultSet(resultSet:MappingType<ScalarValueType>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
+    eagerlyResultSet(resultSet:ArrayMappingType<ScalarValueType>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
     
     /**
      * 预载入关联查询
@@ -105,7 +105,7 @@ declare class MorphMany extends Relation
      * @param  array   $cache       关联缓存
      * @return array
      */
-    protected eagerlyMorphToMany(where:MappingType<string|number>, subRelation?:string[], closure?:Function, cache?:array): MappingType<string|number>
+    protected eagerlyMorphToMany(where:ArrayMappingType<string|number>, subRelation?:string[], closure?:Function, cache?:array): ArrayMappingType<string|number>
    
 
     /**
@@ -115,7 +115,7 @@ declare class MorphMany extends Relation
      * @param  bool  $replace 是否自动识别更新和写入
      * @return Model|false
      */
-    save(data:Model | MappingType<ScalarValueType>, replace?:boolean ):Model|false
+    save(data:Model | ArrayMappingType<ScalarValueType>, replace?:boolean ):Model|false
     
 
     /**
@@ -123,7 +123,7 @@ declare class MorphMany extends Relation
      * @param array|Model $data
      * @return Model
      */
-    make(data?:Model | MappingType<ScalarValueType>): Model
+    make(data?:Model | ArrayMappingType<ScalarValueType>): Model
 
     /**
      * 批量保存当前关联数据对象
@@ -132,7 +132,7 @@ declare class MorphMany extends Relation
      * @param  boolean  $replace 是否自动识别更新和写入
      * @return array|false
      */
-    saveAll(dataSet:MappingType<ScalarValueType>, replace?:boolean):MappingType<ScalarValueType>|false
+    saveAll(dataSet:ArrayMappingType<ScalarValueType>, replace?:boolean):ArrayMappingType<ScalarValueType>|false
 
     /**
      * 获取多态关联外键

@@ -44,7 +44,7 @@ declare interface Attribute{
      * @param  array    $allow 允许的字段名
      * @return $this
      */
-    data(data:MappingType<ScalarValueType>, set?:boolean, allow?:string[]):this;
+    data(data:ArrayMappingType<ScalarValueType>, set?:boolean, allow?:string[]):this;
 
     /**
      * 批量追加数据对象值
@@ -53,7 +53,7 @@ declare interface Attribute{
      * @param  bool  $set   是否需要进行数据处理
      * @return $this
      */
-    appendData(data:MappingType<ScalarValueType>, set:boolean = false):this;
+    appendData(data:ArrayMappingType<ScalarValueType>, set:boolean = false):this;
 
     /**
      * 刷新对象原始数据（为当前数据）
@@ -85,7 +85,7 @@ declare interface Attribute{
      * @access public
      * @return array
      */
-    getChangedData(): MappingType<ScalarValueType>
+    getChangedData(): ArrayMappingType<ScalarValueType>
 
     /**
      * 直接设置数据对象值
@@ -102,7 +102,7 @@ declare interface Attribute{
      * @param  array $data  数据
      * @return void
      */
-    setAttrs(data:MappingType<ScalarValueType>): void
+    setAttrs(data:ArrayMappingType<ScalarValueType>): void
 
 
     /**
@@ -113,7 +113,7 @@ declare interface Attribute{
      * @param  array  $data  数据
      * @return void
      */
-    setAttr(name:string, value:ScalarValueType, data?:MappingType<ScalarValueType>): void
+    setAttr(name:string, value:ScalarValueType, data?:ArrayMappingType<ScalarValueType>): void
     
    
     /**

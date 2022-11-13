@@ -68,14 +68,14 @@ declare class OneToOne extends Relation
      * @param  boolean $replace 是否自动识别更新和写入
      * @return Model|false
      */
-    save(data:MappingType<ScalarValueType>|Model, replace = true):Model|false
+    save(data:ArrayMappingType<ScalarValueType>|Model, replace = true):Model|false
 
     /**
      * 创建关联对象实例
      * @param array|Model $data
      * @return Model
      */
-    make(data?:MappingType<ScalarValueType>|Model): Model
+    make(data?:ArrayMappingType<ScalarValueType>|Model): Model
 
 
     /**
@@ -84,14 +84,14 @@ declare class OneToOne extends Relation
      * @param  array $attr 要绑定的属性列表
      * @return $this
      */
-    bind(attr:MappingType<ScalarValueType>):this
+    bind(attr:ArrayMappingType<ScalarValueType>):this
 
     /**
      * 获取绑定属性
      * @access public
      * @return array
      */
-    getBindAttr(): MappingType<ScalarValueType>
+    getBindAttr(): ArrayMappingType<ScalarValueType>
 
     /**
      * 一对一 关联模型预查询拼装

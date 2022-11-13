@@ -64,7 +64,7 @@ declare class BelongsToMany extends Relation
      * @return Pivot
      * @throws Exception
      */
-    protected newPivot(data:MappingType<ScalarValueType>):Pivot
+    protected newPivot(data:ArrayMappingType<ScalarValueType>):Pivot
 
     /**
      * 延迟获取关联数据
@@ -81,7 +81,7 @@ declare class BelongsToMany extends Relation
      * @param  Model    $result 模型对象
      * @return array
      */
-    protected matchPivot(result:Model): MappingType<ScalarValueType>
+    protected matchPivot(result:Model): ArrayMappingType<ScalarValueType>
 
     /**
      * 根据关联条件查询当前模型
@@ -115,7 +115,7 @@ declare class BelongsToMany extends Relation
      * @param  array   $cache       关联缓存
      * @return void
      */
-    eagerlyResultSet(resultSet:MappingType<ScalarValueType>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
+    eagerlyResultSet(resultSet:ArrayMappingType<ScalarValueType>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
    
 
     /**
@@ -162,7 +162,7 @@ declare class BelongsToMany extends Relation
      * @param  array   $cache       关联缓存
      * @return array
      */
-    protected eagerlyManyToMany(where:MappingType<ScalarValueType>, subRelation?:string[], closure?:Function, cache?:array): array
+    protected eagerlyManyToMany(where:ArrayMappingType<ScalarValueType>, subRelation?:string[], closure?:Function, cache?:array): array
     
     /**
      * BELONGS TO MANY 关联查询
@@ -172,7 +172,7 @@ declare class BelongsToMany extends Relation
      * @param  array  $condition  关联查询条件
      * @return Query
      */
-    protected belongsToManyQuery(foreignKey:string, localKey:string, condition?:MappingType<ScalarValueType>): Query
+    protected belongsToManyQuery(foreignKey:string, localKey:string, condition?:ArrayMappingType<ScalarValueType>): Query
 
     /**
      * 保存（新增）当前关联数据对象
@@ -181,7 +181,7 @@ declare class BelongsToMany extends Relation
      * @param  array $pivot 中间表额外数据
      * @return array|Pivot
      */
-    save(data:MappingType<ScalarValueType>, pivot?:MappingType<ScalarValueType> ):MappingType<ScalarValueType>|Pivot
+    save(data:ArrayMappingType<ScalarValueType>, pivot?:ArrayMappingType<ScalarValueType> ):ArrayMappingType<ScalarValueType>|Pivot
 
     /**
      * 批量保存当前关联数据对象
@@ -191,7 +191,7 @@ declare class BelongsToMany extends Relation
      * @param  bool     $samePivot 额外数据是否相同
      * @return array|false
      */
-    saveAll(dataSet:MappingType<ScalarValueType>, pivot?:MappingType<ScalarValueType>, samePivot?:boolean):MappingType<ScalarValueType>|false
+    saveAll(dataSet:ArrayMappingType<ScalarValueType>, pivot?:ArrayMappingType<ScalarValueType>, samePivot?:boolean):ArrayMappingType<ScalarValueType>|false
 
     /**
      * 附加关联的一个中间表数据
@@ -201,7 +201,7 @@ declare class BelongsToMany extends Relation
      * @return array|Pivot
      * @throws Exception
      */
-    attach(data:MappingType<ScalarValueType>, pivot?:MappingType<ScalarValueType>):MappingType<ScalarValueType>|Pivot
+    attach(data:ArrayMappingType<ScalarValueType>, pivot?:ArrayMappingType<ScalarValueType>):ArrayMappingType<ScalarValueType>|Pivot
 
     /**
      * 判断是否存在关联数据
@@ -218,7 +218,7 @@ declare class BelongsToMany extends Relation
      * @param  bool          $relationDel 是否同时删除关联表数据
      * @return integer
      */
-    detach(data?:Model|ScalarValueType|MappingType<ScalarValueType>, relationDel?:boolean): int
+    detach(data?:Model|ScalarValueType|ArrayMappingType<ScalarValueType>, relationDel?:boolean): int
     
     /**
      * 数据同步
@@ -227,10 +227,10 @@ declare class BelongsToMany extends Relation
      * @param  bool  $detaching
      * @return array
      */
-    sync(ids:MappingType<ScalarValueType>, detaching?:boolean): {
-        attached:MappingType<ScalarValueType>,
-        detached:MappingType<ScalarValueType>,
-        updated:MappingType<ScalarValueType>,
+    sync(ids:ArrayMappingType<ScalarValueType>, detaching?:boolean): {
+        attached:ArrayMappingType<ScalarValueType>,
+        detached:ArrayMappingType<ScalarValueType>,
+        updated:ArrayMappingType<ScalarValueType>,
     }
    
     /**

@@ -73,7 +73,7 @@ declare class HasManyThrough extends Relation{
      * @param  Query  $query    Query对象
      * @return Query
      */
-    hasWhere(where?:MappingType<string|number>, fields?:MappingType<string>, joinType?:string, query?:Query): Query
+    hasWhere(where?:ArrayMappingType<string|number>, fields?:ArrayMappingType<string>, joinType?:string, query?:Query): Query
 
     /**
      * 预载入关联查询（数据集）
@@ -85,7 +85,7 @@ declare class HasManyThrough extends Relation{
      * @param  array   $cache       关联缓存
      * @return void
      */
-    eagerlyResultSet(resultSet:MappingType<ScalarValueType>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
+    eagerlyResultSet(resultSet:ArrayMappingType<ScalarValueType>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
 
     /**
      * 预载入关联查询（数据）
@@ -109,7 +109,7 @@ declare class HasManyThrough extends Relation{
      * @param  array   $cache       关联缓存
      * @return array
      */
-    protected eagerlyWhere(where:MappingType<string|number>, key:string, subRelation?:string[], closure?:Function, cache?:array): MappingType<string|number>
+    protected eagerlyWhere(where:ArrayMappingType<string|number>, key:string, subRelation?:string[], closure?:Function, cache?:array): ArrayMappingType<string|number>
     
 
     /**

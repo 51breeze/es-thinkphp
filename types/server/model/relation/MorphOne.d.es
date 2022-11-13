@@ -69,7 +69,7 @@ declare class MorphOne extends Relation
      * @param  array   $cache       关联缓存
      * @return void
      */
-    eagerlyResultSet(resultSet:MappingType<ScalarValueType>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
+    eagerlyResultSet(resultSet:ArrayMappingType<ScalarValueType>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
 
     /**
      * 预载入关联查询
@@ -92,7 +92,7 @@ declare class MorphOne extends Relation
      * @param  array   $cache       关联缓存
      * @return array
      */
-    protected eagerlyMorphToOne(where:MappingType<string|number>, subRelation?:string[], closure?:Function, cache?:array): MappingType<string|number>
+    protected eagerlyMorphToOne(where:ArrayMappingType<string|number>, subRelation?:string[], closure?:Function, cache?:array): ArrayMappingType<string|number>
 
         /**
      * 保存（新增）当前关联数据对象
@@ -101,7 +101,7 @@ declare class MorphOne extends Relation
      * @param  bool  $replace 是否自动识别更新和写入
      * @return Model|false
      */
-    save(data:Model | MappingType<ScalarValueType>, replace?:boolean ):Model|false
+    save(data:Model | ArrayMappingType<ScalarValueType>, replace?:boolean ):Model|false
     
 
     /**
@@ -109,7 +109,7 @@ declare class MorphOne extends Relation
      * @param array|Model $data
      * @return Model
      */
-    make(data?:Model | MappingType<ScalarValueType>): Model
+    make(data?:Model | ArrayMappingType<ScalarValueType>): Model
 
     /**
      * 执行基础查询（进执行一次）
@@ -124,14 +124,14 @@ declare class MorphOne extends Relation
      * @param  array $attr 要绑定的属性列表
      * @return $this
      */
-    bind(attr:MappingType<ScalarValueType>):this
+    bind(attr:ArrayMappingType<ScalarValueType>):this
 
     /**
      * 获取绑定属性
      * @access public
      * @return array
      */
-    getBindAttr(): MappingType<ScalarValueType>
+    getBindAttr(): ArrayMappingType<ScalarValueType>
 
     /**
      * 绑定关联属性到父模型

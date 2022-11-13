@@ -23,7 +23,7 @@ declare interface Conversion{
      * @param  bool  $merge    是否合并
      * @return $this
      */
-    append(append:MappingType<ScalarValueType>, merge:boolean = false):this;
+    append(append:ArrayMappingType<ScalarValueType>, merge:boolean = false):this;
 
     /**
      * 设置输出层场景
@@ -42,7 +42,7 @@ declare interface Conversion{
      * @return $this
      * @throws Exception
      */
-    appendRelationAttr(attr:string, append:MappingType<ScalarValueType>):this;
+    appendRelationAttr(attr:string, append:ArrayMappingType<ScalarValueType>):this;
 
 
     /**
@@ -52,7 +52,7 @@ declare interface Conversion{
      * @param  bool  $merge    是否合并
      * @return $this
      */
-    hidden(hidden:MappingType<ScalarValueType>, merge = false):this;
+    hidden(hidden:ArrayMappingType<ScalarValueType>, merge = false):this;
 
 
     /**
@@ -62,7 +62,7 @@ declare interface Conversion{
      * @param  bool  $merge    是否合并
      * @return $this
      */
-    visible(visible:MappingType<ScalarValueType>, merge = false):this;
+    visible(visible:ArrayMappingType<ScalarValueType>, merge = false):this;
 
     /**
      * 设置属性的映射输出
@@ -70,7 +70,7 @@ declare interface Conversion{
      * @param  array $map
      * @return $this
      */
-    mapping(map:MappingType<ScalarValueType>):this;
+    mapping(map:ArrayMappingType<ScalarValueType>):this;
 
 
     /**
@@ -79,7 +79,7 @@ declare interface Conversion{
      * @return array
      */
     @Alias(toArray)
-    toValue(): MappingType<ScalarValueType>;
+    toValue(): ArrayMappingType<ScalarValueType>;
    
     /**
      * 转换当前模型对象为JSON字符串
