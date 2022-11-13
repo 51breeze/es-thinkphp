@@ -8,7 +8,7 @@ import server.database.concern.TableFieldInfo;
 /**
 * PDO数据查询类
 */
-declare interface Query extends BaseQuery implements JoinAndViewQuery,ParamsBind,TableFieldInfo{
+declare class Query extends BaseQuery implements JoinAndViewQuery,ParamsBind,TableFieldInfo{
 
 
       /**

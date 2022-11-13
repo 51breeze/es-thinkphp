@@ -14,7 +14,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @access public
       * @return ConnectionInterface
       */
-     // public getConnection():server.database.Connection
+      public getConnection():server.database.Connection
 
       /**
       * 指定当前数据表名（不含前缀）

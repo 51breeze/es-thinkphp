@@ -1,6 +1,6 @@
 package app.model;
 
-import server.database.Model;
+import server.model.Model;
 import server.facade.Db;
 
 class Person extends Model {

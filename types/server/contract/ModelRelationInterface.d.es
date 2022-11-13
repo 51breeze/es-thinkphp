@@ -1,11 +1,7 @@
-@Reference('../database/Collection.d.es');
-@Reference('../database/Model.d.es');
-@Reference('../database/Query.d.es');
-
 package server.contract;
 
 import server.database.Collection;
-import server.database.Model;
+import server.model.Model;
 import server.database.Query;
 
 /**

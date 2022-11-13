@@ -1,6 +1,6 @@
 package server.database.concern;
 
-import server.database.Model;
+import server.model.Model;
 
 /**
 * 模型及关联查询

@@ -1,14 +1,20 @@
-package server.database;
+package server.model;
 
 import server.database.concern.WhereQuery;
 import server.database.concern.WhereQueryFieldType;
 import server.database.concern.BaseQuery;
 
+import server.model.concern.Attribute;
+import server.model.concern.RelationShip;
+import server.model.concern.ModelEvent;
+import server.model.concern.TimeStamp;
+import server.model.concern.Conversion;
+
 /**
 * 模型基类，所有业务模型层都应该继承 Model 类
 */
 @Define(type=model);
-declare class Model{
+declare class Model implements Attribute,RelationShip,ModelEvent,TimeStamp,Conversion{
 
       protected name:string;
       protected table:string;
