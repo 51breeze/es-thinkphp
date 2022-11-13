@@ -1,8 +1,3 @@
-@Reference('./concern/BaseQuery.d.es');
-@Reference('./concern/JoinAndViewQuery.d.es');
-@Reference('./concern/ParamsBind.d.es');
-@Reference('./concern/TableFieldInfo.d.es');
-
 package server.database;
 
 import server.database.concern.BaseQuery;

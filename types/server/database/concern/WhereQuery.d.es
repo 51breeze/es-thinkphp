@@ -1,5 +1,3 @@
-@Reference('../Raw.d.es');
-
 package server.database.concern;
 
 declare type WhereQueryExpressionType = '=' | '<>' | '<' | '<=' | '>' | '>=' | 'REGEXP' | 'NOT REGEXP' | 'regexp' | 'not regexp';

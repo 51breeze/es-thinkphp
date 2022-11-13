@@ -1,6 +1,3 @@
-@Reference('./concern/WhereQuery.d.es');
-@Reference('./concern/BaseQuery.d.es');
-
 package server.database;
 
 import server.database.concern.WhereQuery;

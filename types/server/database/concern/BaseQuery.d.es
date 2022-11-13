@@ -1,16 +1,6 @@
-@Reference('../WhereQuery.d.es');
-@Reference('../TimeFieldQuery.d.es');
-@Reference('../AggregateQuery.d.es');
-@Reference('../ResultOperation.d.es');
-@Reference('../Transaction.d.es');
-@Reference('../ModelRelationQuery.d.es');
-@Reference('../Connection.d.es');
-@Reference('../Paginator.d.es');
-@Reference('../Collection.d.es');
-
 package server.database.concern;
 
-declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,ResultOperation,Transaction,ModelRelationQuery{
+declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,ResultOperation,ModelRelationQuery{
 
       /**
       * 创建一个新的查询对象
@@ -24,7 +14,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @access public
       * @return ConnectionInterface
       */
-      public getConnection():server.database.Connection
+     // public getConnection():server.database.Connection
 
       /**
       * 指定当前数据表名（不含前缀）
@@ -439,7 +429,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @throws ModelNotFoundException
       * @throws DataNotFoundException
       */
-      public find(data:FindDataType):any
+      public find(data:any):any
 
 
       /**
@@ -467,7 +457,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @return void
       * @throws Exception
       */
-      public parsePkWhere(data:FindDataType): void
+      public parsePkWhere(data:any): void
 
 
       /**

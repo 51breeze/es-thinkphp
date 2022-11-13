@@ -1,5 +1,3 @@
-@Reference('../WhereQuery.d.es');
-
 package server.database.concern;
 
 /**

@@ -1,7 +1,3 @@
-@Reference('./database/DbManager.d.es');
-@Reference('./database/Query.d.es');
-@Reference('./database/Connection.d.es');
-
 package server.facade;
  
 import server.database.DbManager 

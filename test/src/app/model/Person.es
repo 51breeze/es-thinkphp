@@ -1,7 +1,7 @@
 package app.model;
 
-import server.application.Model;
-import server.database.Db;
+import server.database.Model;
+import server.facade.Db;
 
 class Person extends Model {
     protected name:string = 'admin';

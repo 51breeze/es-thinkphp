@@ -1,5 +1,3 @@
-@Reference('../Raw.d.es');
-
 package server.database.concern;
 
 import server.database.Raw;

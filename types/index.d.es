@@ -1,3 +1,4 @@
+@Reference('es-php/types');
 @Reference('./server');
 
 declare type ScalarType = string | number | boolean | regexp;

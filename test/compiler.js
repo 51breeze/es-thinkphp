@@ -11,6 +11,7 @@ class Creator {
             autoLoadDescribeFile:true,
             output:path.join(__dirname,"./build"),
             workspace:path.join(__dirname,"./src"),
+            scanTypings:false,
             parser:{
                 locations:true
             }

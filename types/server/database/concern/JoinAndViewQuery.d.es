@@ -1,5 +1,3 @@
-@Reference('../Raw.d.es');
-
 package server.database.concern;
 
 declare type JoinTableType = string | [] | server.database.Raw;

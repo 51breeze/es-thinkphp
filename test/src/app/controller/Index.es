@@ -1,6 +1,6 @@
 package app.controller;
 
-import server.application.Controller;
+import server.kernel.Controller;
 
 import app.model.Person;
 

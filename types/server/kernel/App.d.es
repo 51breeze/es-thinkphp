@@ -1,5 +1,3 @@
-@Reference('./Container.d.es');
-
 package server.kernel;
 
 declare class App extends Container{

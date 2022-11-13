@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "test",
   "main": "index.js",
-  "typings": "./types",
+  "typings": "types/index.d.es",
   "scripts": {
     "init": "node ./test/init.js",
     "dev": "jasmine ./test/index.js",

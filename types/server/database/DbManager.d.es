@@ -1,14 +1,7 @@
-@Reference('../../psr/CacheInterface.d.es');
-@Reference('../../psr/LoggerInterface.d.es');
-@Reference('./Raw.d.es');
-@Reference('./Config.d.es');
-@Reference('./Connection.d.es');
-
 package server.database;
 
 import server.psr.CacheInterface;
 import server.psr.LoggerInterface;
-
 declare interface DbManager{
 
       /**

@@ -1,5 +1,3 @@
-@Reference('../kernel/Env.d.es');
-
 package server.http;
 
 declare class Request{

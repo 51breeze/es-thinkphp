@@ -1,8 +1,3 @@
-@Reference('./DbManager.d.es');
-@Reference('./Config.d.es');
-@Reference('./concern/BaseQuery.d.es');
-@Reference('../../psr/CacheInterface.d.es');
-
 package server.database;
 
 import server.database.concern.BaseQuery;

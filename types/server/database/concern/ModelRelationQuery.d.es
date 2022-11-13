@@ -1,5 +1,3 @@
-@Reference('../Model.d.es');
-
 package server.database.concern;
 
 import server.database.Model;
