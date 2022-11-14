@@ -11,6 +11,10 @@ class Person extends Model {
             ['id', '=', 2]
         ]).select() );
 
+        this.where([]);
+
+        Person.where([]);
+
 
          console.log( Db.table('admin').where({id:2}).select() );
 

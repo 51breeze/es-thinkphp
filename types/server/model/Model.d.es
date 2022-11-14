@@ -2,7 +2,7 @@ package server.model;
 
 import server.database.concern.WhereQuery;
 import server.database.concern.WhereQueryFieldType;
-import server.database.concern.BaseQuery;
+import server.database.Query;
 
 import server.model.concern.Attribute;
 import server.model.concern.RelationShip;
@@ -14,6 +14,8 @@ import server.model.concern.Conversion;
 * 模型基类，所有业务模型层都应该继承 Model 类
 */
 @Define(type=model);
+@Call(Query)
+@CallStatic(Query)
 declare class Model implements Attribute,RelationShip,ModelEvent,TimeStamp,Conversion{
 
       protected name:string;
@@ -122,7 +124,7 @@ declare class Model implements Attribute,RelationShip,ModelEvent,TimeStamp,Conve
       * @param array $scope 设置不使用的全局查询范围
       * @return Query
       */
-      db(scope:[]):BaseQuery
+      db(scope:[]):Query
 
       /**
       * 更新是否强制写入数据 而不做比较（亦可用于软删除的强制删除）
