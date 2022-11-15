@@ -14,8 +14,9 @@ import server.model.concern.Conversion;
 * 模型基类，所有业务模型层都应该继承 Model 类
 */
 @Define(type=model);
-@Call(Query)
-@CallStatic(Query)
+@Call(Query.prototype)
+@CallStatic(Query.prototype)
+@Abstract()
 declare class Model implements Attribute,RelationShip,ModelEvent,TimeStamp,Conversion{
 
       protected name:string;
