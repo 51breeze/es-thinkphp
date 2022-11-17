@@ -8,21 +8,21 @@ import server.database.Query;
  * @package think\model
  * @mixin Query
  */
-declare interface Relation{
+declare interface Relation<T>{
    
     /**
      * 获取关联的所属模型
      * @access public
      * @return Model
      */
-    getParent(): Model
+    getParent(): T
 
     /**
      * 获取当前的关联模型类的Query实例
      * @access public
      * @return Query
      */
-    getQuery():Query
+    getQuery():Query<T>
 
     /**
      * 获取关联表外键
@@ -43,7 +43,7 @@ declare interface Relation{
      * @access public
      * @return Model
      */
-    getModel(): Model
+    getModel(): T
 
     /**
      * 当前关联是否为自关联

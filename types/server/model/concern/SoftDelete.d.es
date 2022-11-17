@@ -9,10 +9,10 @@ import server.database.Query;
  * @method $this withTrashed()
  * @method $this onlyTrashed()
  */
-declare interface SoftDelete
+declare interface SoftDelete<T>
 {
 
-    db(scope?:string[]): Query
+    db(scope?:string[]): Query<T>
 
     /**
      * 判断当前实例是否被软删除
@@ -21,9 +21,9 @@ declare interface SoftDelete
      */
     trashed(): boolean
 
-    scopeWithTrashed(query:Query):void;
+    scopeWithTrashed(query:Query<T>):void;
 
-    scopeOnlyTrashed(query:Query):void;
+    scopeOnlyTrashed(query:Query<T>):void;
 
     /**
      * 获取软删除数据的查询条件
@@ -61,5 +61,5 @@ declare interface SoftDelete
      * @param Query $query
      * @return void
      */
-    protected withNoTrashed(query:Query): void
+    protected withNoTrashed(query:Query<T>): void
 }

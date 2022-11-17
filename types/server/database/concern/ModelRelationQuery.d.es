@@ -5,7 +5,7 @@ import server.model.Model;
 /**
 * 模型及关联查询
 */
-declare interface ModelRelationQuery{
+declare interface ModelRelationQuery<T>{
 
       /**
       * 指定模型
@@ -13,7 +13,7 @@ declare interface ModelRelationQuery{
       * @param Model $model 模型对象实例
       * @return $this
       */
-      model(model:Model):this
+      model(model:T):this
 
 
       /**
@@ -21,7 +21,7 @@ declare interface ModelRelationQuery{
       * @access public
       * @return Model|null
       */
-      getModel():Model|null;
+      getModel():T|null;
 
 
       /**

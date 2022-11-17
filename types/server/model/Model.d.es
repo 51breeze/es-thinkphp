@@ -14,21 +14,22 @@ import server.model.concern.Conversion;
 * 模型基类，所有业务模型层都应该继承 Model 类
 */
 @Define(type=model);
-@Call(Query.prototype)
-@CallStatic(Query.prototype)
 @Abstract()
-declare class Model implements Attribute,RelationShip,ModelEvent,TimeStamp,Conversion{
+declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEvent,TimeStamp,Conversion{
 
-      protected name:string;
-      protected table:string;
-      protected suffix:string;
-      protected pk:string;
-      protected connection:string;
-      protected query:string;
-      protected field:string[];
-      protected schema:array;
-      protected select():Collection;
-      protected checkData():Collection
+      use static extends Query<T>
+      use this extends Query<T>
+
+      protected name:string
+      protected table:string
+      protected suffix:string
+      protected pk:string
+      protected connection:string
+      protected query:string
+      protected field:string[]
+      protected schema:array
+      protected select():Collection<T>
+      protected checkData():Collection<T>
       protected checkResult(result:any):void
 
       /**
@@ -77,7 +78,7 @@ declare class Model implements Attribute,RelationShip,ModelEvent,TimeStamp,Conve
       * @param array $options    参数
       * @return Model
       */
-      newInstance(data:array, where?:any, options?:array ): Model
+      newInstance(data:array, where?:any, options?:array ): T
 
       /**
       * 设置模型的更新条件
@@ -125,7 +126,7 @@ declare class Model implements Attribute,RelationShip,ModelEvent,TimeStamp,Conve
       * @param array $scope 设置不使用的全局查询范围
       * @return Query
       */
-      db(scope:[]):Query
+      db(scope:[]):Query<T>
 
       /**
       * 更新是否强制写入数据 而不做比较（亦可用于软删除的强制删除）
@@ -212,7 +213,7 @@ declare class Model implements Attribute,RelationShip,ModelEvent,TimeStamp,Conve
       * @return Collection
       * @throws \Exception
       */
-      saveAll(dataSet?:array,replace?:boolean):Collection;
+      saveAll(dataSet?:array,replace?:boolean):Collection<T>;
 
       /**
       * 删除当前的记录

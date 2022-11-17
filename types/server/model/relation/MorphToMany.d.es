@@ -6,7 +6,7 @@ import server.model.Model;
 /**
  * 多态多对多关联
  */
-declare class MorphToMany extends BelongsToMany
+declare class MorphToMany<T> extends BelongsToMany<T>
 {
     /**
      * 多态字段名
@@ -37,5 +37,5 @@ declare class MorphToMany extends BelongsToMany
      * @param  string $localKey  当前模型关联键
      * @param  bool   $inverse   反向关联
      */
-    constructor(parent:Model, model:string, middle:string, morphType:string, morphKey:string, localKey:string, inverse?:boolean)
+    constructor(parent:T, model:string, middle:string, morphType:string, morphKey:string, localKey:string, inverse?:boolean)
 }

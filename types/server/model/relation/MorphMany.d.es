@@ -8,7 +8,7 @@ import server.model.Collection;
 /**
  * 多态一对多关联
  */
-declare class MorphMany extends Relation
+declare class MorphMany<T> extends Relation<T>
 {
 
     /**
@@ -38,7 +38,7 @@ declare class MorphMany extends Relation
      * @param  string $morphType 多态字段名
      * @param  string $type      多态类型
      */
-    constructor(parent:Model, model:string, morphKey:string, morphType:string, type:string )
+    constructor(parent:T, model:string, morphKey:string, morphType:string, type:string )
 
     /**
      * 延迟获取关联数据
@@ -47,7 +47,7 @@ declare class MorphMany extends Relation
      * @param  Closure $closure     闭包查询条件
      * @return Collection
      */
-    getRelation(subRelation?:string[], closure?:Function): Collection
+    getRelation(subRelation?:string[], closure?:Function): Collection<T>
 
     /**
      * 预载入关联查询
@@ -71,7 +71,7 @@ declare class MorphMany extends Relation
      * @param  array   $cache       关联缓存
      * @return void
      */
-    eagerlyResult(result:Model, relation:string, subRelation?:string[], closure?:Function, cache?:array): void
+    eagerlyResult(result:T, relation:string, subRelation?:string[], closure?:Function, cache?:array): void
 
     /**
      * 关联统计
@@ -83,7 +83,7 @@ declare class MorphMany extends Relation
      * @param  string  $name 统计字段别名
      * @return mixed
      */
-    relationCount(result:Model, closure?:Function, aggregate?:string, field?:string, name?:string): number
+    relationCount(result:T, closure?:Function, aggregate?:string, field?:string, name?:string): number
 
     /**
      * 获取关联统计子查询
@@ -115,7 +115,7 @@ declare class MorphMany extends Relation
      * @param  bool  $replace 是否自动识别更新和写入
      * @return Model|false
      */
-    save(data:Model | ArrayMappingType<ScalarValueType>, replace?:boolean ):Model|false
+    save(data:T | ArrayMappingType<ScalarValueType>, replace?:boolean ):T|false
     
 
     /**
@@ -123,7 +123,7 @@ declare class MorphMany extends Relation
      * @param array|Model $data
      * @return Model
      */
-    make(data?:Model | ArrayMappingType<ScalarValueType>): Model
+    make(data?:T | ArrayMappingType<ScalarValueType>): T
 
     /**
      * 批量保存当前关联数据对象

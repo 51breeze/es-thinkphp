@@ -8,7 +8,7 @@ import server.model.Collection;
 /**
  * 远程一对多关联类
  */
-declare class HasManyThrough extends Relation{
+declare class HasManyThrough<T> extends Relation<T>{
     
     /**
      * 中间关联表外键
@@ -26,7 +26,7 @@ declare class HasManyThrough extends Relation{
      * 中间表查询对象
      * @var Query
      */
-    protected through:Query;
+    protected through:Query<T>;
 
     /**
      * 架构函数
@@ -39,7 +39,7 @@ declare class HasManyThrough extends Relation{
      * @param  string $localKey   当前模型主键
      * @param  string $throughPk  中间模型主键
      */
-    constructor(parent:Model, model:string, through:string, foreignKey:string, throughKey:string, localKey:string, throughPk:string)
+    constructor(parent:T, model:string, through:string, foreignKey:string, throughKey:string, localKey:string, throughPk:string)
 
 
     /**
@@ -49,7 +49,7 @@ declare class HasManyThrough extends Relation{
      * @param  Closure $closure     闭包查询条件
      * @return Collection
      */
-    getRelation(subRelation?:string[], closure?:Function): Collection
+    getRelation(subRelation?:string[], closure?:Function): Collection<T>
     
 
     /**
@@ -62,7 +62,7 @@ declare class HasManyThrough extends Relation{
      * @param  Query   $query    Query对象
      * @return Query
      */
-     has(operator?:string, count?:uint, id?:string, joinType?:string, query?:Query): Query
+     has(operator?:string, count?:uint, id?:string, joinType?:string, query?:Query<T>): Query<T>
 
     /**
      * 根据关联条件查询当前模型
@@ -73,7 +73,7 @@ declare class HasManyThrough extends Relation{
      * @param  Query  $query    Query对象
      * @return Query
      */
-    hasWhere(where?:ArrayMappingType<string|number>, fields?:ArrayMappingType<string>, joinType?:string, query?:Query): Query
+    hasWhere(where?:ArrayMappingType<string|number>, fields?:ArrayMappingType<string>, joinType?:string, query?:Query<T>): Query<T>
 
     /**
      * 预载入关联查询（数据集）
@@ -97,7 +97,7 @@ declare class HasManyThrough extends Relation{
      * @param  array   $cache       关联缓存
      * @return void
      */
-     eagerlyResult(result:Model, relation:string, subRelation?:string[], closure?:Function, cache?:array): void
+     eagerlyResult(result:T, relation:string, subRelation?:string[], closure?:Function, cache?:array): void
 
     /**
      * 关联模型预查询
@@ -122,7 +122,7 @@ declare class HasManyThrough extends Relation{
      * @param  string  $name 统计字段别名
      * @return mixed
      */
-    relationCount(result:Model, closure?:Function, aggregate?:string, field?:string, name?:string): number
+    relationCount(result:T, closure?:Function, aggregate?:string, field?:string, name?:string): number
 
     /**
      * 创建关联统计子查询

@@ -3,21 +3,21 @@ package server.database;
 import server.database.concern.BaseQuery;
 import server.psr.CacheInterface;
 
-declare interface Connection<QC=BaseQuery>{
+declare interface Connection<QC=BaseQuery< ArrayMappingType< TableColumnValueType > >>{
 
       /**
       * 指定表名开始查询
       * @param $table
       * @return BaseQuery
       */
-      table(table):QC
+      table(table:string):QC
 
       /**
       * 指定表名开始查询(不带前缀)
       * @param $name
       * @return BaseQuery
       */
-      name(name):QC
+      name(name:string):QC
 
       /**
       * 执行数据库事务
@@ -108,7 +108,7 @@ declare interface Connection<QC=BaseQuery>{
       * @param BaseQuery $query 查询对象
       * @return array
       */
-      find(query:QC): array;
+      find(query:QC): ArrayMappingType< TableColumnValueType >;
 
       /**
       * 查找记录
@@ -116,7 +116,7 @@ declare interface Connection<QC=BaseQuery>{
       * @param BaseQuery $query 查询对象
       * @return array
       */
-      select(query:QC): array;
+      select(query:QC): ArrayMappingType< TableColumnValueType >[];
 
       /**
       * 插入记录
@@ -125,7 +125,7 @@ declare interface Connection<QC=BaseQuery>{
       * @param boolean $getLastInsID 返回自增主键
       * @return mixed
       */
-      insert(query:QC, getLastInsID?:boolean);
+      insert(query:QC, getLastInsID?:boolean):int|null;
 
       /**
       * 批量插入记录
@@ -160,7 +160,7 @@ declare interface Connection<QC=BaseQuery>{
       * @param mixed  $default 默认值
       * @return mixed
       */
-      value(query:QC, field:string, defaultValue:any = null);
+      value(query:QC, field:string, defaultValue:any = null):TableColumnValueType;
 
       /**
       * 得到某个列的数组
@@ -170,7 +170,7 @@ declare interface Connection<QC=BaseQuery>{
       * @param string $key    索引
       * @return array
       */
-      column(query:QC, column:string | array, key?:string): array;
+      column(query:QC, column:string | array, key?:string): ArrayMappingType< TableColumnValueType >[];
 }
 
 declare interface PDOStatement{}

@@ -8,7 +8,7 @@ import server.database.concern.TableFieldInfo;
 /**
 * PDO数据查询类
 */
-declare class Query extends BaseQuery implements JoinAndViewQuery,ParamsBind,TableFieldInfo{
+declare class Query<T> extends BaseQuery<T> implements JoinAndViewQuery,ParamsBind,TableFieldInfo{
 
 
       /**
@@ -172,7 +172,7 @@ declare class Query extends BaseQuery implements JoinAndViewQuery,ParamsBind,Tab
       * @param array|string|Raw $duplicate DUPLICATE信息
       * @return $this
       */
-      duplicate(duplicate:array|string|Raw):this
+      duplicate(duplicate:string|Raw|(string|Raw)[]):this
 
 
       /**

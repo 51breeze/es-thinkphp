@@ -1,20 +1,20 @@
 package server.database.concern;
 
-declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,ResultOperation,ModelRelationQuery{
+declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,AggregateQuery,ResultOperation,ModelRelationQuery<T>{
 
       /**
       * 创建一个新的查询对象
       * @access public
       * @return BaseQuery
       */
-      public newQuery(): BaseQuery
+      newQuery(): BaseQuery<T>
 
       /**
       * 获取当前的数据库Connection对象
       * @access public
       * @return ConnectionInterface
       */
-      public getConnection():server.database.Connection
+      getConnection():server.database.Connection
 
       /**
       * 指定当前数据表名（不含前缀）
@@ -22,14 +22,14 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string $name 不含前缀的数据表名字
       * @return $this
       */
-      public name(name:string):this
+      name(name:string):this
 
       /**
       * 获取当前的数据表名称
       * @access public
       * @return string
       */
-      public getName(): string
+      getName(): string
 
       /**
       * 获取数据库的配置参数
@@ -37,7 +37,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string $name 参数名称
       * @return mixed
       */
-      public getConfig( name:string = ''):any;
+      getConfig( name:string = ''):any;
 
       /**
       * 得到当前或者指定名称的数据表
@@ -45,7 +45,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string $name 不含前缀的数据表名字
       * @return mixed
       */
-      public getTable( name:string = ''):string | null
+      getTable( name:string = ''):string | null
 
       /**
       * 设置字段类型信息
@@ -53,7 +53,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param array $type 字段类型信息
       * @return $this
       */
-      public setFieldType(type:array):this;
+      setFieldType(type:ArrayMappingType<string>):this;
 
 
       /**
@@ -61,7 +61,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @access public
       * @return string
       */
-      public getLastSql(): string
+      getLastSql(): string
 
 
       /**
@@ -69,7 +69,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @access public
       * @return integer
       */
-      public getNumRows(): int
+      getNumRows(): int
 
       /**
       * 获取最近插入的ID
@@ -77,7 +77,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string $sequence 自增序列名
       * @return mixed
       */
-      public getLastInsID( sequence:string = null):any;
+      getLastInsID( sequence:string = null):any;
 
 
       /**
@@ -87,7 +87,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param mixed  $default 默认值
       * @return mixed
       */
-      public value(field:string, defaultValue:any = null):any;
+      value(field:string, defaultValue:any = null):any;
 
       /**
       * 得到某个列的数组
@@ -96,7 +96,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string       $key   索引
       * @return array
       */
-      public column(field, key:string = ''): array
+      column(field:string | string[], key:string = ''): ArrayMappingType<TableColumnValueType>
 
       /**
       * 查询SQL组装 union
@@ -105,7 +105,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param boolean $all   是否适用UNION ALL
       * @return $this
       */
-      public union(union, all:boolean = false):this
+      union(union, all:boolean = false):this
 
       /**
       * 查询SQL组装 union all
@@ -113,7 +113,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param mixed $union UNION数据
       * @return $this
       */
-      public unionAll(union):this;
+      unionAll(union):this;
 
       /**
       * 指定查询字段
@@ -121,7 +121,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param mixed $field 字段信息
       * @return $this
       */
-      public field(field):this;
+      field(field:string | string[]):this;
 
       /**
       * 指定要排除的查询字段
@@ -129,7 +129,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param array|string $field 要排除的字段
       * @return $this
       */
-      public withoutField(field):this
+      withoutField(field:string | string[]):this
 
       /**
       * 指定其它数据表的查询字段
@@ -140,7 +140,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string  $alias     别名前缀
       * @return $this
       */
-      public tableField(field, tableName:string, prefix:string = '', alias:string = ''):this
+      tableField(field:string | string[], tableName:string, prefix:string = '', alias:string = ''):this
 
       /**
       * 设置数据
@@ -148,7 +148,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param array $data 数据
       * @return $this
       */
-      public data(data:array):this
+      data(data:ArrayMappingType<ScalarValueType>):this
 
       /**
       * 去除查询参数
@@ -156,7 +156,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string $option 参数名 留空去除所有参数
       * @return $this
       */
-      public removeOption( option:string = ''):this;
+      removeOption( option:string = ''):this;
 
       /**
       * 指定查询数量
@@ -165,7 +165,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param int $length 查询数量
       * @return $this
       */
-      public limit(offset:int, length:int = null):this;
+      limit(offset:int, length:int = null):this;
 
       /**
       * 指定分页
@@ -174,7 +174,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param int $listRows 每页数量
       * @return $this
       */
-      public page(page:int, listRows:int = null):this;
+      page(page:int, listRows:int = null):this;
 
 
       /**
@@ -183,7 +183,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param mixed $table 表名
       * @return $this
       */
-      public table($table):this;
+      table($table):this;
 
 
       /**
@@ -193,7 +193,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string           $order 排序
       * @return $this
       */
-      public order(field, order:string = ''):this;
+      order(field, order:string = ''):this;
 
 
       /**
@@ -204,7 +204,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @return Paginator
       * @throws Exception
       */
-      public paginate(listRows:any = null, simple:boolean = false): server.database.Paginator
+      paginate(listRows:any = null, simple:boolean = false): server.database.Paginator
       
 
       /**
@@ -216,7 +216,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @return Paginator
       * @throws Exception
       */
-      public paginateX(listRows = null,  key:string = null, sort:string = null): server.database.Paginator
+      paginateX(listRows = null,  key:string = null, sort:string = null): server.database.Paginator
 
       /**
       * 根据最后ID查询更多N个数据
@@ -228,7 +228,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @return array
       * @throws Exception
       */
-      public more(limit:int, lastId:int = null, key:string = null, sort:string = null): array
+      more(limit:int, lastId:int = null, key:string = null, sort:string = null): array
 
 
       /**
@@ -240,7 +240,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param bool              $always 始终缓存
       * @return $this
       */
-      public cache(key:any = true, expire:int = null, tag:string|array = null, always:boolean = false):this;
+      cache(key:any = true, expire:int = null, tag:string|array = null, always:boolean = false):this;
 
 
       /**
@@ -251,7 +251,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string|array      $tag    缓存标签
       * @return $this
       */
-      public cacheAlways(key = true, expire = null, tag = null):this;
+      cacheAlways(key = true, expire = null, tag = null):this;
 
       /**
       * 指定查询lock
@@ -259,7 +259,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param bool|string $lock 是否lock
       * @return $this
       */
-      public lock(lock = false):this
+      lock(lock = false):this
 
       /**
       * 指定数据表别名
@@ -267,7 +267,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param array|string $alias 数据表别名
       * @return $this
       */
-      public alias(alias):this;
+      alias(alias):this;
 
 
       /**
@@ -276,7 +276,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param bool $readMaster 是否从主服务器读取
       * @return $this
       */
-      public master(readMaster:boolean = true):this;
+      master(readMaster:boolean = true):this;
 
       /**
       * 设置是否严格检查字段名
@@ -284,7 +284,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param bool $strict 是否严格检查字段
       * @return $this
       */
-      public strict( strict:boolean = true):this;
+      strict( strict:boolean = true):this;
 
       /**
       * 设置自增序列名
@@ -292,7 +292,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string $sequence 自增序列名
       * @return $this
       */
-      public sequence(sequence:string = null):this
+      sequence(sequence:string = null):this
 
       /**
       * 设置JSON字段信息
@@ -301,8 +301,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param bool  $assoc 是否取出数组
       * @return $this
       */
-      public json(json:array = [], assoc:boolean = false):this
-
+      json(json:array = [], assoc:boolean = false):this
 
       /**
       * 指定数据表主键
@@ -310,7 +309,8 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string|array $pk 主键
       * @return $this
       */
-      public pk($pk):this
+      pk($pk):this
+
       /**
       * 查询参数批量赋值
       * @access protected
@@ -325,7 +325,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string $name 参数名
       * @return mixed
       */
-      public getOptions(name:string):any
+      getOptions(name:string):any
 
       /**
       * 设置当前的查询参数
@@ -334,7 +334,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param mixed  $value  参数值
       * @return $this
       */
-      public setOption(option:string, value:any):this
+      setOption(option:string, value:any):this
 
       /**
       * 设置当前字段添加的表别名
@@ -342,7 +342,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string $via 临时表别名
       * @return $this
       */
-      public via( via:string ):this
+      via( via:string ):this
 
       /**
       * 保存记录 自动判断insert或者update
@@ -351,7 +351,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param bool  $forceInsert 是否强制insert
       * @return integer
       */
-      public save(data?:array,forceInsert:boolean = false):int
+      save(data?:ArrayMappingType<ScalarValueType>,forceInsert:boolean = false):int
 
       /**
       * 插入记录
@@ -360,7 +360,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param boolean $getLastInsID 返回自增主键
       * @return integer|string
       */
-      public insert(data:array, getLastInsID:boolean=false):int | string
+      insert(data:ArrayMappingType<ScalarValueType>, getLastInsID:boolean=false):int | string
 
       /**
       * 插入记录并获取自增ID
@@ -368,7 +368,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param array $data 数据
       * @return integer|string
       */
-      public insertGetId(data:array):int | string
+      insertGetId(data:ArrayMappingType<ScalarValueType>):int | string
 
       /**
       * 批量插入记录
@@ -377,7 +377,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param integer $limit   每次写入数据限制
       * @return integer
       */
-      public insertAll(dataSet:array, limit:int = 0): int
+      insertAll(dataSet:ArrayMappingType<ScalarValueType>[], limit:int = 0): int
 
       /**
       * 通过Select方式插入记录
@@ -386,7 +386,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @param string $table  要插入的数据表名
       * @return integer
       */
-      public selectInsert(fields:array, table:string): int
+      selectInsert(fields:string[], table:string): int
 
       /**
       * 更新记录
@@ -395,8 +395,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @return integer
       * @throws Exception
       */
-      public update(data?:array): int
-      
+      update(data?:ScalarValueType|ScalarValueType[]): int
 
       /**
       * 删除记录
@@ -405,7 +404,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @return int
       * @throws Exception
       */
-      public delete(data?): int
+      delete(data?:ScalarValueType|ScalarValueType[]): int
 
 
       /**
@@ -417,8 +416,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @throws ModelNotFoundException
       * @throws DataNotFoundException
       */
-      public select(data?): server.database.Collection
-
+      select(data?:ScalarValueType|ScalarValueType[]): server.database.Collection
 
       /**
       * 查找单条记录
@@ -429,17 +427,15 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @throws ModelNotFoundException
       * @throws DataNotFoundException
       */
-      public find(data:any):any
-
+      find(data?:ScalarValueType|ScalarValueType[]):T | null
 
       /**
       * 分析表达式（可用于查询或者写入操作）
       * @access public
       * @return array
       */
-      public parseOptions(): array
+      parseOptions(): array
       
-
       /**
       * 分析数据是否存在更新条件
       * @access public
@@ -447,8 +443,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @return bool
       * @throws Exception
       */
-      public parseUpdateData(data:array): boolean
-
+      parseUpdateData(data:array): boolean
 
       /**
       * 把主键值转换为查询条件 支持复合主键
@@ -457,8 +452,7 @@ declare interface BaseQuery implements WhereQuery,TimeFieldQuery,AggregateQuery,
       * @return void
       * @throws Exception
       */
-      public parsePkWhere(data:any): void
-
+      parsePkWhere(data:any): void
 
       /**
       * 获取模型的更新条件

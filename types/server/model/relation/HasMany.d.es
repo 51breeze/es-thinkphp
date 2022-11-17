@@ -8,7 +8,7 @@ import server.model.Collection;
 /**
  * 一对多关联类
  */
-declare class HasMany extends Relation
+declare class HasMany<T> extends Relation<T>
 {
     /**
      * 架构函数
@@ -18,7 +18,7 @@ declare class HasMany extends Relation
      * @param  string $foreignKey 关联外键
      * @param  string $localKey   当前模型主键
      */
-    constructor(parent:Model, model:string, foreignKey:string, localKey:string)
+    constructor(parent:T, model:string, foreignKey:string, localKey:string)
 
     /**
      * 延迟获取关联数据
@@ -27,7 +27,7 @@ declare class HasMany extends Relation
      * @param  Closure $closure     闭包查询条件
      * @return Collection
      */
-    getRelation(subRelation?:string[], closure?:Function): Collection
+    getRelation(subRelation?:string[], closure?:Function): Collection<T>
   
     /**
      * 预载入关联查询
@@ -51,7 +51,7 @@ declare class HasMany extends Relation
      * @param  array   $cache       关联缓存
      * @return void
      */
-    eagerlyResult(result:Model, relation:string, subRelation?:string[], closure?:Function, cache?:array): void
+    eagerlyResult(result:T, relation:string, subRelation?:string[], closure?:Function, cache?:array): void
 
     /**
      * 关联统计
@@ -63,7 +63,7 @@ declare class HasMany extends Relation
      * @param  string  $name 统计字段别名
      * @return integer
      */
-    relationCount(result:Model, closure?:Function, aggregate?:string, field?:string, name?:string): number
+    relationCount(result:T, closure?:Function, aggregate?:string, field?:string, name?:string): number
 
     /**
      * 创建关联统计子查询
@@ -94,14 +94,14 @@ declare class HasMany extends Relation
      * @param  boolean $replace 是否自动识别更新和写入
      * @return Model|false
      */
-    save(data:Model | ArrayMappingType<ScalarValueType>, replace?:boolean ):Model|false
+    save(data:T | ArrayMappingType<ScalarValueType>, replace?:boolean ):T|false
 
     /**
      * 创建关联对象实例
      * @param array|Model $data
      * @return Model
      */
-    make(data?:Model | ArrayMappingType<ScalarValueType>): Model
+    make(data?:T | ArrayMappingType<ScalarValueType>): T
 
     /**
      * 批量保存当前关联数据对象
@@ -122,7 +122,7 @@ declare class HasMany extends Relation
      * @param  Query   $query    Query对象
      * @return Query
      */
-    has(operator?:string, count?:uint, id?:string, joinType?:string, query?:Query): Query
+    has(operator?:string, count?:uint, id?:string, joinType?:string, query?:Query<T>): Query<T>
 
     /**
      * 根据关联条件查询当前模型
@@ -133,7 +133,7 @@ declare class HasMany extends Relation
      * @param  Query  $query    Query对象
      * @return Query
      */
-    hasWhere(where?:ArrayMappingType<ScalarValueType>, fields?:ArrayMappingType<string>, joinType?:string, query?:Query): Query
+    hasWhere(where?:ArrayMappingType<ScalarValueType>, fields?:ArrayMappingType<string>, joinType?:string, query?:Query<T>): Query<T>
 
     /**
      * 执行基础查询（仅执行一次）

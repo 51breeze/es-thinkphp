@@ -8,7 +8,7 @@ import server.model.Model;
  * 一对一关联基础类
  * @package think\model\relation
  */
-declare class OneToOne extends Relation
+declare class OneToOne<T> extends Relation<T>
 {
    
     /**
@@ -30,7 +30,7 @@ declare class OneToOne extends Relation
      * @param  bool    $first
      * @return void
      */
-    eagerly(query:Query, relation:string, field = true, joinType = '', closure:Function = null, first = false): void
+    eagerly(query:Query<T>, relation:string, field = true, joinType = '', closure:Function = null, first = false): void
     
 
     /**
@@ -58,7 +58,7 @@ declare class OneToOne extends Relation
      * @param  bool    $join        是否为JOIN方式
      * @return void
      */
-    eagerlyResult(result:Model, relation:string, subRelation?:string[], closure:Function = null, cache = [], join = false): void
+    eagerlyResult(result:T, relation:string, subRelation?:string[], closure:Function = null, cache = [], join = false): void
 
 
     /**
@@ -68,14 +68,14 @@ declare class OneToOne extends Relation
      * @param  boolean $replace 是否自动识别更新和写入
      * @return Model|false
      */
-    save(data:ArrayMappingType<ScalarValueType>|Model, replace = true):Model|false
+    save(data:ArrayMappingType<ScalarValueType>|T, replace = true):T|false
 
     /**
      * 创建关联对象实例
      * @param array|Model $data
      * @return Model
      */
-    make(data?:ArrayMappingType<ScalarValueType>|Model): Model
+    make(data?:ArrayMappingType<ScalarValueType>|T): T
 
 
     /**
@@ -101,7 +101,7 @@ declare class OneToOne extends Relation
      * @param  Model  $result   模型对象实例
      * @return void
      */
-    protected match(model:string, relation:string, result?:Model): void
+    protected match(model:string, relation:string, result?:T): void
    
     /**
      * 绑定关联属性到父模型
@@ -111,7 +111,7 @@ declare class OneToOne extends Relation
      * @return void
      * @throws Exception
      */
-    protected bindAttr(result:Model, model?:Model): void
+    protected bindAttr(result:T, model?:T): void
     
     /**
      * 一对一 关联模型预查询（IN方式）

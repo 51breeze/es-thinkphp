@@ -18,7 +18,7 @@ import server.model.relation.OneToOne;
 /**
  * 模型关联处理
  */
-declare interface RelationShip
+declare interface RelationShip<T>
 {
 
     /**
@@ -27,14 +27,14 @@ declare interface RelationShip
      * @param  Model $model  模型对象
      * @return $this
      */
-    setParent(model:Model):this;
+    setParent(model:T):this;
 
     /**
      * 获取父关联对象
      * @access public
      * @return Model
      */
-    getParent(): Model
+    getParent(): T
 
     /**
      * 获取当前模型的关联模型数据
@@ -84,7 +84,7 @@ declare interface RelationShip
      * @param  bool    $first
      * @return bool
      */
-    eagerly(query:Query, relation:string, field:ArrayMappingType<string> | string, joinType?:string, closure?:Function, first?:boolean): boolean
+    eagerly(query:Query<T>, relation:string, field:ArrayMappingType<string> | string, joinType?:string, closure?:Function, first?:boolean): boolean
 
     /**
      * 预载入关联查询 返回数据集
@@ -130,7 +130,7 @@ declare interface RelationShip
      * @param  bool   $useSubQuery 子查询
      * @return void
      */
-    relationCount(query:Query, relations:ArrayMappingType<ScalarValueType>, aggregate?:string, field?:string, $useSubQuery?:boolean): void
+    relationCount(query:Query<T>, relations:ArrayMappingType<ScalarValueType>, aggregate?:string, field?:string, $useSubQuery?:boolean): void
 
     /**
      * HAS ONE 关联定义

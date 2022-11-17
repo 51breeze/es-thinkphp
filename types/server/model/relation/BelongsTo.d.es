@@ -6,7 +6,7 @@ import server.database.Query;
 /**
  * BelongsTo关联类
  */
-declare class BelongsTo extends OneToOne{
+declare class BelongsTo<T> extends OneToOne<T>{
     /**
      * 架构函数
      * @access public
@@ -16,7 +16,7 @@ declare class BelongsTo extends OneToOne{
      * @param  string $localKey 关联主键
      * @param  string $relation  关联名
      */
-    constructor(parent:Model, model:string, foreignKey:string, localKey:string, relation?:string)
+    constructor(parent:T, model:string, foreignKey:string, localKey:string, relation?:string)
 
     /**
      * 延迟获取关联数据
@@ -25,7 +25,7 @@ declare class BelongsTo extends OneToOne{
      * @param  Closure $closure     闭包查询条件
      * @return Model
      */
-    getRelation(subRelation?:string[], closure:Function = null):Model;
+    getRelation(subRelation?:string[], closure:Function = null):T;
 
     /**
      * 创建关联统计子查询
@@ -49,7 +49,7 @@ declare class BelongsTo extends OneToOne{
      * @param  string  $name 统计字段别名
      * @return integer
      */
-    relationCount(result:Model, closure:Function = null, aggregate = 'count', field = '*', name = null):number
+    relationCount(result:T, closure:Function = null, aggregate = 'count', field = '*', name = null):number
    
 
     /**
@@ -62,7 +62,7 @@ declare class BelongsTo extends OneToOne{
      * @param  Query   $query    Query对象
      * @return Query
      */
-    has(operator = '>=', count = 1, id = '*', joinType = '', query:Query = null): Query
+    has(operator = '>=', count = 1, id = '*', joinType = '', query:Query<T> = null): Query<T>
    
 
     /**
@@ -74,7 +74,7 @@ declare class BelongsTo extends OneToOne{
      * @param  Query  $query    Query对象
      * @return Query
      */
-    hasWhere(where:any, fields = null, joinType = '', query:Query = null): Query
+    hasWhere(where:any, fields = null, joinType = '', query:Query<T> = null): Query<T>
    
     /**
      * 添加关联数据
@@ -82,14 +82,14 @@ declare class BelongsTo extends OneToOne{
      * @param  Model $model关联模型对象
      * @return Model
      */
-    associate(model:Model): Model
+    associate(model:T): T
 
     /**
      * 注销关联数据
      * @access public
      * @return Model
      */
-    dissociate(): Model
+    dissociate(): T
     
     /**
      * 执行基础查询（仅执行一次）

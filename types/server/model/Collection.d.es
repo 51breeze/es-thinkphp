@@ -11,7 +11,7 @@ import server.model.Model;
  *
  * @extends BaseCollection<TKey, TModel>
  */
-declare class Collection extends BaseCollection
+declare class Collection<T> extends BaseCollection
 {
     /**
      * 延迟预载入关联查询
@@ -85,7 +85,7 @@ declare class Collection extends BaseCollection
      * @param  Model $parent 父模型
      * @return $this
      */
-    setParent(parent:Model):this
+    setParent(parent:T):this
 
     /**
      * 设置数据字段获取器

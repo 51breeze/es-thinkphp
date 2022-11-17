@@ -7,7 +7,7 @@ import server.model.Relation;
 /**
  * 多态关联类
  */
-declare class MorphTo extends Relation
+declare class MorphTo<T> extends Relation<T>
 {
     /**
      * 多态关联外键
@@ -44,7 +44,7 @@ declare class MorphTo extends Relation
      * @param array $alias 多态别名定义
      * @param  ?string $relation 关联名
      */
-    constructor(parent:Model, morphType:string, morphKey:string, alias:string[], relation?:string )
+    constructor(parent:T, morphType:string, morphKey:string, alias:string[], relation?:string )
 
     /**
      * 延迟获取关联数据
@@ -53,7 +53,7 @@ declare class MorphTo extends Relation
      * @param ?Closure $closure 闭包查询条件
      * @return Model
      */
-    getRelation(subRelation?:string[], closure?:Function): Model
+    getRelation(subRelation?:string[], closure?:Function): T
 
     /**
      * 根据关联条件查询当前模型
@@ -65,7 +65,7 @@ declare class MorphTo extends Relation
      * @param Query $query Query对象
      * @return Query
      */
-    has(operator?:string, count?:uint, id?:string, joinType?:string, query?:Query): Query
+    has(operator?:string, count?:uint, id?:string, joinType?:string, query?:Query<T>): Query<T>
 
     /**
      * 根据关联条件查询当前模型
@@ -76,7 +76,7 @@ declare class MorphTo extends Relation
      * @param  ?Query $query Query对象
      * @return Query
      */
-    hasWhere(where?:ArrayMappingType<string|number>, fields?:ArrayMappingType<string>, joinType?:string, query?:Query): Query
+    hasWhere(where?:ArrayMappingType<string|number>, fields?:ArrayMappingType<string>, joinType?:string, query?:Query<T>): Query<T>
     
 
     /**
@@ -125,7 +125,7 @@ declare class MorphTo extends Relation
      * @param array $cache 关联缓存
      * @return void
      */
-    eagerlyResult(result:Model, relation:string, subRelation?:string[], closure?:Function, cache?:array): void
+    eagerlyResult(result:T, relation:string, subRelation?:string[], closure?:Function, cache?:array): void
 
     /**
      * 关联统计
@@ -136,7 +136,7 @@ declare class MorphTo extends Relation
      * @param string $field 字段
      * @return integer
      */
-    relationCount(result:Model, closure?:Function, aggregate?:string, field?:string, name?:string): number
+    relationCount(result:T, closure?:Function, aggregate?:string, field?:string, name?:string): number
 
     /**
      * 多态MorphTo 关联模型预查询
@@ -148,7 +148,7 @@ declare class MorphTo extends Relation
      * @param array $cache 关联缓存
      * @return void
      */
-    protected eagerlyMorphToOne(model:string, relation:string, result:Model, subRelation?:string[], cache?:array): void
+    protected eagerlyMorphToOne(model:string, relation:string, result:T, subRelation?:string[], cache?:array): void
 
 
     /**
@@ -158,15 +158,15 @@ declare class MorphTo extends Relation
      * @param string $type 多态类型
      * @return Model
      */
-    associate(model:Model, type?:string): Model
+    associate(model:T, type?:string): T
 
     /**
      * 注销关联数据
      * @access public
      * @return Model
      */
-    dissociate(): Model
+    dissociate(): T
 
-    protected buildQuery(query:Query):void
+    protected buildQuery(query:Query<T>):void
 
 }

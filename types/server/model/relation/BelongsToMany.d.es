@@ -9,7 +9,7 @@ import server.model.Collection;
 /**
  * 多对多关联类
  */
-declare class BelongsToMany extends Relation
+declare class BelongsToMany<T> extends Relation<T>
 {
     /**
      * 中间表表名
@@ -38,7 +38,7 @@ declare class BelongsToMany extends Relation
      * @param  string $foreignKey 关联模型外键
      * @param  string $localKey   当前模型关联键
      */
-    constructor(parent:Model,model:string, middle:string, foreignKey:string, localKey:string)
+    constructor(parent:T,model:string, middle:string, foreignKey:string, localKey:string)
 
 
     /**
@@ -73,7 +73,7 @@ declare class BelongsToMany extends Relation
      * @param  Closure  $closure     闭包查询条件
      * @return Collection
      */
-    getRelation(subRelation?:string[], closure?:Function):Collection
+    getRelation(subRelation?:string[], closure?:Function):Collection<T>
 
     /**
      * 组装Pivot模型
@@ -81,7 +81,7 @@ declare class BelongsToMany extends Relation
      * @param  Model    $result 模型对象
      * @return array
      */
-    protected matchPivot(result:Model): ArrayMappingType<ScalarValueType>
+    protected matchPivot(result:T): ArrayMappingType<ScalarValueType>
 
     /**
      * 根据关联条件查询当前模型
@@ -93,7 +93,7 @@ declare class BelongsToMany extends Relation
      * @param  Query   $query    Query对象
      * @return Model
      */
-    has(operator = '>=', count = 1, id = '*', joinType = 'INNER', query:Query = null):Model
+    has(operator = '>=', count = 1, id = '*', joinType = 'INNER', query:Query<T> = null):T
 
     /**
      * 设置中间表的查询条件
@@ -128,7 +128,7 @@ declare class BelongsToMany extends Relation
      * @param  array   $cache       关联缓存
      * @return void
      */
-    eagerlyResult(result:Model, relation:string, subRelation?:string[], closure?:Function, cache?:array): void
+    eagerlyResult(result:T, relation:string, subRelation?:string[], closure?:Function, cache?:array): void
 
     /**
      * 关联统计
@@ -140,7 +140,7 @@ declare class BelongsToMany extends Relation
      * @param  string  $name 统计字段别名
      * @return integer
      */
-    relationCount(result:Model, closure?:Function, aggregate?:string, field?:string, name?:string): float
+    relationCount(result:T, closure?:Function, aggregate?:string, field?:string, name?:string): float
 
     /**
      * 获取关联统计子查询
@@ -172,7 +172,7 @@ declare class BelongsToMany extends Relation
      * @param  array  $condition  关联查询条件
      * @return Query
      */
-    protected belongsToManyQuery(foreignKey:string, localKey:string, condition?:ArrayMappingType<ScalarValueType>): Query
+    protected belongsToManyQuery(foreignKey:string, localKey:string, condition?:ArrayMappingType<ScalarValueType>): Query<T>
 
     /**
      * 保存（新增）当前关联数据对象
@@ -209,7 +209,7 @@ declare class BelongsToMany extends Relation
      * @param  mixed $data 数据 可以使用关联模型对象 或者 关联对象的主键
      * @return Pivot|false
      */
-    attached(data:Model|ScalarValueType):Pivot|false
+    attached(data:T|ScalarValueType):Pivot|false
 
     /**
      * 解除关联的一个中间表数据
@@ -218,7 +218,7 @@ declare class BelongsToMany extends Relation
      * @param  bool          $relationDel 是否同时删除关联表数据
      * @return integer
      */
-    detach(data?:Model|ScalarValueType|ArrayMappingType<ScalarValueType>, relationDel?:boolean): int
+    detach(data?:T|ScalarValueType|ArrayMappingType<ScalarValueType>, relationDel?:boolean): int
     
     /**
      * 数据同步
