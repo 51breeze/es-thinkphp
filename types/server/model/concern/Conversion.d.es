@@ -5,7 +5,7 @@ import server.model.Collection;
 /**
  * 模型数据转换处理
  */
-declare interface Conversion{
+declare interface Conversion<T>{
    
 
     /**
@@ -96,7 +96,7 @@ declare interface Conversion{
      * @param  string           $resultSetType 数据集类
      * @return Collection
      */
-    toCollection(collection:array|Collection, resultSetType?:class<any> ): Collection
+    toCollection(collection:array|Collection<T>, resultSetType?:class<any> ): Collection<T>
 
 
 }

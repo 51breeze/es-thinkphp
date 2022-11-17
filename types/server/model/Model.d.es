@@ -17,8 +17,9 @@ import server.model.concern.Conversion;
 @Abstract()
 declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEvent,TimeStamp,Conversion{
 
-      use static extends Query<T>
-      use this extends Query<T>
+      use static,this extends Query<T>{
+            find():string
+      }
 
       protected name:string
       protected table:string
@@ -196,7 +197,7 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
       * @param string $sequence 自增序列名
       * @return bool
       */
-      save( data?:array, sequence?:string ): boolean;
+      save( data?:ArrayMappingType<ScalarValueType>, sequence?:string ): boolean;
 
       /**
       * 获取当前的更新条件
@@ -213,7 +214,7 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
       * @return Collection
       * @throws \Exception
       */
-      saveAll(dataSet?:array,replace?:boolean):Collection<T>;
+      saveAll(dataSet?:ArrayMappingType<ScalarValueType>[],replace?:boolean):Collection<T>;
 
       /**
       * 删除当前的记录

@@ -140,7 +140,7 @@ declare interface RelationShip<T>
      * @param  string $localKey   当前主键
      * @return HasOne
      */
-    hasOne(model:string, foreignKey?:string, localKey?:string): HasOne
+    hasOne(model:string, foreignKey?:string, localKey?:string): HasOne<T>
 
     /**
      * BELONGS TO 关联定义
@@ -150,7 +150,7 @@ declare interface RelationShip<T>
      * @param  string $localKey   关联主键
      * @return BelongsTo
      */
-    belongsTo(model:string, foreignKey?:string, localKey?:string): BelongsTo
+    belongsTo(model:string, foreignKey?:string, localKey?:string): BelongsTo<T>
 
     /**
      * HAS MANY 关联定义
@@ -160,7 +160,7 @@ declare interface RelationShip<T>
      * @param  string $localKey   当前主键
      * @return HasMany
      */
-    hasMany(model:string, foreignKey?:string, localKey?:string): HasMany
+    hasMany(model:string, foreignKey?:string, localKey?:string): HasMany<T>
 
     /**
      * HAS MANY 远程关联定义
@@ -173,7 +173,7 @@ declare interface RelationShip<T>
      * @param  string $throughPk  中间表主键
      * @return HasManyThrough
      */
-    hasManyThrough(model:string, through:string, foreignKey:string, throughKey:string, localKey:string, throughPk:string): HasManyThrough
+    hasManyThrough(model:string, through:string, foreignKey:string, throughKey:string, localKey:string, throughPk:string): HasManyThrough<T>
 
     /**
      * HAS ONE 远程关联定义
@@ -186,7 +186,7 @@ declare interface RelationShip<T>
      * @param  string $throughPk  中间表主键
      * @return HasOneThrough
      */
-    hasOneThrough(model:string, through:string, foreignKey:string, throughKey:string, localKey:string, throughPk:string): HasOneThrough
+    hasOneThrough(model:string, through:string, foreignKey:string, throughKey:string, localKey:string, throughPk:string): HasOneThrough<T>
 
     /**
      * BELONGS TO MANY 关联定义
@@ -197,7 +197,7 @@ declare interface RelationShip<T>
      * @param  string $localKey   当前模型关联键
      * @return BelongsToMany
      */
-    belongsToMany(model:string, middle:string, foreignKey?:string, localKey?:string): BelongsToMany
+    belongsToMany(model:string, middle:string, foreignKey?:string, localKey?:string): BelongsToMany<T>
 
     /**
      * MORPH  One 关联定义
@@ -207,7 +207,7 @@ declare interface RelationShip<T>
      * @param  string       $type  多态类型
      * @return MorphOne
      */
-    morphOne(model:string, morph:string|ArrayMappingType<string>, type?:string): MorphOne
+    morphOne(model:string, morph:string|ArrayMappingType<string>, type?:string): MorphOne<T>
 
     /**
      * MORPH  MANY 关联定义
@@ -217,7 +217,7 @@ declare interface RelationShip<T>
      * @param  string       $type  多态类型
      * @return MorphMany
      */
-    morphMany(model:string, morph:string|ArrayMappingType<string>, type?:string): MorphMany
+    morphMany(model:string, morph:string|ArrayMappingType<string>, type?:string): MorphMany<T>
 
     /**
      * MORPH TO 关联定义
@@ -226,7 +226,7 @@ declare interface RelationShip<T>
      * @param  array        $alias 多态别名定义
      * @return MorphTo
      */
-    morphTo(morph?:string|ArrayMappingType<string>, alias?:ArrayMappingType<string>): MorphTo
+    morphTo(morph?:string|ArrayMappingType<string>, alias?:ArrayMappingType<string>): MorphTo<T>
 
     /**
      * MORPH TO MANY关联定义
@@ -237,7 +237,7 @@ declare interface RelationShip<T>
      * @param  string       $localKey   当前模型关联键
      * @return MorphToMany
      */
-    morphToMany(model:string, middle:string, morph?:string|ArrayMappingType<string>, localKey?:string): MorphToMany
+    morphToMany(model:string, middle:string, morph?:string|ArrayMappingType<string>, localKey?:string): MorphToMany<T>
    
 
     /**
@@ -249,7 +249,7 @@ declare interface RelationShip<T>
      * @param  string       $foreignKey 关联外键
      * @return MorphToMany
      */
-    morphByMany(model:string, middle:string, morph?:string|ArrayMappingType<string>, localKey?:string): MorphToMany
+    morphByMany(model:string, middle:string, morph?:string|ArrayMappingType<string>, localKey?:string): MorphToMany<T>
 
     /**
      * 移除当前模型的关联属性

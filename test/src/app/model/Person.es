@@ -16,9 +16,12 @@ class Person extends Model<Person> {
 
         // Person.where([])
 
-        Db.table('admin').where([]).find()
+        Db.table('admin').where([]);
 
-       
+        Db.table('sss').find()
+
+
+
 
 
         //type table = {username:string};
