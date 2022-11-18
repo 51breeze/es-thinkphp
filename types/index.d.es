@@ -1,10 +1,6 @@
 @Reference('es-php/types');
 @Reference('./server');
 
-declare type ScalarType = string | number | boolean | regexp;
-declare type ArrayScalarType = ScalarType[];
-declare type HeaderType = {[key:string]:string};
-
 /**
 * 获取环境变量值
 * @access public
@@ -12,7 +8,7 @@ declare type HeaderType = {[key:string]:string};
 * @param string $default 默认值
 * @return mixed
 */
-declare function env<T=ScalarType | ArrayScalarType>(name:string,defaultValue?:any):T;
+declare function env<T=ScalarValueType | ScalarValueType[]>(name:string,defaultValue?:any):T;
 
 /**
 * 抛出HTTP异常
@@ -20,7 +16,7 @@ declare function env<T=ScalarType | ArrayScalarType>(name:string,defaultValue?:a
 * @param string           $message 错误信息
 * @param array            $header  参数
 */
-declare function abort(code:server.http.Response | number , message?:string, header?:HeaderType):void;
+declare function abort(code:server.http.Response | number , message?:string, header?:ArrayMappingType<ScalarValueType>):void;
 
 /**
 * 快速获取容器中的实例 支持依赖注入
