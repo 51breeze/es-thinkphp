@@ -15,10 +15,10 @@ import server.model.concern.Conversion;
 */
 @Define(type=model);
 @Abstract()
-declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEvent,TimeStamp,Conversion{
+declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEvent,TimeStamp,Conversion<T>{
 
       use static,this extends Query<T>{
-            find():string
+            find():T
       }
 
       protected name:string

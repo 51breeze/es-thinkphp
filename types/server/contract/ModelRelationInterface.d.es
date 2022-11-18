@@ -7,7 +7,7 @@ import server.database.Query;
 /**
  * 模型关联接口
  */
-declare interface ModelRelationInterface
+declare interface ModelRelationInterface<T>
 {
     /**
      * 延迟获取关联数据
@@ -38,7 +38,7 @@ declare interface ModelRelationInterface
      * @param  Closure $closure     闭包条件
      * @return void
      */
-    eagerlyResult(result:Model, relation:string, subRelation?:array, closure:(...args)=>void): void;
+    eagerlyResult(result:T, relation:string, subRelation?:array, closure:(...args)=>void): void;
 
     /**
      * 关联统计
@@ -50,7 +50,7 @@ declare interface ModelRelationInterface
      * @param  string  $name 统计字段别名
      * @return integer
      */
-    relationCount(result:Model, closure:(...args)=>void, aggregate?:string, field?:string, name?:string);
+    relationCount(result:T, closure:(...args)=>void, aggregate?:string, field?:string, name?:string);
 
     /**
      * 创建关联统计子查询
@@ -72,7 +72,7 @@ declare interface ModelRelationInterface
      * @param  string  $joinType JOIN类型
      * @return Query
      */
-    has(operator?:string, count?:int, id?:string, joinType?:string): Query;
+    has(operator?:string, count?:int, id?:string, joinType?:string): Query<T>;
 
     /**
      * 根据关联条件查询当前模型
@@ -82,5 +82,5 @@ declare interface ModelRelationInterface
      * @param  string $joinType JOIN类型
      * @return Query
      */
-    hasWhere(where?:array, fields?, joinType?:string): Query;
+    hasWhere(where?:array, fields?, joinType?:string): Query<T>;
 }

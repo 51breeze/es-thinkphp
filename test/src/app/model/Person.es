@@ -20,8 +20,9 @@ class Person extends Model<Person> {
 
         Db.table('sss').find()
 
+        Person.find()
 
-
+        
 
 
         //type table = {username:string};
