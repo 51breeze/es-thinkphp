@@ -32,7 +32,7 @@ describe('compile file', function() {
     }).catch( error=>{
         const errors=error.errors;
         it(`compiler failed 'Test.es'`, function() {
-            errors.forEach((error)=>{
+            errors && errors.forEach((error)=>{
                 fail( error.message );
             });
         });

@@ -2,8 +2,9 @@ package app.model;
 
 import server.model.Model;
 import server.facade.Db;
+import table.Person as PersonStruct;
 
-class Person extends Model<Person> {
+class Person extends Model<Person> implements PersonStruct {
 
     protected name:string = 'admin';
     get myName(){
@@ -20,9 +21,14 @@ class Person extends Model<Person> {
 
         Db.table('sss').find()
 
-        Person.find()
+        var result = Person.find();
+       // result.account = 'ssss';
 
-        
+       result.title = '66'
+       result.account = 555;
+       
+       result.id = 5;
+       result.save()
 
 
         //type table = {username:string};
@@ -41,3 +47,5 @@ class Person extends Model<Person> {
         return 'Join'
     }
 }
+
+
