@@ -13,11 +13,11 @@ class Person extends Model<Person> implements PersonStruct {
         //     ['id', '=', 2]
         // ]).select() );
 
-         this.where([]);
+         this.where('name','=', 'ssss');
 
         // Person.where([])
 
-        Db.table('admin').where([]);
+        Db.table('admin').where({name:'ssss'});
 
         Db.table('sss').find()
 
@@ -30,7 +30,9 @@ class Person extends Model<Person> implements PersonStruct {
        result.id = 5;
        result.save()
 
-       Person.create({});
+       
+
+       Person.create({'name':'yejun'});
 
 
         //type table = {username:string};

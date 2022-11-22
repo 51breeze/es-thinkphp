@@ -21,7 +21,6 @@ class Router extends Core.Router{
         });
         const file = PATH.join(object.file, filename+'.php' );
         const content = [
-            '<?php',
             'use think\\facade\\Route;'
         ].concat(items).join('\r\n');
         return {file,content};
