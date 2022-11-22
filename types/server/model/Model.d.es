@@ -3,12 +3,14 @@ package server.model;
 import server.database.concern.WhereQuery;
 import server.database.concern.WhereQueryFieldType;
 import server.database.Query;
+import server.database.DbManager;
 
 import server.model.concern.Attribute;
 import server.model.concern.RelationShip;
 import server.model.concern.ModelEvent;
 import server.model.concern.TimeStamp;
 import server.model.concern.Conversion;
+
 
 /**
 * 模型基类，所有业务模型层都应该继承 Model 类
@@ -19,6 +21,97 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
 
       use static,this extends Query<T>{
             find():T
+      }
+
+      use static{
+
+            /**
+            * 写入数据
+            * @access public
+            * @param array  $data       数据数组
+            * @param array  $allowField 允许字段
+            * @param bool   $replace    使用Replace
+            * @param string $suffix     数据表后缀
+            * @return static
+            */
+            create(data:ArrayMappingType<ScalarValueType>, allowField?:string[], replace?:boolean, suffix?:string): T
+
+            /**
+            * 更新数据
+            * @access public
+            * @param array  $data       数据数组
+            * @param mixed  $where      更新条件
+            * @param array  $allowField 允许字段
+            * @param string $suffix     数据表后缀
+            * @return static
+            */
+            update(data:ArrayMappingType<ScalarValueType>, allowField?:string[], suffix?:string):T
+
+            /**
+            * 删除记录
+            * @access public
+            * @param mixed $data  主键列表 支持闭包查询条件
+            * @param bool  $force 是否强制删除
+            * @return bool
+            */
+            destroy(data:ScalarValueType | ScalarValueType[] | (query?:Query)=>void, force?:boolean): boolean
+
+            /**
+            * 设置服务注入
+            * @access public
+            * @param Closure $maker
+            * @return void
+            */
+            maker( maker:(model?:Model)=>void ):void
+
+            /**
+            * 设置方法注入
+            * @access public
+            * @param string $method
+            * @param Closure $closure
+            * @return void
+            */
+            macro(method:string, closure:(...args)=>any):void
+
+            /**
+            * 设置Db对象
+            * @access public
+            * @param DbManager $db Db对象
+            * @return void
+            */
+            setDb(db:DbManager):void
+
+            /**
+            * 设置容器对象的依赖注入方法
+            * @access public
+            * @param callable $callable 依赖注入方法
+            * @return void
+            */
+            setInvoker(callable:(...args)=>any):void
+
+            /**
+            * 设置不使用的全局查询范围
+            * @access public
+            * @param array $scope 不启用的全局查询范围
+            * @return Query
+            */
+            withoutGlobalScope(scope?:string[]):Query
+
+            /**
+            * 切换后缀进行查询
+            * @access public
+            * @param string $suffix 切换的表后缀
+            * @return Model
+            */
+            suffix(suffix:string):T
+
+            /**
+            * 切换数据库连接进行查询
+            * @access public
+            * @param string $connection 数据库连接标识
+            * @return Model
+            */
+            connect(connection:string):T
       }
 
       protected name:string

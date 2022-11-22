@@ -25,10 +25,12 @@ class Person extends Model<Person> implements PersonStruct {
        // result.account = 'ssss';
 
        result.title = '66'
-       result.account = 555;
+       result.account = '555';
        
        result.id = 5;
        result.save()
+
+       Person.create({});
 
 
         //type table = {username:string};
