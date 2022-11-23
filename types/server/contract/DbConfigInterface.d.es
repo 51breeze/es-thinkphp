@@ -1,6 +1,6 @@
-package server.database;
+package server.contract;
 
-declare interface Config{
+declare interface DbConfigInterface{
       // 数据库类型
       type:'mysql' | 'mongo' | 'oracle' | 'pgsql' | 'sqlite' | 'sqlsrv'
       // 服务器地址

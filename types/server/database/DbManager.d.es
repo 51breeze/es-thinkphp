@@ -2,7 +2,9 @@ package server.database;
 
 import server.psr.CacheInterface;
 import server.psr.LoggerInterface;
-declare interface DbManager{
+import server.contract.DbConfigInterface;
+
+declare class DbManager{
 
       /**
       * 初始化配置参数
@@ -10,7 +12,7 @@ declare interface DbManager{
       * @param array $config 连接配置
       * @return void
       */
-      setConfig(config:Config | {[type:string]:Config} ):void
+      setConfig(config:DbConfigInterface | {[type:string]:DbConfigInterface} ):void
 
       /**
       * 设置缓存对象

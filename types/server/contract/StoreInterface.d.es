@@ -1,4 +1,4 @@
-package server.kernel;
+package server.contract;
 
 declare interface StoreInterface{
 

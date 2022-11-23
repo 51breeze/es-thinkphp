@@ -1,6 +1,6 @@
 package server.http;
 
-import server.kernel.StoreInterface;
+import server.contract.StoreInterface;
 import server.kernel.Manager;
 
 /**

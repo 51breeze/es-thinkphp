@@ -2,10 +2,8 @@ package server.kernel;
 
 declare type ValidateOperatorType = '>' | 'gt' | '>=' | 'egt' | '<' | 'lt' | '<=' | 'elt' | '=' | 'eq' | 'same' | 'eq';
 
-
 import server.http.Request;
-//import server.database
-
+import server.database.Db;
 
 /**
  * 数据验证类
@@ -35,7 +33,7 @@ declare class Validate
      * @param Db $db Db对象
      * @return void
      */
-    setDb(db:any):void
+    setDb(db:Db):void
 
     /**
      * 设置Request对象

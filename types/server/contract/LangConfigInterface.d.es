@@ -1,6 +1,6 @@
-package server.kernel;
+package server.contract;
 
-declare interface LangConfig{
+declare interface LangConfigInterface{
       // cookie 保存时间
       default_lang?:string,
       // cookie 保存路径

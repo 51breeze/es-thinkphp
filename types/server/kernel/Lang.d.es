@@ -1,5 +1,7 @@
 package server.kernel;
 
+import server.contract.LangConfigInterface;
+
 /**
  * 多语言管理类
  * @package think
@@ -12,23 +14,23 @@ declare class Lang
      * 配置参数
      * @var array
      */
-    protected config:LangConfig
+    protected config:LangConfigInterface
 
     /**
      * 构造方法
      * @access public
      * @param array $config
      */
-    constructor(app:App, config?:LangConfig )
+    constructor(app:App, config?:LangConfigInterface )
 
-    static __make(app:App, config:LangConfig)
+    static __make(app:App, config:LangConfigInterface)
     
     /**
      * 获取当前语言配置
      * @access public
      * @return array
      */
-    getConfig(): LangConfig
+    getConfig(): LangConfigInterface
 
     /**
      * 设置当前语言

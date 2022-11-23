@@ -2,6 +2,7 @@ package server.database;
 
 import server.database.concern.BaseQuery;
 import server.psr.CacheInterface;
+import server.contract.DbConfigInterface;
 
 declare interface Connection<QC=BaseQuery< ArrayMappingType< TableColumnValueType > >>{
 
@@ -69,7 +70,7 @@ declare interface Connection<QC=BaseQuery< ArrayMappingType< TableColumnValueTyp
       * @param integer $linkNum 连接序号
       * @return mixed
       */
-      connect(config?:Config, linkNum:int = 0);
+      connect(config?:DbConfigInterface, linkNum:int = 0);
 
       /**
       * 设置当前的数据库Db对象
@@ -93,7 +94,7 @@ declare interface Connection<QC=BaseQuery< ArrayMappingType< TableColumnValueTyp
       * @param string $config 配置名称
       * @return mixed
       */
-      getConfig(config?:string):Config
+      getConfig(config?:string):DbConfigInterface
 
       /**
       * 关闭数据库（或者重新连接）

@@ -1,7 +1,9 @@
-package server.kernel;
+package server.database;
 
 import server.database.DbManager;
-import server.database.Config;
+import server.contract.DbConfigInterface;
+import server.kernel.Log;
+import server.kernel.Cache;
 
 /**
  * 数据库管理类
@@ -18,7 +20,7 @@ declare class Db extends DbManager
      * @return Db
      * @codeCoverageIgnore
      */
-    static __make(event:Event, config:Config, log:Log, cache:Cache);
+    static __make(event:Event, config:DbConfigInterface, log:Log, cache:Cache);
    
     /**
      * 注入模型对象

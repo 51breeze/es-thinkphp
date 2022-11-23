@@ -1,6 +1,7 @@
-package server.kernel;
+package server.http;
 
 import server.http.Request;
+import server.contract.CookieConfigInterface;
 
 /**
  * Cookie管理类
@@ -12,7 +13,7 @@ declare class Cookie
      * 配置参数
      * @var array
      */
-    protected config:CookieConfig;
+    protected config:CookieConfigInterface;
 
     /**
      * Cookie写入数据
@@ -30,10 +31,10 @@ declare class Cookie
      * 构造方法
      * @access public
      */
-    constructor(request:Request, config?:CookieConfig)
+    constructor(request:Request, config?:CookieConfigInterface)
 
 
-    static __make(request:Request, config:CookieConfig)
+    static __make(request:Request, config:CookieConfigInterface)
 
 
     /**
