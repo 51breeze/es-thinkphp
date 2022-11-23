@@ -1,6 +1,7 @@
 package server.facade;
 import server.kernel.Cache as BaseCache;
-declare final class Cache{
+declare final static class Cache{
     use static extends BaseCache{
+        [key:string]<T=any>(name:string, ...args):T
     }
 }

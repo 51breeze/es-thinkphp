@@ -54,7 +54,7 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
             * @param bool  $force 是否强制删除
             * @return bool
             */
-            destroy(data:ScalarValueType | ScalarValueType[] | (query?:Query)=>void, force?:boolean): boolean
+            destroy(data:ScalarValueType | ScalarValueType[] | (query?:Query<T>)=>void, force?:boolean): boolean
 
             /**
             * 设置服务注入
@@ -62,7 +62,7 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
             * @param Closure $maker
             * @return void
             */
-            maker( maker:(model?:Model)=>void ):void
+            maker( maker:(model?:T)=>void ):void
 
             /**
             * 设置方法注入
@@ -95,7 +95,7 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
             * @param array $scope 不启用的全局查询范围
             * @return Query
             */
-            withoutGlobalScope(scope?:string[]):Query
+            withoutGlobalScope(scope?:string[]):Query<T>
 
             /**
             * 切换后缀进行查询

@@ -4,6 +4,6 @@ import server.database.DbManager
 import server.database.Connection 
 import server.database.Query 
 
-declare static final class Db implements DbManager, Connection< Query< ArrayMappingType<TableColumnValueType> > >{
-      
+declare final static class Db{
+    use static extends DbManager, Connection< Query< ArrayMappingType<TableColumnValueType> > >;
 }
