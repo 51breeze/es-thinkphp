@@ -8,7 +8,7 @@ import server.kernel.Manager;
  * @mixin Driver
  * @mixin \think\cache\driver\File
  */
-declare class Cache extends Manager implements CacheInterface{
+declare class Cache extends Manager<Cache> implements CacheInterface{
 
     /**
      * 获取缓存配置
@@ -27,8 +27,6 @@ declare class Cache extends Manager implements CacheInterface{
      * @return array
      */
     getStoreConfig(store:string, name?:string, default?):ArrayMappingType<ScalarValueType>;
-
-    resolveConfig(name:string):ArrayMappingType<ScalarValueType> | null;
 
     /**
      * 连接或者切换缓存
