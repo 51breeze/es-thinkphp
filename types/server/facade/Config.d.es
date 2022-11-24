@@ -1,5 +1,5 @@
 package server.facade;
-import server.kernel.Config as BaseConfig;
 declare final static class Config{
-    use static extends BaseConfig;
+    use static extends server.kernel.Config:prototype:public;
+    use static extends server.kernel.Config:class:public;
 }

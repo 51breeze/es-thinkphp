@@ -1,5 +1,4 @@
 package server.facade;
-import server.http.Cookie as BaseCookie;
 declare final static class Cookie{
-    use static extends BaseCookie;
+     use static extends server.http.Cookie:prototype:public;
 }

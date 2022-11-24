@@ -10,8 +10,8 @@ import server.kernel.App;
 @abstract()
 declare class Dispatch
 {
-    constructor(request:Request, rule:Rule, dispatch, param?:ArrayMappingType<ScalarValueType>)
-    init(app:App)
+    constructor(request:Request, rule:Rule, dispatch?:string, param?:ArrayMappingType<ScalarValueType>)
+    init(app:App):void
 
     /**
      * 执行路由调度
@@ -19,7 +19,7 @@ declare class Dispatch
      * @return mixed
      */
     run():Response
-    getDispatch()
-    getParam(): array
-    exec();
+    getDispatch(): Response
+    getParam():ArrayMappingType<ScalarValueType>
+    exec():any;
 }

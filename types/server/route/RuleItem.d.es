@@ -76,7 +76,7 @@ declare class RuleItem extends Rule
      * @param  bool         $completeMatch   路由是否完全匹配
      * @return Dispatch|false
      */
-    checkRule(request:Request, url:string, $match = null, completeMatch:boolean = false)
+    checkRule(request:Request, url:string, match = null, completeMatch:boolean = false)
    
     /**
      * 设置路由所属分组（用于注解路由）
