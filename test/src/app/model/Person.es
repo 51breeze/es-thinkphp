@@ -35,6 +35,10 @@ class Person extends Model<Person> implements PersonStruct {
 
        Person.create({'name':'yejun'});
 
+       Db.table('sss').where([])
+
+       Db.table('sss').where([]);
+
       
 
 

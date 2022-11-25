@@ -376,6 +376,6 @@ declare class Route
      * @param array  $vars 参数 ['a'=>'val1', 'b'=>'val2']
      * @return UrlBuild
      */
-    buildUrl(url:string, vars?:ArrayMappingType<string>): UrlBuild
+    buildUrl(url:string, vars?:ArrayMappingType<string>): server.route.Url
    
 }

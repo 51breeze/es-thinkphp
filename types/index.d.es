@@ -214,9 +214,6 @@ declare function token_meta(name?:string, type?:string): string
 */
 declare function trace(log?:string, level?:string ):array
 
-declare interface UrlBuild{};
-declare interface Validate{};
-
 /**
 * Url生成
 * @param string      $url    路由地址
@@ -225,7 +222,7 @@ declare interface Validate{};
 * @param bool|string $domain 域名
 * @return UrlBuild
 */
-declare function url(url:string, vars?:array, suffix?:boolean, domain?:boolean): UrlBuild;
+declare function url(url:string, vars?:array, suffix?:boolean, domain?:boolean): server.route.Url;
 
 /**
 * 生成验证对象
@@ -235,7 +232,7 @@ declare function url(url:string, vars?:array, suffix?:boolean, domain?:boolean):
 * @param bool         $failException 是否抛出异常
 * @return Validate
 */
-declare function validate(validate:string, message?:array, batch?:boolean, failException?:boolean): Validate;
+declare function validate(validate:string, message?:array, batch?:boolean, failException?:boolean): server.kernel.Validate;
 
 /**
 * 渲染模板输出
