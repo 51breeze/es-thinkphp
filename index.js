@@ -18,7 +18,7 @@ const defaultConfig ={
     resolve:{
         useFolderAsNamespace:true,
         publicPath:'public',
-        excludes:['server.application.Model'],
+        excludes:[],
         mapping:{
             folder:{
                 //只有一级目录
@@ -40,16 +40,16 @@ const defaultConfig ={
                 //三级以上目录
                 '*/*/*/***.es::controller':'%0/%1/controller/%...',
                 '*/*/*/***.es::router':'%0/%1/route/%...',
-                '*/*/lang/***.es::lang':'%0/%1/lang/%...',
-                '*/*/config/***.es::lang':'%0/%1/config/%...',
+                '*/*/lang/***.es::general':'%0/%1/lang/%...',
+                '*/*/config/***.es::general':'%0/%1/config/%...',
                 '*/*/*/***.es::config':'%0/%1/config/%...',
                 '*/*/*/***.es::model':'%0/%1/model/%...',
                 '*/*/*/***.es::general':'%0/%1/%...',
                 
                 //通用文件
-                'config.es::general':'config/%...',
                 '****.es::general':'%...',
                 '****::asset':'public/static/%...',
+                'config.es::general':'config',
                 'config/***.es::general':'config/%...',
                 'root':'./',
             },
