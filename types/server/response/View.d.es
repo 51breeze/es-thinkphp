@@ -1,12 +1,12 @@
 package server.response;
-package server.kernel.Response;
+import server.kernel.Response;
 
 /**
 * View Response
 */
 declare class View extends Response{
 
-     constructor(cookie:server.kernel.Cookie, view:server.kernel.View, data?:string, code?:number)
+     constructor(cookie:server.kernel.Cookie, baseView:server.kernel.View, data?:string, code?:number)
 
       /**
       * 获取视图变量

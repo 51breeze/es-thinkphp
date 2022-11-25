@@ -16,7 +16,7 @@ declare function env<T=ScalarValueType | ScalarValueType[]>(name:string,defaultV
 * @param string           $message 错误信息
 * @param array            $header  参数
 */
-declare function abort(code:server.http.Response | number , message?:string, header?:ArrayMappingType<ScalarValueType>):void;
+declare function abort(code:server.kernel.Response | number , message?:string, header?:ArrayMappingType<ScalarValueType>):void;
 
 /**
 * 快速获取容器中的实例 支持依赖注入
@@ -71,7 +71,7 @@ declare function cookie(name?:string, value?, option?):any;
 * @param int    $expire   有效期（秒）
 * @return \think\response\File
 */
-declare function download(filename:string, name?:string, content?:boolean, expire?:number): server.http.File
+declare function download(filename:string, name?:string, content?:boolean, expire?:number): server.response.File
 
 /**
 * 浏览器友好的变量输出
@@ -119,7 +119,7 @@ declare function invoke(call:(...args)=>any, args?:array ):any;
 * @param array $options 参数
 * @return \think\response\Json
 */
-declare function json(data:any, code:number, header:{[key:string]:string}, options?:array): server.http.Json
+declare function json(data:any, code:number, header:{[key:string]:string}, options?:array): server.response.Json
 
 /**
 * 获取\think\response\Jsonp对象实例
@@ -129,7 +129,7 @@ declare function json(data:any, code:number, header:{[key:string]:string}, optio
 * @param array $options 参数
 * @return \think\response\Jsonp
 */
-declare  function jsonp(data:any, code:number, header:{[key:string]:string}, options?:array): server.http.Jsonp
+declare  function jsonp(data:any, code:number, header:{[key:string]:string}, options?:array): server.response.Jsonp
 
 /**
 * 获取语言变量值
@@ -156,13 +156,13 @@ declare function parse_name(name:string, type:number, ucfirst:boolean): string
 * @param int    $code 状态码
 * @return \think\response\Redirect
 */
-declare  function redirect(url:string, code:number): server.http.Redirect
+declare  function redirect(url:string, code:number): server.response.Redirect
 
 /**
 * 获取当前Request对象实例
 * @return Request
 */
-declare  function request(): server.http.Request
+declare  function request(): server.kernel.Request
 
 /**
 * 创建普通 Response 对象实例
@@ -172,7 +172,7 @@ declare  function request(): server.http.Request
 * @param string     $type
 * @return Response
 */
-declare function response(data:any, code?:number, header?:{[key:string]:string}, type?:string): server.http.Response
+declare function response(data:any, code?:number, header?:{[key:string]:string}, type?:string): server.kernel.Response
 
 /**
 * Session管理
@@ -242,7 +242,7 @@ declare function validate(validate:string, message?:array, batch?:boolean, failE
 * @param callable $filter   内容过滤
 * @return \think\response\View
 */
-declare function view(template?:string, vars?:array, code?:number, filter:(...args)=>boolean): server.http.View;
+declare function view(template?:string, vars?:array, code?:number, filter:(...args)=>boolean): server.response.View;
 
 /**
 * 渲染模板输出
@@ -252,7 +252,7 @@ declare function view(template?:string, vars?:array, code?:number, filter:(...ar
 * @param callable $filter  内容过滤
 * @return \think\response\View
 */
-declare function display(content?:string, vars?:array, code?:number, filter:(...args)=>boolean): server.http.View
+declare function display(content?:string, vars?:array, code?:number, filter:(...args)=>boolean): server.response.View
 
 /**
 * 获取\think\response\Xml对象实例
@@ -262,7 +262,7 @@ declare function display(content?:string, vars?:array, code?:number, filter:(...
 * @param array $options 参数
 * @return \think\response\Xml
 */
-declare function xml(data:array, code?:number, header?:{[key:string]:string}, options?:array): server.http.Xml
+declare function xml(data:array, code?:number, header?:{[key:string]:string}, options?:array): server.response.Xml
 
 /**
 * 获取当前应用目录

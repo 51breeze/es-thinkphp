@@ -1,5 +1,5 @@
 package server.response;
-package server.kernel.Response;
+import server.kernel.Response;
 
 
 /**
