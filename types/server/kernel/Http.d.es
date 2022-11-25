@@ -1,7 +1,7 @@
 package server.kernel;
 
-import server.http.Response;
-import server.http.Request;
+import server.kernel.Response;
+import server.kernel.Request;
 
 /**
  * Web应用管理类

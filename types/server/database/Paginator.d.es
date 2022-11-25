@@ -76,7 +76,7 @@ declare class Paginator{
       *
       * @return Collection|\think\model\Collection
       */
-      public getCollection():Collection
+      public getCollection():server.kernel.Collection
 
       public isEmpty(): boolean
 

@@ -1,4 +1,4 @@
-package server.http;
+package server.kernel;
 
 declare class Response{
 

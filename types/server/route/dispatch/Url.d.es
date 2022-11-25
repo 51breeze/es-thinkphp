@@ -1,6 +1,6 @@
 package server.route.dispatch;
 
-import server.http.Request
+import server.kernel.Request
 import server.route.Rule;
 
 /**

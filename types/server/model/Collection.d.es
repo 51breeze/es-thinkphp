@@ -1,6 +1,6 @@
 package server.model;
 
-import server.database.Collection as BaseCollection;
+import server.kernel.Collection as BaseCollection;
 import server.model.Model;
 
 /**

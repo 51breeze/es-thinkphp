@@ -2,8 +2,8 @@ package server.kernel;
 
 declare type ValidateOperatorType = '>' | 'gt' | '>=' | 'egt' | '<' | 'lt' | '<=' | 'elt' | '=' | 'eq' | 'same' | 'eq';
 
-import server.http.Request;
-import server.database.Db;
+import server.kernel.Request;
+import server.kernel.Db;
 
 /**
  * 数据验证类

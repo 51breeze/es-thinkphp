@@ -1,9 +1,9 @@
-package server.kernel;
+package server.contract;
 
 /**
  * 标签集合
  */
-declare interface TagSet{
+declare interface TagSetInterface{
    
 
     /**

@@ -1,6 +1,6 @@
 package server.facade;
  
-import server.database.Db as BaseDb;
+import server.kernel.Db as BaseDb;
 import server.database.Connection 
 import server.database.Query 
 

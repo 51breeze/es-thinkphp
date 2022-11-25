@@ -1,6 +1,6 @@
 package server.route;
 import server.kernel.Route;
-import server.http.Request;
+import server.kernel.Request;
 
 /**
  * 路由规则基础类

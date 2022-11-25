@@ -1,4 +1,4 @@
-package server.http;
+package server.kernel;
 
 declare class Request{
 
@@ -739,7 +739,7 @@ declare class Request{
       * @param Session session 数据
       * @return this
       */
-      public  withSession(session:server.http.Session):this
+      public  withSession(session:server.kernel.Session):this
 
       /**
       * 设置SERVER数据

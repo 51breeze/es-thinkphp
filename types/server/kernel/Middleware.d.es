@@ -1,6 +1,6 @@
 package server.kernel;
 
-import server.http.Response;
+import server.kernel.Response;
 
 /**
  * 中间件管理类

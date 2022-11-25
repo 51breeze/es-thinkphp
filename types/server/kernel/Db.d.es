@@ -1,4 +1,4 @@
-package server.database;
+package server.kernel;
 
 import server.database.DbManager;
 import server.contract.DbConfigInterface;

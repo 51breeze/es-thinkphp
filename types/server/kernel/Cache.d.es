@@ -2,6 +2,7 @@ package server.kernel;
 
 import server.psr.CacheInterface;
 import server.kernel.Manager;
+import server.contract.TagSetInterface;
 
 /**
  * 缓存管理类
@@ -113,6 +114,6 @@ declare class Cache extends Manager<Cache> implements CacheInterface{
      * @param string|array $name 标签名
      * @return TagSet
      */
-    tag(name:string|string[]): TagSet;
+    tag(name:string|string[]): TagSetInterface;
 
 }

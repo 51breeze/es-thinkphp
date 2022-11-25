@@ -416,7 +416,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @throws ModelNotFoundException
       * @throws DataNotFoundException
       */
-      select(data?:ScalarValueType|ScalarValueType[]): server.database.Collection
+      select(data?:ScalarValueType|ScalarValueType[]): server.kernel.Collection
 
       /**
       * 查找单条记录

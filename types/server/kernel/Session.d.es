@@ -1,4 +1,4 @@
-package server.http;
+package server.kernel;
 
 import server.contract.StoreInterface;
 import server.kernel.Manager;

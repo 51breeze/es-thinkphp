@@ -1,6 +1,6 @@
-package server.http;
+package server.kernel;
 
-import server.http.Request;
+import server.kernel.Request;
 import server.contract.CookieConfigInterface;
 
 /**

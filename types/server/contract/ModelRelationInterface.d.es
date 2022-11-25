@@ -1,6 +1,6 @@
 package server.contract;
 
-import server.database.Collection;
+import server.kernel.Collection;
 import server.model.Model;
 import server.database.Query;
 

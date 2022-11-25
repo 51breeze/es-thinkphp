@@ -1,7 +1,7 @@
 package server.route;
 
-import server.http.Request
-import server.http.Response;
+import server.kernel.Request
+import server.kernel.Response;
 import server.kernel.App;
 
 /**
