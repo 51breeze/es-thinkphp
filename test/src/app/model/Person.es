@@ -5,6 +5,8 @@ import server.facade.Db;
 import table.Person as PersonStruct;
 import server.facade.Cache;
 
+import server.database.Raw;
+
 class Person extends Model<Person> implements PersonStruct {
 
     protected name:string = 'admin';
@@ -17,6 +19,8 @@ class Person extends Model<Person> implements PersonStruct {
          this.where('name','=', 'ssss');
 
          Person.where([])
+
+         new Raw('sssss');
 
 
        Db.table('admin').where({name:'ssss'});

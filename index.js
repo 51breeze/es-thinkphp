@@ -21,7 +21,6 @@ const defaultConfig ={
         excludes:['server.application.Model'],
         mapping:{
             folder:{
-
                 //只有一级目录
                 '*/*.es::controller':'app/controller',
                 '*/*.es::router':'app/route',
@@ -46,7 +45,8 @@ const defaultConfig ={
                 '*/*/*/***.es::config':'%0/%1/config/%...',
                 '*/*/*/***.es::model':'%0/%1/model/%...',
                 '*/*/*/***.es::general':'%0/%1/%...',
-
+                
+                //通用文件
                 'config.es::general':'config/%...',
                 '****.es::general':'%...',
                 '****::asset':'public/static/%...',
@@ -59,19 +59,20 @@ const defaultConfig ={
                 '*/*/*/***.es::controller':'/%1/%filename',
             },
             namespace:{
-                'server.model.Model':'think',
-                'server.facade.Db':'think.facade',
-                'server.database.Connection':'think.db',
-                'server.database.BaseQuery':'think.db',
-                'server.database.Collection':'think',
+                'server.database.DbManager':'think',
                 'server.database.Paginator':'think',
-                'server.http.Session':'think',
-                'server.http.Request':'think',
-                'server.http.Response':'think',
-                'server.kernel.Env':'think',
-                'server.kernel.App':'think',
-                'server.kernel.Container':'think',
+                'server.database.**':'think.db.%...',
+                'server.model.Model':'think',
+                'server.model.**':'think.model.%...',
+                'server.facade.*':'think.facade',
+                'server.route.**':'think.route.%...',
+                'server.response.**':'think.response.%...',
+                'server.event.**':'think.event.%...',
+                'server.kernel.*':'think',
                 'server.utils.env':'',
+            },
+            disconnect:{
+                'server.kernel.Controller':true
             },
             externals:['PHPUnit.Framework.TestCase'],
         }
