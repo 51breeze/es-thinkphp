@@ -1,6 +1,6 @@
 package server.database.concern;
 
-declare type WhereQueryExpressionType = '=' | '<>' | '<' | '<=' | '>' | '>=' | 'REGEXP' | 'NOT REGEXP' | 'regexp' | 'not regexp';
+declare type WhereQueryExpressionType = '=' | '<>' | '<' | '<=' | '>' | '>=' | 'REGEXP' | 'NOT REGEXP' | 'regexp' | 'not regexp' | 'IN' | 'in';
 declare type WhereQueryFieldValueType = string | number | null | server.database.Raw;
 declare type WhereQueryFieldWrapType = [string, WhereQueryExpressionType, WhereQueryFieldValueType]
 declare type WhereQueryFieldType = string | server.database.Raw | WhereQueryFieldWrapType[] | ArrayMappingType<WhereQueryFieldValueType> | (query:BaseQuery)=>void;
@@ -19,7 +19,7 @@ declare interface WhereQuery{
       * @param mixed $condition 查询条件
       * @return $this
       */
-      where(field:WhereQueryFieldType, op?:WhereQueryExpressionType, condition?:WhereQueryFieldValueType):this;
+      where(field:WhereQueryFieldType, op?:WhereQueryExpressionType, condition?:WhereQueryFieldValueType | WhereQueryFieldValueType[]):this;
 
       
       /**

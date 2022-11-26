@@ -244,14 +244,14 @@ declare class Response{
       * @param  string $name 头部名称
       * @return mixed
       */
-      getHeader(name?:string)
+      getHeader(name?:string):string|null
 
       /**
       * 获取原始数据
       * @access public
       * @return mixed
       */
-      getData()
+      getData():any;
 
 
       /**

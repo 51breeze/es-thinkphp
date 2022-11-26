@@ -9,39 +9,43 @@ import server.database.Raw;
 
 class Person extends Model<Person> implements PersonStruct {
 
-    protected name:string = 'admin';
+    list(){
+        return this.where('id','in', [1,2]).select().toArray();
+    }
+
+    
     get myName(){
 
-        console.log( Db.table('admin').where( [
+        console.log( Db.table('person').where( [
             ['id', '=', 2]
         ]).select() );
 
-         this.where('name','=', 'ssss');
+    //      this.where('name','=', 'ssss');
 
-         Person.where([])
+    //      Person.where([])
 
-         new Raw('sssss');
+    //      new Raw('sssss');
 
 
-       Db.table('admin').where({name:'ssss'});
-       Db.table('sss').find()
+    //    Db.table('admin').where({name:'ssss'});
+    //    Db.table('sss').find()
 
-        var result = Person.find();
+        console.log(  Person.find(1), Person.where('id','=',4).find() )
+
+        var result = new Person()
         result.account = 'ssss';
-
        result.title = '66'
        result.account = '555';
-       
-       result.id = 5;
-       result.save();
+      // result.id = 5;
+      console.log( result.save() , result.id );
 
-       Cache.grop('ssss');
+   
 
-       Person.create({'name':'yejun'});
+       Person.create({'account':'yejun','title':'yejun'}).save();
 
-       Db.table('sss').where([])
+    //    Db.table('sss').where([])
 
-       Db.table('sss').where([]);
+    //    Db.table('sss').where([]);
 
       
 

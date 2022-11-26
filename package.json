@@ -8,7 +8,7 @@
     "init": "node ./test/init.js",
     "dev": "jasmine ./test/index.js",
     "run": "node ./test/phptest.js",
-    "test": "npm run dev-test & npm run dev-run"
+    "test": "npm run dev & npm run run"
   },
   "repository": {
     "type": "git",

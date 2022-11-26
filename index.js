@@ -68,8 +68,7 @@ const defaultConfig ={
                 'server.route.**':'think.route.%...',
                 'server.response.**':'think.response.%...',
                 'server.event.**':'think.event.%...',
-                'server.kernel.*':'think',
-                'server.utils.env':'',
+                'server.kernel.*':'think'
             },
             disconnect:{
                 'server.kernel.Controller':true

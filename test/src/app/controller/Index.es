@@ -17,13 +17,16 @@ class Index extends Controller{
 
       @Embed('../../assets/less/index.less')
       file:string;
-      
 
       @Get('/')
-      public getList(){
-           const person = new Person();
-           console.log( _Person  );
-           return `<h1>Hello, World!</h1><div>My name is ${person.myName}</div>`;
+      public hello(){
+           return `Hello, World!`;
+      }
+      
+      @Post('/list')
+      public list(){
+            const person = new Person();
+            return json( person.list(), 200 );
       }
 
 }

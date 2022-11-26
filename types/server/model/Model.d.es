@@ -20,7 +20,7 @@ import server.model.concern.Conversion;
 declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEvent,TimeStamp,Conversion<T>{
 
       use static,this extends Query<T>{
-            find():T
+            find(data?:TableColumnValueType):T
       }
 
       use static{

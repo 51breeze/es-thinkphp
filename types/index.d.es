@@ -119,7 +119,7 @@ declare function invoke(call:(...args)=>any, args?:array ):any;
 * @param array $options 参数
 * @return \think\response\Json
 */
-declare function json(data:any, code:number, header:{[key:string]:string}, options?:array): server.response.Json
+declare function json(data:any, code?:number, header?:{[key:string]:string}, options?:array): server.response.Json
 
 /**
 * 获取\think\response\Jsonp对象实例
@@ -129,7 +129,7 @@ declare function json(data:any, code:number, header:{[key:string]:string}, optio
 * @param array $options 参数
 * @return \think\response\Jsonp
 */
-declare  function jsonp(data:any, code:number, header:{[key:string]:string}, options?:array): server.response.Jsonp
+declare  function jsonp(data:any, code?:number, header?:{[key:string]:string}, options?:array): server.response.Jsonp
 
 /**
 * 获取语言变量值
@@ -148,7 +148,7 @@ declare function lang(name:string, vars:array, lang?:string):any;
 * @param bool   $ucfirst 首字母是否大写（驼峰规则）
 * @return string
 */
-declare function parse_name(name:string, type:number, ucfirst:boolean): string
+declare function parse_name(name:string, type:number, ucfirst?:boolean): string
 
 /**
 * 获取\think\response\Redirect对象实例
@@ -156,7 +156,7 @@ declare function parse_name(name:string, type:number, ucfirst:boolean): string
 * @param int    $code 状态码
 * @return \think\response\Redirect
 */
-declare  function redirect(url:string, code:number): server.response.Redirect
+declare  function redirect(url:string, code?:number): server.response.Redirect
 
 /**
 * 获取当前Request对象实例
