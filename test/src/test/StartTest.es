@@ -87,19 +87,16 @@ public class StartTest extends TestCase{
     }
 
     testModel(){
-       const person = Person.find(1);
-     //  const address =person.address()
-    //    address.area = 'sss';
-    //    address.phone = '156966666';
-
-
-
-      console.log( person,  Person.with('address').find( 1 ) );
-       
-
- 
-       // as Person;
-       // console.log( address.area , '==profile==' );
+        const person = Person.find(1);
+        const address = person.getAttr<Address>('address');
+        this.assertEquals(1, address.uid );
+        const phone = address.phone;
+        address.phone = '8888';
+        this.assertEquals(true, address.save());
+        const result = (object)Db.table('address').find( address.id ) as Address;
+        this.assertEquals(address.phone, result.phone);
+        address.phone = phone;
+        this.assertEquals(true, address.save());
     }
 
 }

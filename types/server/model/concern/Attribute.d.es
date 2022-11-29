@@ -123,7 +123,7 @@ declare interface Attribute{
      * @return mixed
      * @throws InvalidArgumentException
      */
-     getAttr(name:string):any
+     getAttr<T>(name:string):T;
     
 
     /**
