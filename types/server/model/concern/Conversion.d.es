@@ -87,7 +87,7 @@ declare interface Conversion<T>{
      * @param  integer $options json参数
      * @return string
      */
-    toJson(options:number): string;
+    toJson(options?:number): string;
 
     /**
      * 转换数据集为数据集对象

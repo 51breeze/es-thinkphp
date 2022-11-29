@@ -2,11 +2,11 @@ package table;
 
 struct table Person{
   id: int(11) auto_increment,
-  pid: int(11) DEFAULT 0,
-  account?: varchar(32) DEFAULT '',
-  title?: varchar(32),
-
+  account: varchar(16),
+  password: varchar(32),
+  create_at:int(11),
+  status:int(6),
+  title?: varchar(32) DEFAULT '',
   PRIMARY KEY(id),
-  KEY pid(pid),
   FULLTEXT KEY title(title)
 }

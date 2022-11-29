@@ -7,6 +7,8 @@ import server.facade.Cache;
 import server.database.Raw;
 import app.model.Address 
 
+import server.database.concern.BaseQuery;
+
 class Person extends Model<Person> implements PersonStruct {
 
     list(){
@@ -14,7 +16,8 @@ class Person extends Model<Person> implements PersonStruct {
     }
 
     address(){
-        return this.hasOne(Address, 'uid');
+        const result = this.hasOne(Address, 'uid');
+        return result;
     }
 
 }

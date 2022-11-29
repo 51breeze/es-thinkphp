@@ -404,7 +404,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @return int
       * @throws Exception
       */
-      delete(data?:ScalarValueType|ScalarValueType[]): int
+      delete(data?:ScalarValueType|ScalarValueType[]|true): int
 
 
       /**
