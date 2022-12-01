@@ -80,6 +80,14 @@ public class StartTest extends TestCase{
         this.assertEquals(true, result3.save() );
         this.assertEquals(2, result3.id );
 
+        const personResult = Person.find(2);
+        this.assertEquals(2, personResult.id);
+        const personAddress = personResult.getAttr<Address>('address');
+        this.assertEquals(2, personAddress.uid);
+        this.assertEquals(result3.area, personAddress.area);
+        this.assertEquals(result3.phone, personAddress.phone);
+        this.assertEquals(result3.postcode, personAddress.postcode);
+
         const response = this.bootstrap('list','post');
         const data = response.getData() as {id:number}[];
         this.assertEquals(2, data.length);
@@ -93,7 +101,7 @@ public class StartTest extends TestCase{
         const phone = address.phone;
         address.phone = '8888';
         this.assertEquals(true, address.save());
-        const result = (object)Db.table('address').find( address.id ) as Address;
+        const result = Db.table('address').find( address.id );
         this.assertEquals(address.phone, result.phone);
         address.phone = phone;
         this.assertEquals(true, address.save());

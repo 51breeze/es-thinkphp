@@ -427,7 +427,6 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @throws ModelNotFoundException
       * @throws DataNotFoundException
       */
-      @Define(TypeTransform,object)
       find(data?:ScalarValueType|ScalarValueType[]):T | null
 
       /**
