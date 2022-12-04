@@ -15,7 +15,7 @@ public class StartTest extends TestCase{
 
     bootstrap(route:string, method:'get' | 'post' | 'put' | 'delete'='get'){
         const request = new Request();
-        request.setMethod( method );
+        request.setMethod( method as string );
         request.setUrl( route );
         request.setPathinfo( route )
         const app = new App();
