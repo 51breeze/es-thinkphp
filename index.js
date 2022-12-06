@@ -7,10 +7,12 @@ const PluginPHP = Core.Plugin;
 const merge = require("lodash/merge");
 const modules = new Map();
 const dirname = path.join(__dirname,"tokens");
-fs.readdirSync( dirname ).forEach( (filename)=>{
-    const info = path.parse( filename );
-    modules.set(info.name, require( path.join(dirname,filename) ) );
-});
+if( fs.existsSync(dirname) ){
+    fs.readdirSync( dirname ).forEach( (filename)=>{
+        const info = path.parse( filename );
+        modules.set(info.name, require( path.join(dirname,filename) ) );
+    });
+}
 
 const defaultConfig ={
     framework:'thinkphp',

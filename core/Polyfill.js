@@ -6,4 +6,5 @@ Core.Polyfill.createEveryModule(modules, dirname);
 module.exports={
     path:dirname,
     modules,
+    createEveryModule:Core.Polyfill.createEveryModule
 }
