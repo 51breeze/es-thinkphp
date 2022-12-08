@@ -3,6 +3,10 @@ const Polyfill = require('./Polyfill');
 const Router = require('./Router');
 const routerInstance = new Router();
 class Builder extends Core.Builder{
+    constructor(compilation){
+        super(compilation);
+        routerInstance.builder = this;
+    }
     getRouterInstance(){
         return routerInstance;
     }

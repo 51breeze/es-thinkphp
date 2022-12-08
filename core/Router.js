@@ -2,7 +2,9 @@ const Core = require("./Core");
 const PATH = require('path');
 class Router extends Core.Router{
     make( object ){
-        const filename = 'app';
+        const options = this.builder.plugin.options || {};
+        const resolve = options.resolve || {};
+        const filename = resolve.routeFileName || 'app';
         const items = object.items.map( item=>{
             const {className, action, path, method, params} = item;
             const controller = className+'@'+action;

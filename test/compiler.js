@@ -18,7 +18,78 @@ class Creator {
         },options || {}));
         compiler.initialize();
         this._compiler = compiler;
-        this.plugin = compiler.applyPlugin( plugin );
+        this.plugin = compiler.applyPlugin( [plugin,{
+            resolve:{
+                useFolderAsNamespace:true,
+                publicPath:'public',
+                excludes:[],
+                routeFileName:'app',
+                mapping:{
+                    folder:{
+                      
+                        //只有一级目录
+                        '*/*.es::controller':'app/controller',
+                        '*/*.es::router':'app/route',
+                        '*/*.es::model':'app/model',
+                        '*/*.es::config':'config',
+                        'lang/*.es::general':'lang',
+        
+                        //只有二级目录
+                        '*/*/*.es::controller':'%0/controller',
+                        '*/*/*.es::model':'%0/model',
+                        '*/*/*.es::router':'route',
+                        '*/lang/*.es::general':'lang',
+                        '*/config/*.es::general':'config',
+                        '*/*/*.es::config':'config',
+                        '*/*/*.es::general':'%0',
+        
+                        //三级以上目录
+                        '*/*/*/***.es::controller':'%0/%1/controller/%...',
+                        '*/*/*/***.es::router':'%0/%1/route/%...',
+                        '*/*/lang/***.es::general':'%0/%1/lang/%...',
+                        '*/*/config/***.es::general':'%0/%1/config/%...',
+                        '*/*/*/***.es::config':'%0/%1/config/%...',
+                        '*/*/*/***.es::model':'%0/%1/model/%...',
+                        '*/*/*/***.es::general':'%0/%1/%...',
+                        
+                        //通用文件
+                        '****.es::general':'%...',
+                        '****::asset':'public/static/%...',
+                        'config.es::general':'config',
+                        'config/***.es::general':'config/%...',
+                        'root':'./',
+                        
+                    },
+                    route:{
+                        '*/*.es::controller':'%filename',
+                        '*/*/*.es::controller':'/%filename',
+                        '*/*/*/***.es::controller':'/%1/%filename',
+                    },
+                    namespace:{
+                        'server.database.DbManager':'think',
+                        'server.database.Paginator':'think',
+                        'server.database.**':'think.db.%...',
+                        'server.model.Model':'think',
+                        'server.model.**':'think.model.%...',
+                        'server.facade.*':'think.facade',
+                        'server.route.**':'think.route.%...',
+                        'server.response.**':'think.response.%...',
+                        'server.event.**':'think.event.%...',
+                        'server.kernel.*':'think'
+                    },
+                    disconnect:{
+                        'server.kernel.Controller':true
+                    },
+                    externals:[
+                        'PHPUnit.Framework.TestCase'
+                    ],
+                }
+            },
+            includes:[
+                './config/*',
+                '.env',
+            ]
+        }]);
     }
 
     get compiler(){
