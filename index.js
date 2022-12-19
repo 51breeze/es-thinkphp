@@ -70,7 +70,7 @@ function createProject(projectPath, version='6.x.x'){
     });
 }
 
-class Plugin extends PluginPHP{
+class PluginEsThink extends PluginPHP{
 
     static init(projectPath, version){
         return createProject(projectPath, version);
@@ -102,7 +102,14 @@ class Plugin extends PluginPHP{
         builder.plugin = this;
         return builder;
     }
+
+    toString(){
+        return pkg.name;
+    }
 }
 
+PluginEsThink.toString=function toString(){
+    return pkg.name;
+}
 
-module.exports = Plugin;
+module.exports = PluginEsThink;
