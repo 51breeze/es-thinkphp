@@ -18,7 +18,7 @@ class Creator {
         },options || {}));
         compiler.initialize();
         this._compiler = compiler;
-        this.plugin = compiler.applyPlugin( [plugin,{
+        this.plugin = compiler.applyPlugin( {plugin,options:{
             resolve:{
                 useFolderAsNamespace:true,
                 publicPath:'public',
@@ -58,6 +58,7 @@ class Creator {
                         'config.es::general':'config',
                         'config/***.es::general':'config/%...',
                         'root':'./',
+                        '*.es::global':'system',
                         
                     },
                     route:{
@@ -89,7 +90,7 @@ class Creator {
                 './config/*',
                 '.env',
             ]
-        }]);
+        }});
     }
 
     get compiler(){
