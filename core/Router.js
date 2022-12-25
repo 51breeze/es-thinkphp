@@ -6,7 +6,8 @@ class Router extends Core.Router{
         const resolve = options.resolve || {};
         const filename = resolve.routeFileName || 'app';
         const items = object.items.map( item=>{
-            const {className, action, path, method, params} = item;
+            let {className, action, path, method, params} = item;
+            path = path.toLowerCase();
             const controller = className+'@'+action;
             if( params && params.length>0 ){
                 const args = params.map( item=>{
