@@ -1,12 +1,12 @@
 package server.kernel;
 
-declare class Collection{
+declare class Collection<T=any>{
 
-      constructor(items:array = []);
+      constructor(items?:T[]);
 
       isEmpty(): boolean
 
-      toArray(): array
+      toArray(): T[]
 
       all(): array
 
@@ -27,7 +27,7 @@ declare class Collection{
       * @param string $indexKey 键名
       * @return array
       */
-      dictionary(items?:any, indexKey?:string):array
+      dictionary(items?:any, indexKey?:string):T[]
 
       /**
       * 比较数组，返回差集
@@ -88,7 +88,7 @@ declare class Collection{
       * @param mixed    $initial
       * @return mixed
       */
-      reduce( callback:()=>any, initial?:any):array;
+      reduce( callback:()=>any, initial?:any):T[];
 
       /**
       * 以相反的顺序返回数组。
@@ -104,7 +104,7 @@ declare class Collection{
       * @access public
       * @return mixed
       */
-      shift():any
+      shift():T
 
       /**
       * 在数组结尾插入一个元素
@@ -113,7 +113,7 @@ declare class Collection{
       * @param string $key   KEY
       * @return $this
       */
-      push(value:any, key?:string):this
+      push(value:T, key?:string):this
 
       /**
       * 把一个数组分割为新的数组块.
@@ -149,7 +149,7 @@ declare class Collection{
       * @param callable|null $callback 回调
       * @return static
       */
-      map( callback:()=>any ):this
+      map( callback:(item?:T,key?:number)=>T ):this
 
 
       /**
@@ -158,7 +158,7 @@ declare class Collection{
       * @param callable|null $callback 回调
       * @return static
       */
-      filter( callback?:()=>boolean ):this
+      filter( callback?:(item?:T,key?:number)=>boolean ):this
 
       /**
       * 根据字段条件过滤数组中的元素

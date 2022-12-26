@@ -11,7 +11,7 @@ import server.model.Model;
  *
  * @extends BaseCollection<TKey, TModel>
  */
-declare class Collection<T> extends BaseCollection
+declare class Collection<T> extends BaseCollection<T>
 {
     /**
      * 延迟预载入关联查询

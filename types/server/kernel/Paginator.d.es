@@ -1,6 +1,6 @@
-package server.database;
+package server.kernel;
 
-declare class Paginator{
+declare class Paginator<T>{
 
       /**
       * 获取数据总条数
@@ -69,14 +69,14 @@ declare class Paginator{
       */
       protected buildFragment(): string
 
-      public items():any;
+      public items():T[];
 
       /**
       * 获取数据集
       *
       * @return Collection|\think\model\Collection
       */
-      public getCollection():server.kernel.Collection
+      public getCollection():server.kernel.Collection<T>
 
       public isEmpty(): boolean
 
@@ -89,7 +89,6 @@ declare class Paginator{
       */
       public each(callback:()=>void)
 
-
       /**
       * 统计数据集条数
       * @return int
@@ -100,7 +99,28 @@ declare class Paginator{
       * 转换为数组
       * @return array
       */
-      public toArray(): array
+      public toArray(): ArrayProtector< PaginateResult<T> >;
 
+      public jsonSerialize():ArrayProtector< PaginateResult<T> >;
 }
 
+declare interface PaginateConfig{
+      //url额外参数
+      query?:any[]
+      //url锚点
+      fragment?:string
+      //分页变量
+      var_page?:string
+      //每页数量
+      list_rows?:number
+      //当前页
+      page?:number
+}
+
+declare interface PaginateResult<T>{
+      current_page:number
+      last_page:number
+      per_page:number
+      total:number
+      data:T[]
+}

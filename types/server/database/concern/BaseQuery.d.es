@@ -204,7 +204,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @return Paginator
       * @throws Exception
       */
-      paginate(listRows:any = null, simple:boolean = false): server.database.Paginator
+      paginate(listRows?:number | server.kernel.PaginateConfig, simple:boolean = false): server.kernel.Paginator<T>
       
 
       /**
@@ -216,7 +216,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @return Paginator
       * @throws Exception
       */
-      paginateX(listRows = null,  key:string = null, sort:string = null): server.database.Paginator
+      paginateX(listRows?:number | server.kernel.PaginateConfig,  key:string = null, sort:string = null): server.kernel.Paginator<T>
 
       /**
       * 根据最后ID查询更多N个数据
@@ -416,7 +416,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @throws ModelNotFoundException
       * @throws DataNotFoundException
       */
-      select(data?:ScalarValueType|ScalarValueType[]): server.kernel.Collection
+      select(data?:ScalarValueType|ScalarValueType[]): server.kernel.Collection<T>
 
       /**
       * 查找单条记录
