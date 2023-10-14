@@ -1,0 +1,13 @@
+/node_modules
+package-lock.json
+/test
+/core
+/lib
+/helper 
+/polyfill
+/scripts
+/tokens
+/transforms
+/types
+/make.js
+.phpunit.result.cache
