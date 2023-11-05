@@ -395,7 +395,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @return integer
       * @throws Exception
       */
-      update(data?:ScalarValueType|ScalarValueType[]): int
+      update(data?:ArrayMappingType<ScalarValueType> | ArrayMappingType<ScalarValueType>[]): int
 
       /**
       * 删除记录
@@ -404,7 +404,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @return int
       * @throws Exception
       */
-      delete(data?:ScalarValueType|ScalarValueType[]|true): int
+      delete(data?:true|ScalarValueType|ScalarValueType[]): int
 
 
       /**
