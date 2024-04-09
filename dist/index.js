@@ -106,16 +106,17 @@ var require_package = __commonJS({
   "package.json"(exports2, module2) {
     module2.exports = {
       name: "es-thinkphp",
-      version: "0.2.1",
+      version: "0.3.0",
       description: "test",
       main: "dist/index.js",
-      typings: "dist/types/think.d.es",
+      typings: "dist/types/typings.json",
       scripts: {
         init: "node ./test/init.js",
         dev: "jasmine ./test/index.js",
         run: "node ./test/phptest.js",
         test: "npm run dev & npm run run",
-        build: "node ./scripts/build.js"
+        build: "node ./scripts/build.js",
+        manifest: "node ./scripts/manifest.js"
       },
       repository: {
         type: "git",
