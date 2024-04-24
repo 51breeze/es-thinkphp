@@ -3,8 +3,7 @@ const PATH = require('path');
 class Router extends Core.Router{
     make( object ){
         const options = this.builder.plugin.options || {};
-        const resolve = options.resolve || {};
-        const filename = resolve.routeFileName || 'app';
+        const filename = options.routeFileName || 'app';
         const items = object.items.map( item=>{
             let {className, action, path, method, params} = item;
             const controller = className+'@'+action;

@@ -18,7 +18,7 @@ public class StartTest extends TestCase{
         request.setMethod( method as string );
         request.setUrl( route );
         request.setPathinfo( route )
-        const app = new App();
+        const app = new App( dirname(__DIR__) );
         const http = new Http(app);
         return http.run( request );
     }

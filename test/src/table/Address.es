@@ -7,5 +7,5 @@ struct table Address{
   content: varchar(255) DEFAULT '',
   phone: varchar(16) DEFAULT '' ,
   postcode?: varchar(32),
-  PRIMARY KEY(id)
+  PRIMARY KEY(id, postcode)
 }

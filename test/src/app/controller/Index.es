@@ -1,7 +1,5 @@
 package app.controller;
 
-import server.kernel.Controller;
-
 import app.model.Person;
 
 import server.facade.Cookie;
@@ -13,7 +11,7 @@ import {Person as _Person} from '../../config.es';
 import "../../assets/main.js";
 import "../../assets/style.css";
 
-class Index extends Controller{
+class Index {
 
       @Embed('../../assets/less/index.less')
       file:string;
