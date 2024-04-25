@@ -33,7 +33,7 @@ declare class Filesystem extends Manager<any>{
      * @param null   $default
      * @return array
      */
-    getDiskConfig(disk:string, default?:any):ArrayMappingType<string>
+    getDiskConfig(disk:string, default?:any):ArrayMapping<string>
     getDiskConfig(disk:string, name:string, default?:any):string;
 
     /**

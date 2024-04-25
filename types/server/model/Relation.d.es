@@ -82,6 +82,6 @@ declare interface Relation<T>{
      * @param  mixed $data 默认值
      * @return $this
      */
-    withDefault(data:ArrayMappingType<ScalarValueType>):this
+    withDefault(data:ArrayMapping<ScalarValue>):this
 
 }

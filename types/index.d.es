@@ -1,6 +1,3 @@
-@Reference('es-php/dist/types');
-@Reference('./server');
-
 /**
 * 获取环境变量值
 * @access public
@@ -8,7 +5,7 @@
 * @param string $default 默认值
 * @return mixed
 */
-declare function env<T=ScalarValueType | ScalarValueType[]>(name:string,defaultValue?:any):T;
+declare function env<T=ScalarValue | ScalarValue[]>(name:string,defaultValue?:any):T;
 
 /**
 * 抛出HTTP异常
@@ -16,7 +13,7 @@ declare function env<T=ScalarValueType | ScalarValueType[]>(name:string,defaultV
 * @param string           $message 错误信息
 * @param array            $header  参数
 */
-declare function abort(code:server.kernel.Response | number , message?:string, header?:ArrayMappingType<ScalarValueType>):void;
+declare function abort(code:server.kernel.Response | number , message?:string, header?:ArrayMapping<ScalarValue>):void;
 
 /**
 * 快速获取容器中的实例 支持依赖注入
@@ -253,8 +250,8 @@ declare function url(url:string, vars?:array, suffix?:boolean, domain?:boolean):
 * @param bool         $failException 是否抛出异常
 * @return Validate
 */
-declare function validate(validate:string, message?:ArrayMappingType<string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
-declare function validate(validate:ArrayMappingType<ArrayMappingType<any>>, message?:ArrayMappingType<string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
+declare function validate(validate:string, message?:ArrayMapping<string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
+declare function validate(validate:ArrayMapping<ArrayMapping<any>>, message?:ArrayMapping<string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
 
 /**
 * 渲染模板输出

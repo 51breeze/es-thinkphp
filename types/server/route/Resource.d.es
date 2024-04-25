@@ -40,7 +40,7 @@ declare class Resource extends RuleGroup
      * @param  array $vars 资源变量
      * @return $this
      */
-    vars(vars:ArrayMappingType<any>):this;
+    vars(vars:ArrayMapping<any>):this;
    
 
     /**

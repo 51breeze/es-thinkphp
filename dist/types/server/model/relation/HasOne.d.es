@@ -84,7 +84,7 @@ declare class HasOne<T> extends OneToOne<T>
      * @param  array   $cache       关联缓存
      * @return void
      */
-    protected eagerlySet(resultSet:ArrayMappingType<ScalarValueType>, relation:string, subRelation?:string[], closure:(...args)=>any, cache?:array): void
+    protected eagerlySet(resultSet:ArrayMapping<ScalarValue>, relation:string, subRelation?:string[], closure:(...args)=>any, cache?:array): void
 
     /**
      * 预载入关联查询（数据）

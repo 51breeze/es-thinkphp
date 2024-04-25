@@ -4,7 +4,7 @@ import server.database.concern.BaseQuery;
 import server.psr.CacheInterface;
 import server.contract.DbConfigInterface;
 
-declare interface Connection<QC=BaseQuery< ArrayMappingType< TableColumnValueType > >>{
+declare interface Connection<QC=BaseQuery< ArrayMapping< TableColumnValue > >>{
 
       /**
       * 指定表名开始查询
@@ -109,7 +109,7 @@ declare interface Connection<QC=BaseQuery< ArrayMappingType< TableColumnValueTyp
       * @param BaseQuery $query 查询对象
       * @return array
       */
-      find(query:QC): ArrayMappingType< TableColumnValueType >;
+      find(query:QC): ArrayMapping< TableColumnValue >;
 
       /**
       * 查找记录
@@ -117,7 +117,7 @@ declare interface Connection<QC=BaseQuery< ArrayMappingType< TableColumnValueTyp
       * @param BaseQuery $query 查询对象
       * @return array
       */
-      select(query:QC): ArrayMappingType< TableColumnValueType >[];
+      select(query:QC): ArrayMapping< TableColumnValue >[];
 
       /**
       * 插入记录
@@ -161,7 +161,7 @@ declare interface Connection<QC=BaseQuery< ArrayMappingType< TableColumnValueTyp
       * @param mixed  $default 默认值
       * @return mixed
       */
-      value(query:QC, field:string, defaultValue:any = null):TableColumnValueType;
+      value(query:QC, field:string, defaultValue:any = null):TableColumnValue;
 
       /**
       * 得到某个列的数组
@@ -171,7 +171,7 @@ declare interface Connection<QC=BaseQuery< ArrayMappingType< TableColumnValueTyp
       * @param string $key    索引
       * @return array
       */
-      column(query:QC, column:string | array, key?:string): ArrayMappingType< TableColumnValueType >[];
+      column(query:QC, column:string | array, key?:string): ArrayMapping< TableColumnValue >[];
 }
 
 declare interface PDOStatement{}

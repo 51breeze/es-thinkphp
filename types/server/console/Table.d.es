@@ -13,7 +13,7 @@ declare class Table
      * @param int   $align      对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
      * @return void
      */
-    setHeader(header:ArrayMappingType<ScalarValueType>, align?:number): void
+    setHeader(header:ArrayMapping<ScalarValue>, align?:number): void
 
     /**
      * 设置输出表格数据 及对齐方式

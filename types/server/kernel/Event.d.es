@@ -14,7 +14,7 @@ declare class Event{
      * @param array $events 事件定义
      * @return $this
      */
-    listenEvents(events:ArrayMappingType<(...args)=>void>):this;
+    listenEvents(events:ArrayMapping<(...args)=>void>):this;
 
     /**
      * 注册事件监听
@@ -48,7 +48,7 @@ declare class Event{
      * @param array $events 事件别名
      * @return $this
      */
-    bind(events:ArrayMappingType<string>):this;
+    bind(events:ArrayMapping<string>):this;
 
     /**
      * 注册事件订阅者

@@ -33,7 +33,7 @@ declare interface TagSetInterface{
      * @param null|int|\DateInterval $ttl    有效时间 0为永久
      * @return bool
      */
-    setMultiple(values:ArrayMappingType<any>, ttl?:number): boolean
+    setMultiple(values:ArrayMapping<any>, ttl?:number): boolean
    
 
     /**

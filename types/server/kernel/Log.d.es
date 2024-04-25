@@ -80,7 +80,7 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param bool   $lazy
      * @return $this
      */
-    record(msg:string, type?:string, context?:ArrayMappingType<string>, lazy?:boolean):this;
+    record(msg:string, type?:string, context?:ArrayMapping<string>, lazy?:boolean):this;
    
 
     /**
@@ -91,7 +91,7 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param array  $context 替换内容
      * @return $this
      */
-    write(msg:string, type:string, context?:ArrayMappingType<string>):this;
+    write(msg:string, type:string, context?:ArrayMapping<string>):this;
    
 
     /**
@@ -110,7 +110,7 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param array  $context 替换内容
      * @return void
      */
-    log(level:string, message:ScalarValueType, context?:ArrayMappingType<string>): void
+    log(level:string, message:ScalarValue, context?:ArrayMapping<string>): void
    
     /**
      * 记录emergency信息
@@ -119,7 +119,7 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param array $context 替换内容
      * @return void
      */
-    emergency(message:ScalarValueType, context?:ArrayMappingType<string>): void
+    emergency(message:ScalarValue, context?:ArrayMapping<string>): void
   
 
     /**
@@ -129,7 +129,7 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param array $context 替换内容
      * @return void
      */
-    alert(message:ScalarValueType, context?:ArrayMappingType<string>): void
+    alert(message:ScalarValue, context?:ArrayMapping<string>): void
   
 
     /**
@@ -139,7 +139,7 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param array $context 替换内容
      * @return void
      */
-    critical(message:ScalarValueType, context?:ArrayMappingType<string>): void
+    critical(message:ScalarValue, context?:ArrayMapping<string>): void
    
 
     /**
@@ -149,7 +149,7 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param array $context 替换内容
      * @return void
      */
-    error(message:ScalarValueType, context?:ArrayMappingType<string>): void
+    error(message:ScalarValue, context?:ArrayMapping<string>): void
    
 
     /**
@@ -159,7 +159,7 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param array $context 替换内容
      * @return void
      */
-    warning(message:ScalarValueType, context?:ArrayMappingType<string>): void
+    warning(message:ScalarValue, context?:ArrayMapping<string>): void
   
 
     /**
@@ -169,7 +169,7 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param array $context 替换内容
      * @return void
      */
-    notice(message:ScalarValueType, context?:ArrayMappingType<string>): void
+    notice(message:ScalarValue, context?:ArrayMapping<string>): void
    
 
     /**
@@ -179,7 +179,7 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param array $context 替换内容
      * @return void
      */
-    info(message:ScalarValueType, context?:ArrayMappingType<string>): void
+    info(message:ScalarValue, context?:ArrayMapping<string>): void
    
 
     /**
@@ -189,7 +189,7 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param array $context 替换内容
      * @return void
      */
-    debug(message:ScalarValueType, context?:ArrayMappingType<string>): void
+    debug(message:ScalarValue, context?:ArrayMapping<string>): void
    
 
     /**
@@ -199,5 +199,5 @@ declare class Log extends Manager<Log> implements LoggerInterface
      * @param array $context 替换内容
      * @return void
      */
-    sql(message:ScalarValueType, context?:ArrayMappingType<string>): void
+    sql(message:ScalarValue, context?:ArrayMapping<string>): void
 }

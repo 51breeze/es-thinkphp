@@ -10,14 +10,19 @@ const defaultConfig ={
         usings:['server/**'],
         folders:{
             "*.global":"escore",
-            '**/*.route':'route',
-            '*/lang/*.es::*':'app/lang',
-            '*/config/*.es::*':'config',
+            '*.route':'route',
+            'lang/***':'app/lang',
             'console/*.es':'app/console',
-            'middleware.es':'app',
+            'middleware/***':'app',
+            'http/*.es':'app/controller',
+            'model/*.es':'app/model',
+            'assets/***':'static',
+            'config/***':'config/{...}',
         },
-        routes:{
-           
+        formats:{
+            '*.route':(id, scheme, data)=>{
+                return String(data.path).toLowerCase();
+            }
         },
         namespaces:{
             'server/database/DbManager':'think',

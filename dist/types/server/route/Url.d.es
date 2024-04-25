@@ -22,7 +22,7 @@ declare class Url
      * @param  array $vars URL参数
      * @return $this
      */
-    vars(vars:ArrayMappingType<string>):this
+    vars(vars:ArrayMapping<string>):this
    
     /**
      * 设置URL后缀

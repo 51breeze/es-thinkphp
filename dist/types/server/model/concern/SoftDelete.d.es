@@ -45,7 +45,7 @@ declare interface SoftDelete<T>
      * @param array $where 更新条件
      * @return bool
      */
-    restore(where:ArrayMappingType<ScalarValueType>): boolean
+    restore(where:ArrayMapping<ScalarValue>): boolean
 
     /**
      * 获取软删除字段

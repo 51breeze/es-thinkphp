@@ -25,7 +25,7 @@ declare class Manager<T>
      * @param null|string $name
      * @return mixed
      */
-    protected driver(name:string = null):T | ArrayMappingType<T>
+    protected driver(name:string = null):T | ArrayMapping<T>
 
     /**
      * 获取驱动实例
@@ -46,7 +46,7 @@ declare class Manager<T>
      * @param string $name
      * @return mixed
      */
-    protected resolveConfig(name:string):ArrayMappingType<ScalarValueType>
+    protected resolveConfig(name:string):ArrayMapping<ScalarValue>
 
     /**
      * 获取驱动类

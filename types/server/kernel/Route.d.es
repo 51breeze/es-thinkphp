@@ -307,7 +307,7 @@ declare class Route
      * @param array  $vars     模板变量
      * @return RuleItem
      */
-    view(rule:string, template?:string, vars?:ArrayMappingType<any>): RuleItem
+    view(rule:string, template?:string, vars?:ArrayMapping<any>): RuleItem
 
     /**
      * 注册重定向路由
@@ -376,6 +376,6 @@ declare class Route
      * @param array  $vars 参数 ['a'=>'val1', 'b'=>'val2']
      * @return UrlBuild
      */
-    buildUrl(url:string, vars?:ArrayMappingType<string>): server.route.Url
+    buildUrl(url:string, vars?:ArrayMapping<string>): server.route.Url
    
 }

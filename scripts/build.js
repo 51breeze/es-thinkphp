@@ -14,6 +14,11 @@ esbuild.build({
   plugins: [
     require('esbuild-plugin-copy').copy({
       resolveFrom: 'cwd',
+      globbyOptions:{
+        ignore:[
+          './types/think.d.es',
+        ],
+      },
       assets: {
         from: ['./types/**'],
         to: ['./dist/types/'],

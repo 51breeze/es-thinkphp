@@ -40,7 +40,7 @@ declare class View extends Manager<View>
      * @return string
      * @throws \Exception
      */
-   fetch(template?:string, vars?:ArrayMappingType<any>): string
+   fetch(template?:string, vars?:ArrayMapping<any>): string
 
     /**
      * 渲染内容输出
@@ -49,7 +49,7 @@ declare class View extends Manager<View>
      * @param array  $vars    模板变量
      * @return string
      */
-   display(content:string, vars?:ArrayMappingType<any>): string
+   display(content:string, vars?:ArrayMapping<any>): string
 
     /**
      * 获取模板引擎渲染内容

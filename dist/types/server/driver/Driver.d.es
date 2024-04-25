@@ -30,7 +30,7 @@ declare class Driver{
      * @param array                $options 参数
      * @return bool|string
      */
-    putFile(path:string, file:File, rule?:any, options?:ArrayMappingType<any>):boolean|string
+    putFile(path:string, file:File, rule?:any, options?:ArrayMapping<any>):boolean|string
 
     /**
      * 指定文件名保存文件
@@ -40,5 +40,5 @@ declare class Driver{
      * @param array  $options 参数
      * @return bool|string
      */
-    putFileAs(path:string, file:File, name:string, options?:ArrayMappingType<any>):boolean|string
+    putFileAs(path:string, file:File, name:string, options?:ArrayMapping<any>):boolean|string
 }

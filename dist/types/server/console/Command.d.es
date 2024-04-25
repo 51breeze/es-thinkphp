@@ -91,7 +91,7 @@ declare class Command
      * @param mixed  $default     默认值
      * @return Command
      */
-    addArgument(name:string, mode?:int, description?:string, default?:ScalarValueType):this;
+    addArgument(name:string, mode?:int, description?:string, default?:ScalarValue):this;
 
     /**
      * 添加选项
@@ -102,7 +102,7 @@ declare class Command
      * @param mixed  $default     默认值
      * @return Command
      */
-    addOption(name:string, shortcut?:string, mode?:int, description?:string, default?:ScalarValueType):this;
+    addOption(name:string, shortcut?:string, mode?:int, description?:string, default?:ScalarValue):this;
    
 
     /**

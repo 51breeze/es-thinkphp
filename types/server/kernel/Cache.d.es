@@ -18,7 +18,7 @@ declare class Cache extends Manager<Cache> implements CacheInterface{
      * @param mixed $default 默认值
      * @return mixed
      */
-    getConfig(name?:string, default?):ArrayMappingType<ScalarValueType>;
+    getConfig(name?:string, default?):ArrayMapping<ScalarValue>;
 
     /**
      * 获取驱动配置
@@ -27,7 +27,7 @@ declare class Cache extends Manager<Cache> implements CacheInterface{
      * @param null   $default
      * @return array
      */
-    getStoreConfig(store:string, name?:string, default?):ArrayMappingType<ScalarValueType>;
+    getStoreConfig(store:string, name?:string, default?):ArrayMapping<ScalarValue>;
 
     /**
      * 连接或者切换缓存
@@ -79,7 +79,7 @@ declare class Cache extends Manager<Cache> implements CacheInterface{
      * @return iterable
      * @throws InvalidArgumentException
      */
-    getMultiple(keys:string[], default?): ArrayMappingType<ScalarValueType>;
+    getMultiple(keys:string[], default?): ArrayMapping<ScalarValue>;
 
     /**
      * 写入缓存
@@ -88,7 +88,7 @@ declare class Cache extends Manager<Cache> implements CacheInterface{
      * @param null|int|\DateInterval $ttl    有效时间 0为永久
      * @return bool
      */
-    setMultiple(values:ArrayMappingType<any>, ttl?:number): boolean
+    setMultiple(values:ArrayMapping<any>, ttl?:number): boolean
 
 
     /**

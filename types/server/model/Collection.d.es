@@ -38,7 +38,7 @@ declare class Collection<T> extends BaseCollection<T>
      * @param array $allowField 允许字段
      * @return bool
      */
-    update(data:ArrayMappingType<ScalarValueType>, allowField?:string[]): boolean
+    update(data:ArrayMapping<ScalarValue>, allowField?:string[]): boolean
 
 
     /**
@@ -48,7 +48,7 @@ declare class Collection<T> extends BaseCollection<T>
      * @param  bool  $merge  是否合并
      * @return $this
      */
-    hidden(hidden:ArrayMappingType<ScalarValueType>, merge = false):this
+    hidden(hidden:ArrayMapping<ScalarValue>, merge = false):this
 
 
     /**
@@ -58,7 +58,7 @@ declare class Collection<T> extends BaseCollection<T>
      * @param  bool  $merge    是否合并
      * @return $this
      */
-    visible(visible:ArrayMappingType<ScalarValueType>, merge = false):this
+    visible(visible:ArrayMapping<ScalarValue>, merge = false):this
 
 
     /**
@@ -68,7 +68,7 @@ declare class Collection<T> extends BaseCollection<T>
      * @param  bool  $merge  是否合并
      * @return $this
      */
-    append(append:ArrayMappingType<ScalarValueType>, merge = false):this
+    append(append:ArrayMapping<ScalarValue>, merge = false):this
 
 
     /**
@@ -104,5 +104,5 @@ declare class Collection<T> extends BaseCollection<T>
      * @return $this
      * @throws Exception
      */
-    bindAttr(relation:string, attrs:ArrayMappingType<ScalarValueType>):this
+    bindAttr(relation:string, attrs:ArrayMapping<ScalarValue>):this
 }

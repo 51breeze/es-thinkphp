@@ -20,7 +20,7 @@ import server.model.concern.Conversion;
 declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEvent,TimeStamp,Conversion<T>{
 
       use static,this extends Query<T>{
-            find(data?:TableColumnValueType):T
+            find(data?:TableColumnValue):T
       }
 
       use static{
@@ -34,7 +34,7 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
             * @param string $suffix     数据表后缀
             * @return static
             */
-            create(data:ArrayMappingType<ScalarValueType>, allowField?:string[], replace?:boolean, suffix?:string): T
+            create(data:ArrayMapping<ScalarValue>, allowField?:string[], replace?:boolean, suffix?:string): T
 
             /**
             * 更新数据
@@ -45,7 +45,7 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
             * @param string $suffix     数据表后缀
             * @return static
             */
-            update(data:ArrayMappingType<ScalarValueType>, allowField?:string[], suffix?:string):T
+            update(data:ArrayMapping<ScalarValue>, allowField?:string[], suffix?:string):T
 
             /**
             * 删除记录
@@ -54,7 +54,7 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
             * @param bool  $force 是否强制删除
             * @return bool
             */
-            destroy(data:ScalarValueType | ScalarValueType[] | (query?:Query<T>)=>void, force?:boolean): boolean
+            destroy(data:ScalarValue | ScalarValue[] | (query?:Query<T>)=>void, force?:boolean): boolean
 
             /**
             * 设置服务注入
@@ -291,7 +291,7 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
       * @param string $sequence 自增序列名
       * @return bool
       */
-      save( data?:ArrayMappingType<ScalarValueType>, sequence?:string ): boolean;
+      save( data?:ArrayMapping<ScalarValue>, sequence?:string ): boolean;
 
       /**
       * 获取当前的更新条件
@@ -308,7 +308,7 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
       * @return Collection
       * @throws \Exception
       */
-      saveAll(dataSet?:ArrayMappingType<ScalarValueType>[],replace?:boolean):Collection<T>;
+      saveAll(dataSet?:ArrayMapping<ScalarValue>[],replace?:boolean):Collection<T>;
 
       /**
       * 删除当前的记录

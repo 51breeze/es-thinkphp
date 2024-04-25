@@ -90,5 +90,5 @@ declare class Output
    
     isDebug():boolean
    
-    describe(object, options?:ArrayMappingType<any>): void
+    describe(object, options?:ArrayMapping<any>): void
 }

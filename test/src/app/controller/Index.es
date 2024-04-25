@@ -21,7 +21,7 @@ class Index {
            return `Hello, World!`;
       }
       
-      @Post('/list')
+      @Post('/List')
       public list(){
             const person = new Person();
             return json( person.list(), 200 );

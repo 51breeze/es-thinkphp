@@ -20,7 +20,7 @@ declare interface  Virtual
      * @param string $sequence 自增序列名
      * @return bool
      */
-    public save(data:ArrayMappingType<ScalarValueType>, sequence?:string): boolean
+    public save(data:ArrayMapping<ScalarValue>, sequence?:string): boolean
 
     /**
      * 删除当前的记录

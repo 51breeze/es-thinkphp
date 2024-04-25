@@ -53,7 +53,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param array $type 字段类型信息
       * @return $this
       */
-      setFieldType(type:ArrayMappingType<string>):this;
+      setFieldType(type:ArrayMapping<string>):this;
 
 
       /**
@@ -96,7 +96,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param string       $key   索引
       * @return array
       */
-      column<R=string[] | ArrayMappingType<TableColumnValueType>>(field:string | string[], key:string = ''):R
+      column<R=string[] | ArrayMapping<TableColumnValue>>(field:string | string[], key:string = ''):R
 
       /**
       * 查询SQL组装 union
@@ -148,7 +148,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param array $data 数据
       * @return $this
       */
-      data(data:ArrayMappingType<ScalarValueType>):this
+      data(data:ArrayMapping<ScalarValue>):this
 
       /**
       * 去除查询参数
@@ -351,7 +351,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param bool  $forceInsert 是否强制insert
       * @return integer
       */
-      save(data?:ArrayMappingType<ScalarValueType>,forceInsert:boolean = false):int
+      save(data?:ArrayMapping<ScalarValue>,forceInsert:boolean = false):int
 
       /**
       * 插入记录
@@ -360,7 +360,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param boolean $getLastInsID 返回自增主键
       * @return integer|string
       */
-      insert(data:ArrayMappingType<ScalarValueType>, getLastInsID:boolean=false):int | string
+      insert(data:ArrayMapping<ScalarValue>, getLastInsID:boolean=false):int | string
 
       /**
       * 插入记录并获取自增ID
@@ -368,7 +368,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param array $data 数据
       * @return integer|string
       */
-      insertGetId(data:ArrayMappingType<ScalarValueType>):int | string
+      insertGetId(data:ArrayMapping<ScalarValue>):int | string
 
       /**
       * 批量插入记录
@@ -377,7 +377,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param integer $limit   每次写入数据限制
       * @return integer
       */
-      insertAll(dataSet:ArrayMappingType<ScalarValueType>[], limit:int = 0): int
+      insertAll(dataSet:ArrayMapping<ScalarValue>[], limit:int = 0): int
 
       /**
       * 通过Select方式插入记录
@@ -395,7 +395,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @return integer
       * @throws Exception
       */
-      update(data?:ArrayMappingType<ScalarValueType> | ArrayMappingType<ScalarValueType>[]): int
+      update(data?:ArrayMapping<ScalarValue> | ArrayMapping<ScalarValue>[]): int
 
       /**
       * 删除记录
@@ -404,7 +404,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @return int
       * @throws Exception
       */
-      delete(data?:true|ScalarValueType|ScalarValueType[]): int
+      delete(data?:true|ScalarValue|ScalarValue[]): int
 
 
       /**
@@ -416,7 +416,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @throws ModelNotFoundException
       * @throws DataNotFoundException
       */
-      select<R=T>(data?:ScalarValueType|ScalarValueType[]): server.kernel.Collection<R>
+      select<R=T>(data?:ScalarValue|ScalarValue[]): server.kernel.Collection<R>
 
       /**
       * 查找单条记录
@@ -427,7 +427,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @throws ModelNotFoundException
       * @throws DataNotFoundException
       */
-      find<R=T>(data?:ScalarValueType|ScalarValueType[]):R | null
+      find<R=T>(data?:ScalarValue|ScalarValue[]):R | null
 
       /**
       * 分析表达式（可用于查询或者写入操作）

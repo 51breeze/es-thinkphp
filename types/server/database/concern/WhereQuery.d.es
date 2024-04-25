@@ -3,7 +3,7 @@ package server.database.concern;
 declare type WhereQueryExpressionType = '=' | '<>' | '<' | '<=' | '>' | '>=' | 'REGEXP' | 'NOT REGEXP' | 'regexp' | 'not regexp' | 'IN' | 'in';
 declare type WhereQueryFieldValueType = string | number | null | server.database.Raw;
 declare type WhereQueryFieldWrapType = [string, WhereQueryExpressionType, WhereQueryFieldValueType]
-declare type WhereQueryFieldType = string | server.database.Raw | WhereQueryFieldWrapType[] | ArrayMappingType<WhereQueryFieldValueType> | (query:BaseQuery)=>void;
+declare type WhereQueryFieldType = string | server.database.Raw | WhereQueryFieldWrapType[] | ArrayMapping<WhereQueryFieldValueType> | (query:BaseQuery)=>void;
 declare type WhereQueryFieldQuickType = string;
 declare type WhereQueryLogicType = 'AND' | 'OR' | 'XOR' | 'and' | 'or' | 'xor' ;
 declare type WhereQueryTimeExpressionType = 'today' | 'yesterday' | 'week'  | 'last week' | 'month'  | 'last month' | 'year' | 'last year'
