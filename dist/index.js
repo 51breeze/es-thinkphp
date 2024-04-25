@@ -169,12 +169,12 @@ var defaultConfig = {
     folders: {
       "*.global": "escore",
       "*.route": "route",
-      "lang/***": "app/lang",
-      "console/*.es": "app/console",
-      "middleware/***": "app",
-      "http/*.es": "app/controller",
-      "model/*.es": "app/model",
-      "assets/***": "static",
+      "lang/***": "app/lang/{...}",
+      "console/***": "app/console/{...}",
+      "middleware/***": "app/middleware/{...}",
+      "http/***": "app/http/{...}",
+      "model/***": "app/model/{...}",
+      "assets/***": "static/{...}",
       "config/***": "config/{...}"
     },
     formats: {
