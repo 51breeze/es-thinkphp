@@ -1,4 +1,5 @@
 const Builder = require("./core/Builder");
+const ClassBuilder = require("./core/ClassBuilder");
 const Core = require("./core/Core");
 const PluginPHP = require('es-php');
 const modules =  require("./tokens/index.js");
@@ -24,6 +25,7 @@ const defaultConfig ={
                 return String(data.path).toLowerCase();
             }
         },
+        types:{},
         namespaces:{
             'server/database/DbManager':'think',
             'server/database/Paginator':'think',
@@ -56,6 +58,23 @@ class PluginEsThink extends PluginPHP{
         this.name = pkg.name;
         this.version = pkg.version;
         this.platform = 'server';
+
+        
+    }
+
+    addGlobRule(){
+        super.addGlobRule();
+        const resolve = this.options.resolve;
+        Object.keys(resolve.formats).forEach( key=>{
+            this.glob.addRuleGroup(key, resolve.formats[key], 'formats');
+        });
+        Object.keys(resolve.types).forEach( key=>{
+            this.glob.addRuleGroup(key, resolve.types[key], 'types');
+        });
+    }
+
+    getClassModuleBuilder(){
+        return ClassBuilder;
     }
 
     getTokenNode(name, flag){
