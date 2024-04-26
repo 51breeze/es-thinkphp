@@ -7,6 +7,12 @@ const defaultConfig ={
     framework:'thinkphp',
     version:"6.0.0",
     routeFileName:'app',
+    routePathWithNamespace:false,
+    formation:{
+        route:(path)=>{
+            return String(path).toLowerCase();
+        }
+    },
     resolve:{
         usings:['server/**'],
         folders:{
@@ -19,11 +25,6 @@ const defaultConfig ={
             'model/***':'app/model/{...}',
             'assets/***':'static/{...}',
             'config/***':'config/{...}',
-        },
-        formats:{
-            '*.route':(id, scheme, data)=>{
-                return String(data.path).toLowerCase();
-            }
         },
         types:{},
         namespaces:{
@@ -58,16 +59,11 @@ class PluginEsThink extends PluginPHP{
         this.name = pkg.name;
         this.version = pkg.version;
         this.platform = 'server';
-
-        
     }
 
     addGlobRule(){
         super.addGlobRule();
         const resolve = this.options.resolve;
-        Object.keys(resolve.formats).forEach( key=>{
-            this.glob.addRuleGroup(key, resolve.formats[key], 'formats');
-        });
         Object.keys(resolve.types).forEach( key=>{
             this.glob.addRuleGroup(key, resolve.types[key], 'types');
         });

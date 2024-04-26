@@ -11,4 +11,5 @@ package-lock.json
 /transforms
 /types
 /make.js
+index.js
 .phpunit.result.cache

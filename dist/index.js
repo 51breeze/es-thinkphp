@@ -72,6 +72,7 @@ var require_Builder = __commonJS({
     var Router = require_Router();
     var resolveModuleTypeCached = /* @__PURE__ */ new Map();
     var routerInstance = new Router();
+    var RouteMethods = ["router", "get", "post", "put", "delete", "option"];
     var Builder2 = class extends Core2.Builder {
       constructor(compilation) {
         super(compilation);
@@ -80,18 +81,15 @@ var require_Builder = __commonJS({
       getRouterInstance() {
         return routerInstance;
       }
-      getModuleMappingRoute(module3, data = {}) {
-        if (!module3 || !module3.isModule)
-          return data.path;
-        const id = data.path + "/" + PATH.basename(module3.file, PATH.extname(module3.file)) + ".route";
-        data.group = "formats";
-        return this.plugin.resolveSourceId(id.replace(/^[\/]+/, ""), data) || data.path;
-      }
-      addRouterConfig(module3, method, path, action, params) {
+      addRouterConfig(module3, method, path, action, params, flag = false) {
         const router = this.getRouterInstance();
         if (router instanceof Core2.Router) {
-          const outputFolder = this.plugin.resolveSourceId(PATH.dirname(module3.file) + "/" + module3.id + ".route", "folders") || "route";
-          const className = this.getModuleNamespace(module3, module3.id, false);
+          let outputFolder = this.plugin.resolveSourceId(PATH.dirname(module3.file) + "/" + module3.id + ".route", "folders");
+          if (flag && !outputFolder)
+            return;
+          if (!outputFolder)
+            outputFolder = "route";
+          let className = this.getModuleNamespace(module3, module3.id, false);
           router.addItem(PATH.join(this.getOutputPath(), outputFolder), className, action, path, method, params);
         } else {
           throw new Error("Invalid router instance.");
@@ -164,12 +162,88 @@ var require_Builder = __commonJS({
             if (module3 && module3.isModule) {
               const file = module3.file || module3.compilation.file;
               if (file) {
-                return this.plugin.resolveSourceId(PATH.join(PATH.dirname(file), module3.id + PATH.extname(file)), "types") || "*";
+                return this.plugin.resolveSourceId(file, "types") || "*";
               }
             }
           }
         }
         return "*";
+      }
+      createMemeberRoute(memeberStack, module3 = null) {
+        if (!memeberStack.isMethodDefinition || memeberStack.isAccessor || memeberStack.isConstructor || !memeberStack.compiler.callUtils("isModifierPublic", memeberStack)) {
+          return;
+        }
+        module3 = module3 || memeberStack.module;
+        if (!module3 || !module3.isModule || !module3.isClass || module3.abstract || module3.isDeclaratorModule) {
+          return;
+        }
+        const annotation = memeberStack.annotations.find((annotation2) => {
+          return RouteMethods.includes(annotation2.name.toLowerCase());
+        });
+        const routeFormat = this.plugin.options.formation?.route;
+        if (annotation) {
+          const args = annotation.getArguments();
+          const action = memeberStack.key.value();
+          const params = memeberStack.params.map((item) => {
+            const required = !(item.question || item.isAssignmentPattern);
+            return { name: item.value(), required };
+          });
+          let method = annotation.name.toLowerCase();
+          let path = action;
+          if (method === "router") {
+            method = args[0] && args[0].value ? args[0].value : "get";
+            if (args[1] && args[1].value) {
+              path = args[1].value.trim();
+            }
+          } else if (args[0] && args[0].value) {
+            path = args[0].value.trim();
+          }
+          let routePath = path;
+          if (path.charCodeAt(0) === 64) {
+          } else if (path.charCodeAt(0) === 47) {
+          } else {
+            routePath = module3.id + "/" + path;
+            if (this.plugin.options.routePathWithNamespace) {
+              routePath = module3.getName("/") + "/" + path;
+            }
+          }
+          if (routeFormat) {
+            routePath = routeFormat(routePath, {
+              method,
+              params,
+              action,
+              className: module3.getName()
+            });
+          }
+          if (routePath) {
+            this.builder.addRouterConfig(module3, method, routePath, action, params);
+          }
+        } else {
+          const type = this.builder.resolveModuleTypeName(module3);
+          if (type === "http" || type === "controller") {
+            const method = "any";
+            const action = memeberStack.key.value();
+            const params = memeberStack.params.map((item) => {
+              const required = !(item.question || item.isAssignmentPattern);
+              return { name: item.value(), required };
+            });
+            let routePath = module3.id + "/" + action;
+            if (this.plugin.options.routePathWithNamespace) {
+              routePath = module3.getName("/") + "/" + action;
+            }
+            if (routeFormat) {
+              routePath = routeFormat(routePath, {
+                method,
+                params,
+                action,
+                className: module3.getName()
+              });
+            }
+            if (routePath) {
+              this.builder.addRouterConfig(module3, method, routePath, action, params, true);
+            }
+          }
+        }
       }
     };
     module2.exports = Builder2;
@@ -180,7 +254,6 @@ var require_Builder = __commonJS({
 var require_ClassBuilder = __commonJS({
   "core/ClassBuilder.js"(exports2, module2) {
     var Core2 = require_Core();
-    var RouteMethods = ["router", "get", "post", "put", "delete", "option"];
     var ClassBuilder2 = class extends Core2.ClassBuilder {
       static createClassNode(stack, ctx, type) {
         const obj = new ClassBuilder2(stack, ctx, type);
@@ -188,66 +261,8 @@ var require_ClassBuilder = __commonJS({
       }
       createClassMemeberNode(memeberStack) {
         const node = this.createToken(memeberStack);
-        if (memeberStack.isMethodDefinition && !memeberStack.isAccessor && !memeberStack.isConstructor && node && memeberStack.compiler.callUtils("isModifierPublic", memeberStack)) {
-          const annotation = memeberStack.annotations.find((annotation2) => {
-            return RouteMethods.includes(annotation2.name.toLowerCase());
-          });
-          if (annotation) {
-            const args = annotation.getArguments();
-            const action = memeberStack.key.value();
-            const params = memeberStack.params.map((item) => {
-              const required = !(item.question || item.isAssignmentPattern);
-              return { name: item.value(), required };
-            });
-            let method = annotation.name.toLowerCase();
-            let path = action;
-            if (method === "router") {
-              method = args[0] && args[0].value ? args[0].value : "get";
-              if (args[1] && args[1].value) {
-                path = args[1].value.trim();
-              }
-            } else if (args[0] && args[0].value) {
-              path = args[0].value.trim();
-            }
-            let routePath = path;
-            if (path.charCodeAt(0) === 64) {
-            } else if (path.charCodeAt(0) === 47) {
-            } else {
-              routePath = this.module.getName("/") + "/" + path;
-            }
-            routePath = this.builder.getModuleMappingRoute(
-              this.module,
-              {
-                method,
-                params,
-                action,
-                path: routePath,
-                className: this.module.getName()
-              }
-            );
-            this.builder.addRouterConfig(this.module, method, routePath, action, params);
-          } else {
-            const type = this.builder.resolveModuleTypeName(this.module);
-            if (type === "http" || type === "controller") {
-              const method = "any";
-              const action = memeberStack.key.value();
-              const params = memeberStack.params.map((item) => {
-                const required = !(item.question || item.isAssignmentPattern);
-                return { name: item.value(), required };
-              });
-              const routePath = this.builder.getModuleMappingRoute(
-                this.module,
-                {
-                  method,
-                  params,
-                  action,
-                  path: this.module.getName("/") + "/" + action,
-                  className: this.module.getName()
-                }
-              );
-              this.builder.addRouterConfig(this.module, method, routePath, action, params);
-            }
-          }
+        if (node) {
+          this.builder.createMemeberRoute(memeberStack);
         }
         return node;
       }
@@ -329,6 +344,12 @@ var defaultConfig = {
   framework: "thinkphp",
   version: "6.0.0",
   routeFileName: "app",
+  routePathWithNamespace: false,
+  formation: {
+    route: (path) => {
+      return String(path).toLowerCase();
+    }
+  },
   resolve: {
     usings: ["server/**"],
     folders: {
@@ -341,11 +362,6 @@ var defaultConfig = {
       "model/***": "app/model/{...}",
       "assets/***": "static/{...}",
       "config/***": "config/{...}"
-    },
-    formats: {
-      "*.route": (id, scheme, data) => {
-        return String(data.path).toLowerCase();
-      }
     },
     types: {},
     namespaces: {
@@ -382,9 +398,6 @@ var PluginEsThink = class extends PluginPHP {
   addGlobRule() {
     super.addGlobRule();
     const resolve = this.options.resolve;
-    Object.keys(resolve.formats).forEach((key) => {
-      this.glob.addRuleGroup(key, resolve.formats[key], "formats");
-    });
     Object.keys(resolve.types).forEach((key) => {
       this.glob.addRuleGroup(key, resolve.types[key], "types");
     });

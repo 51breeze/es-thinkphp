@@ -4,6 +4,8 @@ const PATH = require('path');
 const Router = require('./Router');
 const resolveModuleTypeCached = new Map();
 const routerInstance = new Router();
+const RouteMethods = ['router','get','post','put','delete','option'];
+
 class Builder extends Core.Builder{
     constructor(compilation){
         super(compilation);
@@ -14,18 +16,13 @@ class Builder extends Core.Builder{
         return routerInstance;
     }
 
-    getModuleMappingRoute(module, data={}){
-        if(!module || !module.isModule)return data.path;
-        const id = data.path +'/'+ PATH.basename(module.file, PATH.extname(module.file)) + '.route';
-        data.group = 'formats';
-        return this.plugin.resolveSourceId(id.replace(/^[\/]+/,''), data) || data.path;
-    }
-
-    addRouterConfig(module, method, path, action, params){
+    addRouterConfig(module, method, path, action, params, flag=false){
         const router = this.getRouterInstance();
         if(router instanceof Core.Router){
-            const outputFolder = this.plugin.resolveSourceId(PATH.dirname(module.file)+'/'+module.id+'.route', 'folders') || 'route';
-            const className = this.getModuleNamespace(module, module.id, false);
+            let outputFolder = this.plugin.resolveSourceId(PATH.dirname(module.file)+'/'+module.id+'.route', 'folders');
+            if(flag && !outputFolder)return;
+            if(!outputFolder)outputFolder = 'route';
+            let className = this.getModuleNamespace(module, module.id, false);
             router.addItem( PATH.join(this.getOutputPath(), outputFolder), className, action, path, method, params);
         }else{
             throw new Error('Invalid router instance.')
@@ -104,12 +101,108 @@ class Builder extends Core.Builder{
                 if(module && module.isModule){
                     const file = module.file || module.compilation.file;
                     if(file){
-                        return this.plugin.resolveSourceId(PATH.join(PATH.dirname(file), module.id+PATH.extname(file)), 'types') || '*';
+                        return this.plugin.resolveSourceId(file, 'types') || '*';
                     }
                 }
             }
         }
         return '*';
+    }
+
+    createMemeberRoute(memeberStack, module=null){
+
+        if( !memeberStack.isMethodDefinition || memeberStack.isAccessor || memeberStack.isConstructor || !memeberStack.compiler.callUtils('isModifierPublic',memeberStack)){
+            return;
+        }
+
+        module = module || memeberStack.module;
+        if(!module || !module.isModule || !module.isClass || module.abstract || module.isDeclaratorModule){
+            return;
+        }
+
+        const annotation = memeberStack.annotations.find( annotation=>{
+            return RouteMethods.includes( annotation.name.toLowerCase() );
+        });
+
+        const routeFormat = this.plugin.options.formation?.route;
+        
+        if( annotation ){
+
+            const args = annotation.getArguments();
+            const action = memeberStack.key.value();
+            const params = memeberStack.params.map( item=>{
+                const required = !(item.question || item.isAssignmentPattern);
+                return {name:item.value(),required}
+            });
+
+            let method = annotation.name.toLowerCase();
+            let path = action;
+
+            if(method==="router"){
+                method = args[0] && args[0].value ? args[0].value : 'get';
+                if( args[1] && args[1].value ){
+                    path = args[1].value.trim();
+                }
+            }else if(args[0] && args[0].value){
+                path = args[0].value.trim();
+            }
+
+            let routePath = path;
+            if( path.charCodeAt(0) === 64 ){
+                // @
+            }else if( path.charCodeAt(0) === 47 ){
+                // /
+            }else{
+                routePath = module.id+'/'+path;
+                if(this.plugin.options.routePathWithNamespace){
+                    routePath = module.getName('/')+'/'+path;
+                }
+            }
+
+            if(routeFormat){
+                routePath = routeFormat(routePath, {
+                    method,
+                    params,
+                    action,
+                    className:module.getName(),
+                });
+            }
+
+            if(routePath){
+                this.builder.addRouterConfig(module, method, routePath, action, params);
+            }
+
+        }else{
+
+            const type = this.builder.resolveModuleTypeName(module);
+            if(type ==='http' || type ==='controller' ){
+
+                const method = 'any';
+                const action = memeberStack.key.value();
+                const params = memeberStack.params.map( item=>{
+                    const required = !(item.question || item.isAssignmentPattern);
+                    return {name:item.value(),required}
+                });
+
+                let routePath =  module.id+'/'+action;
+                if(this.plugin.options.routePathWithNamespace){
+                    routePath =  module.getName('/')+'/'+action
+                }
+
+                if(routeFormat){
+                    routePath = routeFormat(routePath, {
+                        method,
+                        params,
+                        action,
+                        className:module.getName(),
+                    });
+                }
+                
+                if(routePath){
+                    this.builder.addRouterConfig(module, method, routePath, action, params, true);
+                }
+            }
+        }
     }
 }
 module.exports = Builder;
