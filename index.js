@@ -9,9 +9,7 @@ const defaultConfig ={
     routeFileName:'app',
     routePathWithNamespace:false,
     formation:{
-        route:(path)=>{
-            return String(path).toLowerCase();
-        }
+        route:null
     },
     resolve:{
         usings:['server/**'],
