@@ -284,7 +284,7 @@ var require_package = __commonJS({
   "package.json"(exports2, module2) {
     module2.exports = {
       name: "es-thinkphp",
-      version: "0.4.1",
+      version: "0.4.2",
       description: "test",
       main: "dist/index.js",
       typings: "dist/types/typings.json",
