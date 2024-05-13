@@ -1,6 +1,7 @@
 package server.console;
 
 import server.kernel.App;
+import server.kernel.Console;
 import server.console.input.Definition;
 
 @Abstract();
