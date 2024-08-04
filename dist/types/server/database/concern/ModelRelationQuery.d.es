@@ -6,7 +6,7 @@ import server.model.Relation;
 /**
 * 模型及关联查询
 */
-declare interface ModelRelationQuery<T>{
+declare interface ModelRelationQuery<T=any>{
 
       /**
       * 指定模型
@@ -96,7 +96,7 @@ declare interface ModelRelationQuery<T>{
       * @param array|string $with 关联方法名称
       * @return $this
       */
-      with(withs:string|Record<(query?:this)=>any>):this;
+      with(withs:string|string[]|Record<string[]|(query?:Relation<T>)=>any>):this;
 
       /**
       * 关联预载入 JOIN方式
@@ -105,7 +105,7 @@ declare interface ModelRelationQuery<T>{
       * @param string       $joinType JOIN方式
       * @return $this
       */
-      withJoin(withs:string|Record<(query?:this)=>any>, joinType?:string):this
+      withJoin(withs:string|Record<string[]|(query?:Relation<T>)=>any>, joinType?:string):this
 
       /**
       * 关联缓存
@@ -116,7 +116,7 @@ declare interface ModelRelationQuery<T>{
       * @param string            $tag    缓存标签
       * @return $this
       */
-      withCache(relation?:string|number|Record<string|number, string>|boolean, key?:any, expire?:string|number, tag?:string):this
+      withCache(relation?:string|number|Record<string|number, string>|string[]|boolean, key?:any, expire?:string|number, tag?:string):this
 
       /**
       * 关联统计
