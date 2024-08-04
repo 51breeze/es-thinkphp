@@ -9,6 +9,8 @@ import server.database.Query;
  * @mixin Query
  */
 declare interface Relation<T>{
+
+    use this extends Query<T>;
    
     /**
      * 获取关联的所属模型

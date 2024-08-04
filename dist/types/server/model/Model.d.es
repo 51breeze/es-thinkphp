@@ -1,7 +1,9 @@
 package server.model;
 
 import server.database.concern.WhereQuery;
-import server.database.concern.WhereQueryFieldType;
+import server.database.concern.WhereQueryCondition;
+import server.database.concern.WhereQueryValue;
+import server.database.concern.WhereQueryFilter;
 import server.database.Query;
 import server.database.DbManager;
 
@@ -298,7 +300,7 @@ declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEv
       * @access public
       * @return mixed
       */
-      getWhere():WhereQueryFieldType;
+      getWhere():null | Record<WhereQueryCondition | WhereQueryValue[]> | WhereQueryFilter | WhereQueryFilter[];
 
       /**
       * 保存多个数据到当前数据对象

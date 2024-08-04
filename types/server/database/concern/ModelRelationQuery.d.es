@@ -1,6 +1,7 @@
 package server.database.concern;
 
 import server.model.Model;
+import server.model.Relation;
 
 /**
 * 模型及关联查询
@@ -30,7 +31,7 @@ declare interface ModelRelationQuery<T>{
       * @param  array $hidden   属性列表
       * @return $this
       */
-      hidden(hidden?:array):this
+      hidden(hidden?:string[]):this
 
 
       /**
@@ -39,7 +40,7 @@ declare interface ModelRelationQuery<T>{
       * @param  array $visible
       * @return $this
       */
-      visible(visible?:array):this
+      visible(visible?:string[]):this
 
       /**
       * 设置需要附加的输出属性
@@ -47,7 +48,7 @@ declare interface ModelRelationQuery<T>{
       * @param  array $append   属性列表
       * @return $this
       */
-      append(append?:array):this
+      append(append?:string[]):this
 
 
       /**
@@ -57,7 +58,7 @@ declare interface ModelRelationQuery<T>{
       * @param array                $args  参数
       * @return $this
       */
-      scope(scope:string | array | ((...args)=>void), ...args):this
+      scope(scope:string | string[] | ((target?:this,...args)=>void), ...args):this
 
 
       /**
@@ -66,7 +67,7 @@ declare interface ModelRelationQuery<T>{
       * @param array $relation 关联名称
       * @return $this
       */
-      relation(relation:array):this
+      relation(relation:Record<string,string>):this
 
       /**
       * 使用搜索器条件搜索字段
@@ -76,7 +77,7 @@ declare interface ModelRelationQuery<T>{
       * @param string        $prefix 字段前缀标识
       * @return $this
       */
-      withSearch(fields:string|array, data?:any, prefix?:string):this
+      withSearch(fields:string|string[], data?:Record<string,string>, prefix?:string):this
 
 
       /**
@@ -86,8 +87,8 @@ declare interface ModelRelationQuery<T>{
       * @param callable      $callback 闭包获取器
       * @return $this
       */
-      withAttr(name:string|array, callback?:(...args)=>void):this
-
+      withAttr(name:string, callback:(...args)=>any):this
+      withAttr(name:Record<(...args)=>any>):this
 
       /**
       * 关联预载入 In方式
@@ -95,7 +96,7 @@ declare interface ModelRelationQuery<T>{
       * @param array|string $with 关联方法名称
       * @return $this
       */
-      with(withs:string|array):this;
+      with(withs:string|Record<(query?:this)=>any>):this;
 
       /**
       * 关联预载入 JOIN方式
@@ -104,7 +105,7 @@ declare interface ModelRelationQuery<T>{
       * @param string       $joinType JOIN方式
       * @return $this
       */
-      withJoin(withs:string|array, joinType?:string):this
+      withJoin(withs:string|Record<(query?:this)=>any>, joinType?:string):this
 
       /**
       * 关联缓存
@@ -115,8 +116,7 @@ declare interface ModelRelationQuery<T>{
       * @param string            $tag    缓存标签
       * @return $this
       */
-      withCache(relation?:string|array|boolean, key?:any, expire?:string|number, tag?:string):this
-
+      withCache(relation?:string|number|Record<string|number, string>|boolean, key?:any, expire?:string|number, tag?:string):this
 
       /**
       * 关联统计
@@ -125,7 +125,7 @@ declare interface ModelRelationQuery<T>{
       * @param bool         $subQuery 是否使用子查询
       * @return $this
       */
-      withCount(relation:string|array, subQuery?:boolean):this
+      withCount(relation:string|Record<string>|string[], subQuery?:boolean):this
 
       /**
       * 关联统计Sum
@@ -135,7 +135,7 @@ declare interface ModelRelationQuery<T>{
       * @param bool         $subQuery 是否使用子查询
       * @return $this
       */
-      withSum(relation:string|array, field:string, subQuery?:boolean):this
+      withSum(relation:string|Record<string>|string[], field:string, subQuery?:boolean):this
 
       /**
       * 关联统计Max
@@ -145,7 +145,7 @@ declare interface ModelRelationQuery<T>{
       * @param bool         $subQuery 是否使用子查询
       * @return $this
       */
-      withMax(relation:string|array, field:string, subQuery?:boolean):this
+      withMax(relation:string|Record<string>|string[], field:string, subQuery?:boolean):this
 
       /**
       * 关联统计Min
@@ -155,7 +155,7 @@ declare interface ModelRelationQuery<T>{
       * @param bool         $subQuery 是否使用子查询
       * @return $this
       */
-      withMin(relation:string|array, field:string, subQuery?:boolean):this
+      withMin(relation:string|Record<string>|string[], field:string, subQuery?:boolean):this
 
       /**
       * 关联统计Avg
@@ -165,7 +165,7 @@ declare interface ModelRelationQuery<T>{
       * @param bool         $subQuery 是否使用子查询
       * @return $this
       */
-      withAvg(relation:string|array, field:string, subQuery?:boolean):this
+      withAvg(relation:string|Record<string>|string[], field:string, subQuery?:boolean):this
 
       /**
       * 根据关联条件查询当前模型
@@ -177,7 +177,7 @@ declare interface ModelRelationQuery<T>{
       * @param  string  $joinType JOIN类型
       * @return $this
       */
-      has(relation:string|array, operator='>=', count = 1, id = '*', joinType = '')
+      has(relation:string, operator='>=', count = 1, id = '*', joinType = ''):this
 
       /**
       * 根据关联条件查询当前模型
@@ -188,6 +188,6 @@ declare interface ModelRelationQuery<T>{
       * @param  string $joinType JOIN类型
       * @return $this
       */
-      hasWhere(relation:string, where?:array|(name?:string)=>void, fields?:string, joinType?:string) 
+      hasWhere(relation:string, where?:this|Record<string>|(query?:this)=>any, fields?:string, joinType?:string):this
 
 }

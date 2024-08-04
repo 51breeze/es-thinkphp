@@ -22,7 +22,7 @@ declare interface TimeFieldQuery{
       * @param string       $logic AND OR
       * @return $this
       */
-      whereTime(field:string, op:WhereQueryExpressionType, range:string | [string,string], logic?:WhereQueryLogicType):this
+      whereTime(field:string, op:WhereQueryOperator, range:string | [string,string], logic?:WhereQueryLogic):this
 
       /**
       * 查询某个时间间隔数据
@@ -34,7 +34,7 @@ declare interface TimeFieldQuery{
       * @param string $logic    AND OR
       * @return $this
       */
-      whereTimeInterval(field:string, start:string, interval:WhereQueryTimeUnitType, step?:int,  logic?:WhereQueryLogicType ):this
+      whereTimeInterval(field:string, start:string, interval:WhereQueryTime, step?:int,  logic?:WhereQueryLogic ):this
 
       /**
       * 查询月数据 whereMonth('time_field', '2018-1')
@@ -45,7 +45,7 @@ declare interface TimeFieldQuery{
       * @param string $logic AND OR
       * @return $this
       */
-      whereMonth(field:string, month?:string, step?:int,  logic?:WhereQueryLogicType):this
+      whereMonth(field:string, month?:string, step?:int,  logic?:WhereQueryLogic):this
 
       /**
       * 查询周数据 whereWeek('time_field', '2018-1-1') 从2018-1-1开始的一周数据
@@ -56,7 +56,7 @@ declare interface TimeFieldQuery{
       * @param string $logic AND OR
       * @return $this
       */
-      whereWeek(field:string, week?:string, step?:int, logic?:WhereQueryLogicType):this
+      whereWeek(field:string, week?:string, step?:int, logic?:WhereQueryLogic):this
 
       /**
       * 查询年数据 whereYear('time_field', '2018')
@@ -67,7 +67,7 @@ declare interface TimeFieldQuery{
       * @param string $logic AND OR
       * @return $this
       */
-      whereYear(field:string, year?:string, step?:int, logic?:WhereQueryLogicType):this
+      whereYear(field:string, year?:string, step?:int, logic?:WhereQueryLogic):this
 
       /**
       * 查询日数据 whereDay('time_field', '2018-1-1')
@@ -78,7 +78,7 @@ declare interface TimeFieldQuery{
       * @param string $logic AND OR
       * @return $this
       */
-      whereDay(field:string, day?:string, step?:int, logic?:WhereQueryLogicType):this
+      whereDay(field:string, day?:string, step?:int, logic?:WhereQueryLogic):this
 
       /**
       * 查询日期或者时间范围 whereBetweenTime('time_field', '2018-1-1','2018-1-15')
@@ -89,7 +89,7 @@ declare interface TimeFieldQuery{
       * @param string     $logic     AND OR
       * @return $this
       */
-      whereBetweenTime(field:string, startTime:string|number, endTime:string|number, logic?:WhereQueryLogicType):this
+      whereBetweenTime(field:string, startTime:string|number, endTime:string|number, logic?:WhereQueryLogic):this
 
       /**
       * 查询日期或者时间范围 whereNotBetweenTime('time_field', '2018-1-1','2018-1-15')
