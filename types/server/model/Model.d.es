@@ -19,7 +19,7 @@ import server.model.concern.Conversion;
 */
 @Define(type=model);
 @Abstract()
-declare class Model<T extends this> implements Attribute,RelationShip<T>,ModelEvent,TimeStamp,Conversion<T>{
+declare class Model<T extends this=any> implements Attribute,RelationShip<T>,ModelEvent,TimeStamp,Conversion<T>{
 
       use static,this extends Query<T>{
             find(data?:TableColumnValue):T

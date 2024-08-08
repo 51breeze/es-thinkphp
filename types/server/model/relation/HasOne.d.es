@@ -6,7 +6,7 @@ import server.database.Query;
 /**
  * HasOne 关联类
  */
-declare class HasOne<T> extends OneToOne<T>
+declare class HasOne<T extends Model=Model> extends OneToOne<T>
 {
     /**
      * 架构函数

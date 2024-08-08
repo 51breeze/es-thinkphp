@@ -23,7 +23,7 @@ declare interface Conversion<T>{
      * @param  bool  $merge    是否合并
      * @return $this
      */
-    append(append:ArrayMapping<ScalarValue>, merge:boolean = false):this;
+    append(append:Record, merge:boolean = false):this;
 
     /**
      * 设置输出层场景
@@ -42,7 +42,7 @@ declare interface Conversion<T>{
      * @return $this
      * @throws Exception
      */
-    appendRelationAttr(attr:string, append:ArrayMapping<ScalarValue>):this;
+    appendRelationAttr(attr:string, append:Record):this;
 
 
     /**
@@ -52,7 +52,7 @@ declare interface Conversion<T>{
      * @param  bool  $merge    是否合并
      * @return $this
      */
-    hidden(hidden:ArrayMapping<ScalarValue>, merge = false):this;
+    hidden(hidden:string[], merge = false):this;
 
 
     /**
@@ -62,7 +62,7 @@ declare interface Conversion<T>{
      * @param  bool  $merge    是否合并
      * @return $this
      */
-    visible(visible:ArrayMapping<ScalarValue>, merge = false):this;
+    visible(visible:string[], merge = false):this;
 
     /**
      * 设置属性的映射输出
@@ -70,8 +70,7 @@ declare interface Conversion<T>{
      * @param  array $map
      * @return $this
      */
-    mapping(map:ArrayMapping<ScalarValue>):this;
-
+    mapping(map:Record):this;
 
     /**
      * 转换当前模型对象为数组
@@ -79,7 +78,7 @@ declare interface Conversion<T>{
      * @return array
      */
     @Alias(toArray)
-    toValue(): ArrayMapping<ScalarValue>;
+    toValue(): Record;
    
     /**
      * 转换当前模型对象为JSON字符串

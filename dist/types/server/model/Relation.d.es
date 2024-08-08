@@ -8,7 +8,7 @@ import server.database.Query;
  * @package think\model
  * @mixin Query
  */
-declare interface Relation<T>{
+declare interface Relation<T extends Model<T>=Model>{
 
     use this extends Query<T>;
    
@@ -45,7 +45,7 @@ declare interface Relation<T>{
      * @access public
      * @return Model
      */
-    getModel(): T
+    getModel<R extends Model<R>=T>():R|null;
 
     /**
      * 当前关联是否为自关联

@@ -8,7 +8,7 @@ import server.model.Collection;
 /**
  * 多态一对多关联
  */
-declare class MorphMany<T> extends Relation<T>
+declare class MorphMany<T extends Model=Model> extends Relation<T>
 {
 
     /**

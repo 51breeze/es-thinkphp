@@ -191,7 +191,7 @@ declare class Query<T> extends BaseQuery<T> implements JoinAndViewQuery,ParamsBi
       * @return string
       * @throws Exception
       */
-      buildSql(sub:boolean): string
+      buildSql(sub?:boolean): string
 
       /**
       * 获取当前数据表的主键

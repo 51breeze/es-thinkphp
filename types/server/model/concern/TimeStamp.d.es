@@ -62,7 +62,7 @@ declare interface  TimeStamp
      * @param  string|false $format
      * @return $this
      */
-    setDateFormat($format):this;
+    setDateFormat(format:string|boolean):this;
 
     /**
      * 获取自动写入时间字段

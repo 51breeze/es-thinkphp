@@ -141,7 +141,7 @@ declare class Collection<T=any>{
       * @param callable $callback 回调
       * @return $this
       */
-      each(callback:()=>void):this
+      each(callback:(item?:T)=>void):this
 
       /**
       * 用回调函数处理数组中的元素
@@ -149,7 +149,7 @@ declare class Collection<T=any>{
       * @param callable|null $callback 回调
       * @return static
       */
-      map( callback:(item?:T,key?:number)=>T ):this
+      map(callback:(item?:T,key?:number)=>T ):this
 
 
       /**

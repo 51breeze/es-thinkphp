@@ -99,9 +99,9 @@ declare class Paginator<T>{
       * 转换为数组
       * @return array
       */
-      public toArray(): ArrayProtector< PaginateResult<T> >;
+      public toArray(): PaginateResult<T>;
 
-      public jsonSerialize():ArrayProtector< PaginateResult<T> >;
+      public jsonSerialize(): PaginateResult<T>;
 }
 
 declare interface PaginateConfig{
@@ -117,10 +117,10 @@ declare interface PaginateConfig{
       page?:number
 }
 
-declare interface PaginateResult<T>{
-      current_page:number
-      last_page:number
-      per_page:number
-      total:number
+declare type PaginateResult<T>={
+      current_page:number,
+      last_page:number,
+      per_page:number,
+      total:number,
       data:T[]
 }

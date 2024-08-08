@@ -9,7 +9,7 @@ import server.model.Collection;
 /**
  * 多对多关联类
  */
-declare class BelongsToMany<T> extends Relation<T>
+declare class BelongsToMany<T extends Model=Model> extends Relation<T>
 {
     /**
      * 中间表表名

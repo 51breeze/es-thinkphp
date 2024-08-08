@@ -1,6 +1,6 @@
 package server.database.concern;
 
-declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,AggregateQuery,ResultOperation,ModelRelationQuery<T>{
+declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,AggregateQuery,ResultOperation,ModelRelationQuery{
 
       /**
       * 创建一个新的查询对象

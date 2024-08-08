@@ -6,7 +6,7 @@ import server.model.Model;
 /**
  * 多态多对多关联
  */
-declare class MorphToMany<T> extends BelongsToMany<T>
+declare class MorphToMany<T extends Model=Model> extends BelongsToMany<T>
 {
     /**
      * 多态字段名

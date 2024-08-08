@@ -8,7 +8,7 @@ import server.model.Model;
  * 一对一关联基础类
  * @package think\model\relation
  */
-declare class OneToOne<T> extends Relation<T>
+declare class OneToOne<T extends Model=Model> extends Relation<T>
 {
    
     /**

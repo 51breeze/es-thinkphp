@@ -6,7 +6,7 @@ import server.database.Query;
 /**
  * BelongsTo关联类
  */
-declare class BelongsTo<T> extends OneToOne<T>{
+declare class BelongsTo<T extends Model=Model> extends OneToOne<T>{
     /**
      * 架构函数
      * @access public

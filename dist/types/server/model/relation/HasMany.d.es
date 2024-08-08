@@ -8,7 +8,7 @@ import server.model.Collection;
 /**
  * 一对多关联类
  */
-declare class HasMany<T> extends Relation<T>
+declare class HasMany<T extends Model=Model> extends Relation<T>
 {
     /**
      * 架构函数

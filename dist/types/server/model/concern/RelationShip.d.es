@@ -18,7 +18,7 @@ import server.model.relation.OneToOne;
 /**
  * 模型关联处理
  */
-declare interface RelationShip<T>
+declare interface RelationShip<T extends Model=Model>
 {
 
     /**
@@ -53,7 +53,7 @@ declare interface RelationShip<T>
      * @param  array  $data  数据
      * @return $this
      */
-    setRelation(name:string, value:ScalarValue, data?:ArrayMapping<ScalarValue> ):this;
+    setRelation(name:string, value:ScalarValue, data?:Record ):this;
 
     /**
      * 查询当前模型的关联数据
@@ -62,7 +62,7 @@ declare interface RelationShip<T>
      * @param  array $withRelationAttr   关联获取器
      * @return void
      */
-    relationQuery(relations:(string|((...args)=>void)|string[])[], withRelationAttr?:ArrayMapping<ScalarValue> ): void
+    relationQuery(relations:(string|((...args)=>void)|string[])[], withRelationAttr?:Record ): void
 
     /**
      * 关联数据写入
@@ -70,7 +70,7 @@ declare interface RelationShip<T>
      * @param  array $relation 关联
      * @return $this
      */
-    together(relation:ArrayMapping<ScalarValue>):this;
+    together(relation:Record):this;
     
 
     /**
@@ -84,7 +84,7 @@ declare interface RelationShip<T>
      * @param  bool    $first
      * @return bool
      */
-    eagerly(query:Query<T>, relation:string, field:ArrayMapping<string> | string, joinType?:string, closure?:Function, first?:boolean): boolean
+    eagerly(query:Query<T>, relation:string, field:Record<string> | string, joinType?:string, closure?:Function, first?:boolean): boolean
 
     /**
      * 预载入关联查询 返回数据集
@@ -96,7 +96,7 @@ declare interface RelationShip<T>
      * @param  mixed  $cache     关联缓存
      * @return void
      */
-    eagerlyResultSet(resultSet:ArrayMapping<ScalarValue>, relations:ArrayMapping<ScalarValue> , withRelationAttr?:ArrayMapping<ScalarValue>, join?:boolean, cache?:boolean): void
+    eagerlyResultSet(resultSet:Record, relations:Record , withRelationAttr?:Record, join?:boolean, cache?:boolean): void
     
 
     /**
@@ -108,7 +108,7 @@ declare interface RelationShip<T>
      * @param  mixed $cache     关联缓存
      * @return void
      */
-    eagerlyResult(relations:ArrayMapping<string>, withRelationAttr?:ArrayMapping<ScalarValue>, join?:boolean, cache?:boolean): void
+    eagerlyResult(relations:Record<string>, withRelationAttr?:Record, join?:boolean, cache?:boolean): void
 
     /**
      * 绑定（一对一）关联属性到当前模型
@@ -118,7 +118,7 @@ declare interface RelationShip<T>
      * @return $this
      * @throws Exception
      */
-    bindAttr(relation:string, attrs?:ArrayMapping<ScalarValue>)
+    bindAttr(relation:string, attrs?:Record)
 
     /**
      * 关联统计
@@ -130,7 +130,7 @@ declare interface RelationShip<T>
      * @param  bool   $useSubQuery 子查询
      * @return void
      */
-    relationCount(query:Query<T>, relations:ArrayMapping<ScalarValue>, aggregate?:string, field?:string, $useSubQuery?:boolean): void
+    relationCount(query:Query<T>, relations:Record, aggregate?:string, field?:string, useSubQuery?:boolean): void
 
     /**
      * HAS ONE 关联定义
@@ -207,7 +207,7 @@ declare interface RelationShip<T>
      * @param  string       $type  多态类型
      * @return MorphOne
      */
-    morphOne<R extends Model<R>>(model:R, morph:string|ArrayMapping<string>, type?:string): MorphOne<T>
+    morphOne<R extends Model<R>>(model:R, morph:string|Record<string>, type?:string): MorphOne<T>
 
     /**
      * MORPH  MANY 关联定义
@@ -217,7 +217,7 @@ declare interface RelationShip<T>
      * @param  string       $type  多态类型
      * @return MorphMany
      */
-    morphMany<R extends Model<R>>(model:R, morph:string|ArrayMapping<string>, type?:string): MorphMany<T>
+    morphMany<R extends Model<R>>(model:R, morph:string|Record<string>, type?:string): MorphMany<T>
 
     /**
      * MORPH TO 关联定义
@@ -226,7 +226,7 @@ declare interface RelationShip<T>
      * @param  array        $alias 多态别名定义
      * @return MorphTo
      */
-    morphTo<R extends Model<R>>(morph?:string|ArrayMapping<string>, alias?:ArrayMapping<string>): MorphTo<T>
+    morphTo<R extends Model<R>>(morph?:string|Record<string>, alias?:Record<string>): MorphTo<T>
 
     /**
      * MORPH TO MANY关联定义
@@ -237,7 +237,7 @@ declare interface RelationShip<T>
      * @param  string       $localKey   当前模型关联键
      * @return MorphToMany
      */
-    morphToMany<R extends Model<R>>(model:R, middle:string, morph?:string|ArrayMapping<string>, localKey?:string): MorphToMany<T>
+    morphToMany<R extends Model<R>>(model:R, middle:string, morph?:string|Record<string>, localKey?:string): MorphToMany<T>
    
 
     /**
@@ -249,7 +249,7 @@ declare interface RelationShip<T>
      * @param  string       $foreignKey 关联外键
      * @return MorphToMany
      */
-    morphByMany<R extends Model<R>>(model:R, middle:string, morph?:string|ArrayMapping<string>, localKey?:string): MorphToMany<T>
+    morphByMany<R extends Model<R>>(model:R, middle:string, morph?:string|Record<string>, localKey?:string): MorphToMany<T>
 
     /**
      * 移除当前模型的关联属性

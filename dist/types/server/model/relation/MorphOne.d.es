@@ -7,7 +7,7 @@ import server.model.Relation;
 /**
  * 多态一对一关联类
  */
-declare class MorphOne<T> extends Relation<T>
+declare class MorphOne<T extends Model=Model> extends Relation<T>
 {
     /**
      * 多态关联外键

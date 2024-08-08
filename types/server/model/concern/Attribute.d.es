@@ -44,7 +44,7 @@ declare interface Attribute{
      * @param  array    $allow 允许的字段名
      * @return $this
      */
-    data(data:ArrayMapping<ScalarValue>, set?:boolean, allow?:string[]):this;
+    data(data:Record, set?:boolean, allow?:string[]):this;
 
     /**
      * 批量追加数据对象值
@@ -53,7 +53,7 @@ declare interface Attribute{
      * @param  bool  $set   是否需要进行数据处理
      * @return $this
      */
-    appendData(data:ArrayMapping<ScalarValue>, set:boolean = false):this;
+    appendData(data:Record, set:boolean = false):this;
 
     /**
      * 刷新对象原始数据（为当前数据）
@@ -85,7 +85,7 @@ declare interface Attribute{
      * @access public
      * @return array
      */
-    getChangedData(): ArrayMapping<ScalarValue>
+    getChangedData(): Record
 
     /**
      * 直接设置数据对象值
@@ -94,7 +94,7 @@ declare interface Attribute{
      * @param  mixed  $value 值
      * @return void
      */
-    set(name:string, value:ScalarValue): void
+    set(name:string, value:any): void
 
     /**
      * 通过修改器 批量设置数据对象值
@@ -102,7 +102,7 @@ declare interface Attribute{
      * @param  array $data  数据
      * @return void
      */
-    setAttrs(data:ArrayMapping<ScalarValue>): void
+    setAttrs(data:Record): void
 
 
     /**
@@ -113,7 +113,7 @@ declare interface Attribute{
      * @param  array  $data  数据
      * @return void
      */
-    setAttr(name:string, value:ScalarValue, data?:ArrayMapping<ScalarValue>): void
+    setAttr(name:string, value:any, data?:Record): void
     
    
     /**
@@ -129,8 +129,8 @@ declare interface Attribute{
     /**
      * 设置数据字段获取器
      * @access public
-     * @param  string|array $name       字段名
-     * @param  callable     $callback   闭包获取器
+     * @param  string|array $name  字段名
+     * @param  callable $callback  闭包获取器
      * @return $this
      */
     withAttr(name:string | string[], callable?:(...args)=>any):this

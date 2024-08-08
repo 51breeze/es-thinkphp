@@ -8,7 +8,7 @@ import server.model.Collection;
 /**
  * 远程一对多关联类
  */
-declare class HasManyThrough<T> extends Relation<T>{
+declare class HasManyThrough<T extends Model=Model> extends Relation<T>{
     
     /**
      * 中间关联表外键

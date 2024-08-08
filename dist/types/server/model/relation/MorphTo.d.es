@@ -7,7 +7,7 @@ import server.model.Relation;
 /**
  * 多态关联类
  */
-declare class MorphTo<T> extends Relation<T>
+declare class MorphTo<T extends Model=Model> extends Relation<T>
 {
     /**
      * 多态关联外键
