@@ -250,8 +250,8 @@ declare function url(url:string, vars?:array, suffix?:boolean, domain?:boolean):
 * @param bool         $failException 是否抛出异常
 * @return Validate
 */
-declare function validate(validate:class<any>, message?:Record<string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
-declare function validate(validate:Record<string>, message?:Record<string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
+declare function validate(validate:class<server.kernel.Validate>, message?:Record<Record<any>|string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
+declare function validate(validate:Record<Record<any>|string>, message?:Record<Record<any>|string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
 
 /**
 * 渲染模板输出

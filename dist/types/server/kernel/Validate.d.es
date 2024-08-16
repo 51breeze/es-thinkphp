@@ -11,6 +11,75 @@ import server.kernel.Db;
  */
 declare class Validate
 {
+  /**
+     * 当前验证规则
+     * @var array
+     */
+    @Alias(rule)
+    protected rules:Record = {};
+
+    /**
+     * 验证提示信息
+     * @var array
+     */
+    @Alias(message) 
+    protected messages:Record = {};
+
+    /**
+     * 验证字段描述
+     * @var array
+     */
+    @Alias(field)  
+    protected fields:Record = {};
+
+    /**
+     * 验证场景定义
+     * @var array
+     */
+    @Alias(scene)  
+    protected scenes:Record = {};
+
+    /**
+     * 验证失败错误信息
+     * @var string|array
+     */
+    @Alias(error)   
+    protected errors:Record = {};
+
+    /**
+     * 是否批量验证
+     * @var bool
+     */
+    @Alias(batch)    
+    protected batchFlag = false;
+
+    /**
+     * 验证失败是否抛出异常
+     * @var bool
+     */
+    @Alias(failException) 
+    protected failThrowException = false;
+
+    /**
+     * 场景需要验证的规则
+     * @var array
+     */
+    @Alias(only)  
+    protected onlyScenes:Record<Record<any>> = {};
+
+    /**
+     * 场景需要移除的验证规则
+     * @var array
+     */
+     @Alias(remove) 
+    protected removeScenes:Record<Record<any>> = {};
+
+    /**
+     * 当前验证场景
+     * @var string
+     */
+    protected currentScene:string;
+
     /**
      * 设置服务注入
      * @access public
