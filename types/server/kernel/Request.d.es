@@ -1,5 +1,8 @@
 package server.kernel;
 
+declare type RequestMethodFilter<T> = string | string[] | null | (value?:T)=>T
+declare type RequestMethodFeildMulti<T> =false|string[]|Record<T>
+
 declare class Request{
 
     /**
@@ -88,7 +91,8 @@ declare class Request{
     * @param  string|array $filter 过滤方法
     * @return mixed
     */
-    param<T=any>(name:string, defaultValue?:T, filter?:string | array):T
+    param<T=any>(name:string, defaultValue?:T, filter?:RequestMethodFilter<T>):T|null
+    param<T=any>(name?:RequestMethodFeildMulti<T>, defaultValue?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
     * 获取包含文件在内的请求参数
@@ -97,7 +101,8 @@ declare class Request{
     * @param  string|array $filter 过滤方法
     * @return mixed
     */
-    all<T=any>(name?:string, filter?:string | (name?)=>boolean):T
+    all<T=any>(name:string, filter?:RequestMethodFilter<T>):T|null
+    all<T=any>(name?:RequestMethodFeildMulti<T>, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
     * 获取POST参数
@@ -107,9 +112,9 @@ declare class Request{
     * @param  string|array $filter 过滤方法
     * @return mixed
     */
-    post<T=any>(name?:string, defaultValue?:T, filter?:string | array):T
-
-
+    post<T=any>(name:string, defaultValue?:T, filter?:RequestMethodFilter<T>):T|null
+    post<T=any>(name?:RequestMethodFeildMulti<T>, defaultValue?:T, filter?:RequestMethodFilter<T>):Record<T>
+    
     /**
     * 获取当前URL 不含QUERY_STRING
     * @access public
@@ -305,7 +310,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    route(name?:string, default?:any, filter?:string|array):any
+    route<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    route<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<any>):Record<T>
 
     /**
     * 获取GET参数
@@ -315,7 +321,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    get<T=any>(name?:string, default?:any, filter?:string|array):T
+    get<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    get<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
     * 获取中间件传递的参数
@@ -334,7 +341,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    put<T=any>(name?:string, default?:any, filter?:string|array):T
+    put<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    put<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
     * 设置获取DELETE参数
@@ -344,7 +352,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    delete<T=any>(name?:string, default?:any, filter?:string|array):T
+    delete<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    delete<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
     * 设置获取PATCH参数
@@ -354,7 +363,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    patch<T=any>(name?:string, default?:any, filter?:string|array):T
+    patch<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    patch<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
     * 获取request变量
@@ -364,7 +374,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    request<T=any>(name?:string, default?:any, filter?:string|array):T
+    request<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    request<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
     * 获取环境变量
@@ -382,7 +393,8 @@ declare class Request{
     * @param  string default 默认值
     * @return mixed
     */
-    session<T=any>(name?:string, default?:any):T
+    session<T=any>(name:string, default?:any):T|null
+    session<T=any>():Record<T>
 
     /**
     * 获取cookie参数
@@ -392,7 +404,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    cookie<T=any>(name?:string, default?:any, filter?:string|array):T
+    cookie<T=any>(name:string, default?:any, filter?:RequestMethodFilter<any>):T|null
+    cookie<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
     * 获取server参数
@@ -401,7 +414,8 @@ declare class Request{
     * @param  string default 默认值
     * @return mixed
     */
-    server<T=any>(name?:string, default?:string):T;
+    server<T=any>(name:string, default?:string):T|null;
+    server<T=any>():Record<T>;
 
     /**
     * 获取上传的文件信息
@@ -426,7 +440,8 @@ declare class Request{
     * @param  string default 默认值
     * @return string|array
     */
-    header<T=any>(name?:string, default?:string):T
+    header<T=any>(name:string, default?:string):T|null
+    header<T=any>():Record<T>
 
     /**
     * 获取变量 支持过滤和默认值
@@ -437,7 +452,7 @@ declare class Request{
     * @param  string|array filter 过滤函数
     * @return mixed
     */
-    input(data?:array, name?:string, default?:any, filter?:string|array):any;
+    input(data?:any, name?:string|false, default?:any, filter?:RequestMethodFilter<any>):any;
 
     /**
     * 设置或获取当前的过滤规则
@@ -475,7 +490,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return array
     */
-    only(name:array, data?:string, filter?:string|array): array
+    only<T=any>(name:string, data?:Record<T>, filter?:RequestMethodFilter<T>): T|null
+    only<T=any>(name:RequestMethodFeildMulti<T>, data?:any, filter?:RequestMethodFilter<T>): Record<T>
 
     /**
     * 排除指定参数获取

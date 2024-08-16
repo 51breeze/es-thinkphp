@@ -62,7 +62,7 @@ declare function bind(abstracts:class<any>|class<any>[], concrete?:class<any>|(.
 * @param string $tag     缓存标签
 * @return mixed
 */
-declare function cache(name?:string, value?:any, options?, tag?:string):any;
+declare function cache(name?:string, value?:any, options?:Record, tag?:string):any;
 
 /**
 * 获取和设置配置参数
@@ -70,7 +70,7 @@ declare function cache(name?:string, value?:any, options?, tag?:string):any;
 * @param mixed        $value 参数值
 * @return mixed
 */
-declare function config(name:string|string[], value?):any;
+declare function config(name:string|string[]|Record<any>, value?):any;
 
 /**
 * Cookie管理
@@ -79,7 +79,7 @@ declare function config(name:string|string[], value?):any;
 * @param mixed  $option 参数
 * @return mixed
 */
-declare function cookie(name?:string, value?, option?):any;
+declare function cookie(name?:string, value?, option?:Record):any;
 
 /**
 * 获取\think\response\Download对象实例
@@ -104,7 +104,7 @@ declare function dump(...vars):void;
 * @param mixed $args  参数
 * @return mixed
 */
-declare function event(event:string, $args?):any;
+declare function event(event:string, args?):any;
 
 /**
 * 调试变量并且中断输出
@@ -137,7 +137,7 @@ declare function invoke(call:(...args)=>any, args?:array ):any;
 * @param array $options 参数
 * @return \think\response\Json
 */
-declare function json<T=any>(data:T, code?:number, header?:{[key:string]:string}, options?:array): server.response.Json<T>
+declare function json<T=any>(data:T, code?:number, header?:Record<string>, options?:Record): server.response.Json<T>
 
 /**
 * 获取\think\response\Jsonp对象实例
@@ -147,7 +147,7 @@ declare function json<T=any>(data:T, code?:number, header?:{[key:string]:string}
 * @param array $options 参数
 * @return \think\response\Jsonp
 */
-declare  function jsonp<T=any>(data:T, code?:number, header?:{[key:string]:string}, options?:array): server.response.Jsonp<T>
+declare  function jsonp<T=any>(data:T, code?:number, header?:Record<string>, options?:Record): server.response.Jsonp<T>
 
 /**
 * 获取语言变量值
@@ -190,7 +190,7 @@ declare  function request(): server.kernel.Request
 * @param string     $type
 * @return Response
 */
-declare function response<T=any>(data:T, code?:number, header?:{[key:string]:string}, type?:string): server.kernel.Response<T>
+declare function response<T=any>(data:T, code?:number, header?:Record<string>, type?:string): server.kernel.Response<T>
 
 /**
 * Session管理
@@ -250,8 +250,8 @@ declare function url(url:string, vars?:array, suffix?:boolean, domain?:boolean):
 * @param bool         $failException 是否抛出异常
 * @return Validate
 */
-declare function validate(validate:string, message?:ArrayMapping<string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
-declare function validate(validate:ArrayMapping<ArrayMapping<any>>, message?:ArrayMapping<string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
+declare function validate(validate:class<any>, message?:Record<string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
+declare function validate(validate:Record<string>, message?:Record<string>, batch?:boolean, failException?:boolean): server.kernel.Validate;
 
 /**
 * 渲染模板输出
@@ -261,7 +261,7 @@ declare function validate(validate:ArrayMapping<ArrayMapping<any>>, message?:Arr
 * @param callable $filter   内容过滤
 * @return \think\response\View
 */
-declare function view(template?:string, vars?:array, code?:number, filter:(...args)=>boolean): server.response.View<string>;
+declare function view(template?:string, vars?:Record<any>, code?:number, filter:(...args)=>boolean): server.response.View<string>;
 
 /**
 * 渲染模板输出
@@ -271,7 +271,7 @@ declare function view(template?:string, vars?:array, code?:number, filter:(...ar
 * @param callable $filter  内容过滤
 * @return \think\response\View
 */
-declare function display(content?:string, vars?:array, code?:number, filter:(...args)=>boolean): server.response.View<string>
+declare function display(content?:string, vars?:Record<any>, code?:number, filter:(...args)=>boolean): server.response.View<string>
 
 /**
 * 获取\think\response\Xml对象实例
@@ -281,7 +281,7 @@ declare function display(content?:string, vars?:array, code?:number, filter:(...
 * @param array $options 参数
 * @return \think\response\Xml
 */
-declare function xml(data:array, code?:number, header?:{[key:string]:string}, options?:array): server.response.Xml<string>
+declare function xml(data:array, code?:number, header?:Record<any>, options?:Record): server.response.Xml<string>
 
 /**
 * 获取当前应用目录

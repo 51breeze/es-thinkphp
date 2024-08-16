@@ -375,6 +375,8 @@ var defaultConfig = {
       "server/event/**": "think/event/{...}",
       "server/console/**": "think/console/{...}",
       "server/driver/**": "think/filesystem/{...}",
+      "server/exception/db/*": "think/db/exception",
+      "server/exception/*": "think/exception",
       "server/kernel/*": "think"
     }
   },
