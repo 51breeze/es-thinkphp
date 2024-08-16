@@ -107,4 +107,12 @@ public class StartTest extends TestCase{
         this.assertEquals(true, address.save());
     }
 
+    testException(){
+        const error = new server.exception.ValidateException('ValidateException')
+        this.assertEquals('ValidateException', error.getMessage() );
+
+        const error2 = new server.exception.db.DataNotFoundException('DataNotFoundException')
+        this.assertEquals('DataNotFoundException', error2.getMessage() );
+    }
+
 }

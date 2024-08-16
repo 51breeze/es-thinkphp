@@ -1,5 +1,7 @@
 package server.exception.db;
 
+import global.PDOException as _PDOException;
+
 /**
  * PDO异常处理类
  * 重新封装了系统的\PDOException类
@@ -14,5 +16,5 @@ declare class PDOException extends DbException
      * @param  string        $sql
      * @param  int           $code
      */
-    constructor(exception:global.PDOException, config:Record = {}, sql:string = '', code:int = 10501)
+    constructor(exception:_PDOException, config:Record = {}, sql:string = '', code:int = 10501)
 }

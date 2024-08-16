@@ -1,13 +1,5 @@
 package server.exception;
 
-// use think\App;
-// use think\console\Output;
-// use think\db\exception\DataNotFoundException;
-// use think\db\exception\ModelNotFoundException;
-// use think\Request;
-// use think\Response;
-// use Throwable;
-
 /**
  * 系统异常处理类
  */

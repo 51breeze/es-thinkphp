@@ -1,10 +1,12 @@
 package server.kernel;
 
+import global.Exception as _Exception;
+
 /**
  * 异常基础类
  * @package think
  */
-declare class Exception extends global.Exception{
+declare class Exception extends _Exception{
     /**
      * 保存异常页面显示的额外Debug数据
      * @var array
