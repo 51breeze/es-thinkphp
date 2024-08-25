@@ -10,6 +10,7 @@ class Creator {
             autoLoadDescribeFile:true,
             output:path.join(__dirname,"./build"),
             workspace:path.join(__dirname,"./src"),
+            resolvePaths:[path.join(process.cwd(), 'types')],
             scanTypings:false,
             parser:{
                 locations:true

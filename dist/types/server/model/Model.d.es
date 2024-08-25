@@ -22,7 +22,7 @@ import server.model.concern.Conversion;
 declare class Model<T extends this=any> implements Attribute,RelationShip<T>,ModelEvent,TimeStamp,Conversion<T>{
 
       use static,this extends Query<T>{
-            find(data?:TableColumnValue):T
+            find(data?:TableColumnValue):T|null;
       }
 
       use static{
@@ -125,7 +125,6 @@ declare class Model<T extends this=any> implements Attribute,RelationShip<T>,Mod
       @Alias(field)
       protected _field:string[]
       protected schema:array
-      protected select():Collection<T>
       protected checkData():Collection<T>
       protected checkResult(result:any):void
 
@@ -318,5 +317,7 @@ declare class Model<T extends this=any> implements Attribute,RelationShip<T>,Mod
       * @return bool
       */
       delete(): boolean;
+
+      create():this
 
 }

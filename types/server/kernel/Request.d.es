@@ -91,7 +91,8 @@ declare class Request{
     * @param  string|array $filter 过滤方法
     * @return mixed
     */
-    param<T=any>(name:string, defaultValue?:T, filter?:RequestMethodFilter<T>):T|null
+    param<T=any>(name:string):T|null
+    param<T=any>(name:string, defaultValue:T, filter?:RequestMethodFilter<T>):T
     param<T=any>(name?:RequestMethodFeildMulti<T>, defaultValue?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
@@ -112,7 +113,8 @@ declare class Request{
     * @param  string|array $filter 过滤方法
     * @return mixed
     */
-    post<T=any>(name:string, defaultValue?:T, filter?:RequestMethodFilter<T>):T|null
+    post<T=any>(name:string):T|null
+    post<T=any>(name:string, defaultValue:T, filter?:RequestMethodFilter<T>):T
     post<T=any>(name?:RequestMethodFeildMulti<T>, defaultValue?:T, filter?:RequestMethodFilter<T>):Record<T>
     
     /**
@@ -310,7 +312,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    route<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    route<T=any>(name:string):T|null
+    route<T=any>(name:string, default:T, filter?:RequestMethodFilter<T>):T
     route<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<any>):Record<T>
 
     /**
@@ -321,7 +324,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    get<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    get<T=any>(name:string):T|null
+    get<T=any>(name:string, default:T, filter?:RequestMethodFilter<T>):T
     get<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
@@ -341,7 +345,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    put<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    put<T=any>(name:string):T|null
+    put<T=any>(name:string, default:T, filter?:RequestMethodFilter<T>):T
     put<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
@@ -352,7 +357,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    delete<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    delete<T=any>(name:string):T|null
+    delete<T=any>(name:string, default:T, filter?:RequestMethodFilter<T>):T
     delete<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
@@ -363,7 +369,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    patch<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    patch<T=any>(name:string):T|null
+    patch<T=any>(name:string, default:T, filter?:RequestMethodFilter<T>):T
     patch<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
@@ -374,7 +381,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    request<T=any>(name:string, default?:T, filter?:RequestMethodFilter<T>):T|null
+    request<T=any>(name:string):T|null
+    request<T=any>(name:string, default:T, filter?:RequestMethodFilter<T>):T
     request<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
@@ -404,7 +412,8 @@ declare class Request{
     * @param  string|array filter 过滤方法
     * @return mixed
     */
-    cookie<T=any>(name:string, default?:any, filter?:RequestMethodFilter<any>):T|null
+    cookie<T=any>(name:string):T|null
+    cookie<T=any>(name:string, default:T, filter?:RequestMethodFilter<T>):T
     cookie<T=any>(name?:RequestMethodFeildMulti<T>, default?:T, filter?:RequestMethodFilter<T>):Record<T>
 
     /**
@@ -414,7 +423,8 @@ declare class Request{
     * @param  string default 默认值
     * @return mixed
     */
-    server<T=any>(name:string, default?:string):T|null;
+    server<T=any>(name:string):T|null;
+    server<T=any>(name:string, default:string):T;
     server<T=any>():Record<T>;
 
     /**
@@ -440,7 +450,8 @@ declare class Request{
     * @param  string default 默认值
     * @return string|array
     */
-    header<T=any>(name:string, default?:string):T|null
+    header<T=any>(name:string):T|null
+    header<T=any>(name:string, default:string):T
     header<T=any>():Record<T>
 
     /**
