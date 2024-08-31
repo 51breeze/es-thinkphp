@@ -26,7 +26,7 @@ declare interface Connection<QC=BaseQuery< ArrayMapping< TableColumnValue > >>{
       * @param callable $callback 数据操作方法回调
       * @return mixed
       */
-      transaction<T>(callback:(connection:Connection)=>T):T;
+      transaction<T=any>(callback:(connection:Connection)=>T):T;
 
       /**
       * 启动事务
@@ -109,7 +109,7 @@ declare interface Connection<QC=BaseQuery< ArrayMapping< TableColumnValue > >>{
       * @param BaseQuery $query 查询对象
       * @return array
       */
-      find(query:QC): ArrayMapping< TableColumnValue >;
+      find(query:QC): Record | null;
 
       /**
       * 查找记录
@@ -117,7 +117,7 @@ declare interface Connection<QC=BaseQuery< ArrayMapping< TableColumnValue > >>{
       * @param BaseQuery $query 查询对象
       * @return array
       */
-      select(query:QC): ArrayMapping< TableColumnValue >[];
+      select(query:QC): Record[];
 
       /**
       * 插入记录
@@ -171,7 +171,7 @@ declare interface Connection<QC=BaseQuery< ArrayMapping< TableColumnValue > >>{
       * @param string $key    索引
       * @return array
       */
-      column(query:QC, column:string | array, key?:string): ArrayMapping< TableColumnValue >[];
+      column(query:QC, column:string | array, key?:string): Record[];
 }
 
 declare interface PDOStatement{}
