@@ -39,7 +39,7 @@ declare class HasMany<T extends Model=Model> extends Relation<T>
      * @param  array   $cache       关联缓存
      * @return void
      */
-    eagerlyResultSet(resultSet:ArrayMapping<ScalarValue>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
+    eagerlyResultSet(resultSet:ArrayMapping<Scalar>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
     
     /**
      * 预载入关联查询
@@ -85,7 +85,7 @@ declare class HasMany<T extends Model=Model> extends Relation<T>
      * @param  array   $cache       关联缓存
      * @return array
      */
-    protected eagerlyManyToMany(where:ArrayMapping<ScalarValue>, subRelation?:string[], closure?:Function, cache?:array): array
+    protected eagerlyManyToMany(where:ArrayMapping<Scalar>, subRelation?:string[], closure?:Function, cache?:array): array
 
     /**
      * 保存（新增）当前关联数据对象
@@ -94,14 +94,14 @@ declare class HasMany<T extends Model=Model> extends Relation<T>
      * @param  boolean $replace 是否自动识别更新和写入
      * @return Model|false
      */
-    save(data:T | ArrayMapping<ScalarValue>, replace?:boolean ):T|false
+    save(data:T | ArrayMapping<Scalar>, replace?:boolean ):T|false
 
     /**
      * 创建关联对象实例
      * @param array|Model $data
      * @return Model
      */
-    make(data?:T | ArrayMapping<ScalarValue>): T
+    make(data?:T | ArrayMapping<Scalar>): T
 
     /**
      * 批量保存当前关联数据对象
@@ -110,7 +110,7 @@ declare class HasMany<T extends Model=Model> extends Relation<T>
      * @param  boolean  $replace 是否自动识别更新和写入
      * @return array|false
      */
-    saveAll(dataSet:ArrayMapping<ScalarValue>, replace?:boolean):ArrayMapping<ScalarValue>|false
+    saveAll(dataSet:ArrayMapping<Scalar>, replace?:boolean):ArrayMapping<Scalar>|false
 
     /**
      * 根据关联条件查询当前模型
@@ -133,7 +133,7 @@ declare class HasMany<T extends Model=Model> extends Relation<T>
      * @param  Query  $query    Query对象
      * @return Query
      */
-    hasWhere(where?:ArrayMapping<ScalarValue>, fields?:ArrayMapping<string>, joinType?:string, query?:Query<T>): Query<T>
+    hasWhere(where?:ArrayMapping<Scalar>, fields?:ArrayMapping<string>, joinType?:string, query?:Query<T>): Query<T>
 
     /**
      * 执行基础查询（仅执行一次）

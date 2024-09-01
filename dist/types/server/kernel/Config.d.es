@@ -10,7 +10,7 @@ declare class Config{
      * 配置参数
      * @var array
      */
-    protected config:ArrayMapping<ScalarValue>;
+    protected config:ArrayMapping<Scalar>;
 
     /**
      * 配置文件目录
@@ -40,7 +40,7 @@ declare class Config{
      * @param  string $name 一级配置名
      * @return array
      */
-    load(file:string, name?:string): ArrayMapping<ScalarValue>;
+    load(file:string, name?:string): ArrayMapping<Scalar>;
     
 
     /**
@@ -50,7 +50,7 @@ declare class Config{
      * @param  string $name 一级配置名
      * @return array
      */
-    protected parse(file:string, name:string): ArrayMapping<ScalarValue>;
+    protected parse(file:string, name:string): ArrayMapping<Scalar>;
    
 
     /**
@@ -67,7 +67,7 @@ declare class Config{
      * @param  string $name 一级配置名
      * @return array
      */
-    protected pull(name:string): ArrayMapping<ScalarValue>;
+    protected pull(name:string): ArrayMapping<Scalar>;
 
     /**
      * 获取配置参数 为空则获取所有配置
@@ -76,7 +76,7 @@ declare class Config{
      * @param  mixed  $default 默认值
      * @return mixed
      */
-    get<T=ScalarValue>(name:string, default?:T):T
+    get<T=Scalar>(name:string, default?:T):T
 
     /**
      * 设置配置参数 name为数组则为批量设置
@@ -85,5 +85,5 @@ declare class Config{
      * @param  string $name 配置名
      * @return array
      */
-    set(config:ArrayMapping<ScalarValue>, name?:string): ArrayMapping<ScalarValue>;
+    set(config:ArrayMapping<Scalar>, name?:string): ArrayMapping<Scalar>;
 }

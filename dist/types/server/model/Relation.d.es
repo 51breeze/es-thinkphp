@@ -84,6 +84,6 @@ declare interface Relation<T extends Model<T>=Model>{
      * @param  mixed $data 默认值
      * @return $this
      */
-    withDefault(data:ArrayMapping<ScalarValue>):this
+    withDefault(data:ArrayMapping<Scalar>):this
 
 }

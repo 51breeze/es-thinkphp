@@ -64,7 +64,7 @@ declare class BelongsToMany<T extends Model=Model> extends Relation<T>
      * @return Pivot
      * @throws Exception
      */
-    protected newPivot(data:ArrayMapping<ScalarValue>):Pivot
+    protected newPivot(data:ArrayMapping<Scalar>):Pivot
 
     /**
      * 延迟获取关联数据
@@ -81,7 +81,7 @@ declare class BelongsToMany<T extends Model=Model> extends Relation<T>
      * @param  Model    $result 模型对象
      * @return array
      */
-    protected matchPivot(result:T): ArrayMapping<ScalarValue>
+    protected matchPivot(result:T): ArrayMapping<Scalar>
 
     /**
      * 根据关联条件查询当前模型
@@ -115,7 +115,7 @@ declare class BelongsToMany<T extends Model=Model> extends Relation<T>
      * @param  array   $cache       关联缓存
      * @return void
      */
-    eagerlyResultSet(resultSet:ArrayMapping<ScalarValue>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
+    eagerlyResultSet(resultSet:ArrayMapping<Scalar>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
    
 
     /**
@@ -162,7 +162,7 @@ declare class BelongsToMany<T extends Model=Model> extends Relation<T>
      * @param  array   $cache       关联缓存
      * @return array
      */
-    protected eagerlyManyToMany(where:ArrayMapping<ScalarValue>, subRelation?:string[], closure?:Function, cache?:array): array
+    protected eagerlyManyToMany(where:ArrayMapping<Scalar>, subRelation?:string[], closure?:Function, cache?:array): array
     
     /**
      * BELONGS TO MANY 关联查询
@@ -172,7 +172,7 @@ declare class BelongsToMany<T extends Model=Model> extends Relation<T>
      * @param  array  $condition  关联查询条件
      * @return Query
      */
-    protected belongsToManyQuery(foreignKey:string, localKey:string, condition?:ArrayMapping<ScalarValue>): Query<T>
+    protected belongsToManyQuery(foreignKey:string, localKey:string, condition?:ArrayMapping<Scalar>): Query<T>
 
     /**
      * 保存（新增）当前关联数据对象
@@ -181,7 +181,7 @@ declare class BelongsToMany<T extends Model=Model> extends Relation<T>
      * @param  array $pivot 中间表额外数据
      * @return array|Pivot
      */
-    save(data:ArrayMapping<ScalarValue>, pivot?:ArrayMapping<ScalarValue> ):ArrayMapping<ScalarValue>|Pivot
+    save(data:ArrayMapping<Scalar>, pivot?:ArrayMapping<Scalar> ):ArrayMapping<Scalar>|Pivot
 
     /**
      * 批量保存当前关联数据对象
@@ -191,7 +191,7 @@ declare class BelongsToMany<T extends Model=Model> extends Relation<T>
      * @param  bool     $samePivot 额外数据是否相同
      * @return array|false
      */
-    saveAll(dataSet:ArrayMapping<ScalarValue>, pivot?:ArrayMapping<ScalarValue>, samePivot?:boolean):ArrayMapping<ScalarValue>|false
+    saveAll(dataSet:ArrayMapping<Scalar>, pivot?:ArrayMapping<Scalar>, samePivot?:boolean):ArrayMapping<Scalar>|false
 
     /**
      * 附加关联的一个中间表数据
@@ -201,7 +201,7 @@ declare class BelongsToMany<T extends Model=Model> extends Relation<T>
      * @return array|Pivot
      * @throws Exception
      */
-    attach(data:ArrayMapping<ScalarValue>, pivot?:ArrayMapping<ScalarValue>):ArrayMapping<ScalarValue>|Pivot
+    attach(data:ArrayMapping<Scalar>, pivot?:ArrayMapping<Scalar>):ArrayMapping<Scalar>|Pivot
 
     /**
      * 判断是否存在关联数据
@@ -209,7 +209,7 @@ declare class BelongsToMany<T extends Model=Model> extends Relation<T>
      * @param  mixed $data 数据 可以使用关联模型对象 或者 关联对象的主键
      * @return Pivot|false
      */
-    attached(data:T|ScalarValue):Pivot|false
+    attached(data:T|Scalar):Pivot|false
 
     /**
      * 解除关联的一个中间表数据
@@ -218,7 +218,7 @@ declare class BelongsToMany<T extends Model=Model> extends Relation<T>
      * @param  bool          $relationDel 是否同时删除关联表数据
      * @return integer
      */
-    detach(data?:T|ScalarValue|ArrayMapping<ScalarValue>, relationDel?:boolean): int
+    detach(data?:T|Scalar|ArrayMapping<Scalar>, relationDel?:boolean): int
     
     /**
      * 数据同步
@@ -227,10 +227,10 @@ declare class BelongsToMany<T extends Model=Model> extends Relation<T>
      * @param  bool  $detaching
      * @return array
      */
-    sync(ids:ArrayMapping<ScalarValue>, detaching?:boolean): {
-        attached:ArrayMapping<ScalarValue>,
-        detached:ArrayMapping<ScalarValue>,
-        updated:ArrayMapping<ScalarValue>,
+    sync(ids:ArrayMapping<Scalar>, detaching?:boolean): {
+        attached:ArrayMapping<Scalar>,
+        detached:ArrayMapping<Scalar>,
+        updated:ArrayMapping<Scalar>,
     }
    
     /**

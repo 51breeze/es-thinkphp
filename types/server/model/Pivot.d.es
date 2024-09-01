@@ -21,5 +21,5 @@ declare class Pivot<T=Pivot> extends Model<Pivot>
      * @param Model|null $parent 上级模型
      * @param string     $table  中间数据表名
      */
-    constructor(data:ArrayMapping<ScalarValue>, parent?:Model<any>, table?:string);
+    constructor(data:ArrayMapping<Scalar>, parent?:Model<any>, table?:string);
 }

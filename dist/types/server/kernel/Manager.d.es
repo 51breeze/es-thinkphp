@@ -46,7 +46,7 @@ declare class Manager<T>
      * @param string $name
      * @return mixed
      */
-    protected resolveConfig(name:string):ArrayMapping<ScalarValue>
+    protected resolveConfig(name:string):ArrayMapping<Scalar>
 
     /**
      * 获取驱动类

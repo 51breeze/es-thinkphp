@@ -10,7 +10,7 @@ import server.kernel.App;
 @abstract()
 declare class Dispatch
 {
-    constructor(request:Request, rule:Rule, dispatch?:string, param?:ArrayMapping<ScalarValue>)
+    constructor(request:Request, rule:Rule, dispatch?:string, param?:ArrayMapping<Scalar>)
     init(app:App):void
 
     /**
@@ -20,6 +20,6 @@ declare class Dispatch
      */
     run():Response
     getDispatch(): Response
-    getParam():ArrayMapping<ScalarValue>
+    getParam():ArrayMapping<Scalar>
     exec():any;
 }

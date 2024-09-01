@@ -22,7 +22,7 @@ import server.model.concern.Conversion;
 declare class Model<T extends this=any> implements Attribute,RelationShip<T>,ModelEvent,TimeStamp,Conversion<T>{
 
       use static,this extends Query<T>{
-            find(data?:TableColumnValue):T|null;
+            find(data?:string | number):T|null;
       }
 
       use static{
@@ -36,7 +36,7 @@ declare class Model<T extends this=any> implements Attribute,RelationShip<T>,Mod
             * @param string $suffix     数据表后缀
             * @return static
             */
-            create(data:ArrayMapping<ScalarValue>, allowField?:string[], replace?:boolean, suffix?:string): T
+            create(data:Record, allowField?:string[], replace?:boolean, suffix?:string): T
 
             /**
             * 更新数据
@@ -47,7 +47,7 @@ declare class Model<T extends this=any> implements Attribute,RelationShip<T>,Mod
             * @param string $suffix     数据表后缀
             * @return static
             */
-            update(data:ArrayMapping<ScalarValue>, allowField?:string[], suffix?:string):T
+            update(data:Record, allowField?:string[], suffix?:string):T
 
             /**
             * 删除记录
@@ -56,7 +56,7 @@ declare class Model<T extends this=any> implements Attribute,RelationShip<T>,Mod
             * @param bool  $force 是否强制删除
             * @return bool
             */
-            destroy(data:ScalarValue | ScalarValue[] | (query?:Query<T>)=>void, force?:boolean): boolean
+            destroy(data:Record | (query?:Query<T>)=>void, force?:boolean): boolean
 
             /**
             * 设置服务注入
@@ -292,7 +292,7 @@ declare class Model<T extends this=any> implements Attribute,RelationShip<T>,Mod
       * @param string $sequence 自增序列名
       * @return bool
       */
-      save( data?:ArrayMapping<ScalarValue>, sequence?:string ): boolean;
+      save( data?:ArrayMapping<Scalar>, sequence?:string ): boolean;
 
       /**
       * 获取当前的更新条件
@@ -309,7 +309,7 @@ declare class Model<T extends this=any> implements Attribute,RelationShip<T>,Mod
       * @return Collection
       * @throws \Exception
       */
-      saveAll(dataSet?:ArrayMapping<ScalarValue>[],replace?:boolean):Collection<T>;
+      saveAll(dataSet?:ArrayMapping<Scalar>[],replace?:boolean):Collection<T>;
 
       /**
       * 删除当前的记录

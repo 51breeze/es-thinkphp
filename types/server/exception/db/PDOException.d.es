@@ -1,6 +1,6 @@
 package server.exception.db;
 
-import global.PDOException as _PDOException;
+import PDOException as _PDOException;
 
 /**
  * PDO异常处理类

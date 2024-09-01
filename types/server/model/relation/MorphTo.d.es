@@ -113,7 +113,7 @@ declare class MorphTo<T extends Model=Model> extends Relation<T>
      * @return void
      * @throws Exception
      */
-    eagerlyResultSet(resultSet:ArrayMapping<ScalarValue>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
+    eagerlyResultSet(resultSet:ArrayMapping<Scalar>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
 
     /**
      * 预载入关联查询

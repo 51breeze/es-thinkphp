@@ -30,7 +30,7 @@ declare class Env{
         * @param mixed  $default 默认值
         * @return mixed
         */
-        public get<T=ScalarValue>(name:string, default?:T):T
+        public get<T=Scalar>(name:string, default?:T):T
 
         protected getEnv( name:string, default?:any)
 

@@ -71,7 +71,7 @@ declare class Lang
      * @param string       $range 语言作用域
      * @return array
      */
-    load(file:string, range?:string): ArrayMapping<ScalarValue>
+    load(file:string, range?:string): ArrayMapping<Scalar>
     
 
     /**
@@ -80,7 +80,7 @@ declare class Lang
      * @param string $file 语言文件名
      * @return array
      */
-    protected parse(file:string):  ArrayMapping<ScalarValue>
+    protected parse(file:string):  ArrayMapping<Scalar>
    
 
     /**

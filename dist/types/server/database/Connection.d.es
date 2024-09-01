@@ -4,7 +4,7 @@ import server.database.concern.BaseQuery;
 import server.psr.CacheInterface;
 import server.contract.DbConfigInterface;
 
-declare interface Connection<QC=BaseQuery< ArrayMapping< TableColumnValue > >>{
+declare interface Connection<QC=BaseQuery<ArrayMapping<string|number>>>{
 
       /**
       * 指定表名开始查询
@@ -161,7 +161,7 @@ declare interface Connection<QC=BaseQuery< ArrayMapping< TableColumnValue > >>{
       * @param mixed  $default 默认值
       * @return mixed
       */
-      value(query:QC, field:string, defaultValue:any = null):TableColumnValue;
+      value(query:QC, field:string, defaultValue:any = null):string|number|null;
 
       /**
       * 得到某个列的数组

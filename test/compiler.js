@@ -11,7 +11,7 @@ class Creator {
             output:path.join(__dirname,"./build"),
             workspace:path.join(__dirname,"./src"),
             resolvePaths:[path.join(process.cwd(), 'types')],
-            scanTypings:false,
+            scanTypings:true,
             parser:{
                 locations:true
             }

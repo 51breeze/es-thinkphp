@@ -293,8 +293,8 @@ var require_package = __commonJS({
         dev: "jasmine ./test/index.js",
         run: "node ./test/phptest.js",
         test: "npm run dev & npm run run",
-        build: "node ./scripts/build.js",
-        manifest: "node ./scripts/manifest.js"
+        build: "npm run manifest & node ./scripts/build.js",
+        manifest: "esc -o types -f types/think.d.es --manifest --scope es-thinkphp --inherit es-php"
       },
       repository: {
         type: "git",
@@ -316,6 +316,7 @@ var require_package = __commonJS({
       },
       devDependencies: {
         easescript: "latest",
+        "easescript-cli": "latest",
         esbuild: "^0.17.11",
         "esbuild-plugin-copy": "^2.1.0",
         jasmine: "^3.10.0",

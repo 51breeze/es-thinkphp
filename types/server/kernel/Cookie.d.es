@@ -19,7 +19,7 @@ declare class Cookie
      * Cookie写入数据
      * @var array
      */
-    protected cookie:ArrayMapping<ScalarValue>;
+    protected cookie:ArrayMapping<Scalar>;
 
     /**
      * 当前Request对象
@@ -44,7 +44,7 @@ declare class Cookie
      * @param  string $default 默认值
      * @return mixed
      */
-    get<T=ScalarValue>(name?:string, default?:T):T;
+    get<T=Scalar>(name?:string, default?:T):T;
 
 
     /**
@@ -77,7 +77,7 @@ declare class Cookie
      * @param  array  $option 可选参数
      * @return void
      */
-    protected setCookie(name:string, value:string, expire:number, option:ArrayMapping<ScalarValue>): void
+    protected setCookie(name:string, value:string, expire:number, option:ArrayMapping<Scalar>): void
 
     /**
      * 永久保存Cookie数据
@@ -87,7 +87,7 @@ declare class Cookie
      * @param  mixed  $option 可选参数 可能会是 null|integer|string
      * @return void
      */
-   forever(name:string, value:string,option:ArrayMapping<ScalarValue>): void
+   forever(name:string, value:string,option:ArrayMapping<Scalar>): void
 
 
     /**
@@ -97,7 +97,7 @@ declare class Cookie
      * @param  array  $options cookie参数
      * @return void
      */
-   delete(name:string, option:ArrayMapping<ScalarValue>): void
+   delete(name:string, option:ArrayMapping<Scalar>): void
   
 
     /**
@@ -105,7 +105,7 @@ declare class Cookie
      * @access public
      * @return array
      */
-   getCookie(): ArrayMapping<ScalarValue>
+   getCookie(): ArrayMapping<Scalar>
 
 
     /**

@@ -215,7 +215,7 @@ declare class Validate
      * @param array $rules 验证规则
      * @return bool
      */
-    check(data:ArrayMapping<ScalarValue>, rules?:string[]): boolean
+    check(data:ArrayMapping<Scalar>, rules?:string[]): boolean
     
 
     /**
@@ -225,7 +225,7 @@ declare class Validate
      * @param mixed $rules 验证规则
      * @return bool
      */
-    checkRule(value:ScalarValue, rules:string[]): boolean
+    checkRule(value:Scalar, rules:string[]): boolean
     
 
     /**
@@ -239,7 +239,7 @@ declare class Validate
      * @param array  $msg   提示信息
      * @return mixed
      */
-    protected checkItem(field:string, value:ScalarValue, rules:string|string[], data:ArrayMapping<ScalarValue>, title?:string, msg:ArrayMapping<string>):any
+    protected checkItem(field:string, value:Scalar, rules:string|string[], data:ArrayMapping<Scalar>, title?:string, msg:ArrayMapping<string>):any
    
 
     /**
@@ -260,7 +260,7 @@ declare class Validate
      * @param string $field 字段名
      * @return bool
      */
-   confirm(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>, field?:string): boolean
+   confirm(value:Scalar, rule:any, data?:ArrayMapping<Scalar>, field?:string): boolean
    
 
     /**
@@ -271,7 +271,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-    different(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+    different(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
    
 
     /**
@@ -282,7 +282,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-    egt(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+    egt(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
    
 
     /**
@@ -293,7 +293,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-    gt(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+    gt(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
    
 
     /**
@@ -304,7 +304,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-   elt(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+   elt(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
   
 
     /**
@@ -315,7 +315,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-    lt(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+    lt(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
   
 
     /**
@@ -325,7 +325,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-   eq(value:ScalarValue, rule:any): boolean
+   eq(value:Scalar, rule:any): boolean
    
     /**
      * 必须验证
@@ -334,7 +334,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-   must(value:ScalarValue, rule?:any): boolean
+   must(value:Scalar, rule?:any): boolean
   
 
     /**
@@ -345,7 +345,7 @@ declare class Validate
      * @param array  $data  数据
      * @return bool
      */
-   is(value:ScalarValue, rule:string, data?:ArrayMapping<ScalarValue>): boolean
+   is(value:Scalar, rule:string, data?:ArrayMapping<Scalar>): boolean
    
 
     // 判断图像类型
@@ -359,7 +359,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-   token(value:ScalarValue, rule:string, data?:ArrayMapping<ScalarValue>): boolean
+   token(value:Scalar, rule:string, data?:ArrayMapping<Scalar>): boolean
   
 
     /**
@@ -369,7 +369,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-   activeUrl(value:ScalarValue, rule?:string ): boolean
+   activeUrl(value:Scalar, rule?:string ): boolean
   
 
     /**
@@ -379,7 +379,7 @@ declare class Validate
      * @param mixed $rule  验证规则 ipv4 ipv6
      * @return bool
      */
-   ip(value:ScalarValue, rule?:string): boolean
+   ip(value:Scalar, rule?:string): boolean
   
     /**
      * 检测上传文件后缀
@@ -457,7 +457,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-   dateFormat(value:ScalarValue, rule:any): boolean
+   dateFormat(value:Scalar, rule:any): boolean
   
 
     /**
@@ -469,7 +469,7 @@ declare class Validate
      * @param string $field 验证字段名
      * @return bool
      */
-    unique(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>, field?:string): boolean
+    unique(value:Scalar, rule:any, data?:ArrayMapping<Scalar>, field?:string): boolean
    
 
     /**
@@ -479,7 +479,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-   filter(value:ScalarValue, rule:any): boolean
+   filter(value:Scalar, rule:any): boolean
    
     /**
      * 验证某个字段等于某个值的时候必须
@@ -489,7 +489,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-    requireIf(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+    requireIf(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
    
 
     /**
@@ -500,7 +500,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-   requireCallback(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+   requireCallback(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
     
 
     /**
@@ -511,7 +511,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-   requireWith(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+   requireWith(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
    
 
     /**
@@ -522,7 +522,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-    requireWithout(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+    requireWithout(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
    
 
     /**
@@ -532,7 +532,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-    in(value:ScalarValue, rule:any): boolean
+    in(value:Scalar, rule:any): boolean
 
     /**
      * 验证是否不在某个范围
@@ -541,7 +541,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-    notIn(value:ScalarValue, rule:any): boolean
+    notIn(value:Scalar, rule:any): boolean
 
     /**
      * between验证数据
@@ -550,7 +550,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-    between(value:ScalarValue, rule:any): boolean
+    between(value:Scalar, rule:any): boolean
 
     /**
      * 使用notbetween验证数据
@@ -559,7 +559,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-    notBetween(value:ScalarValue, rule:any): boolean
+    notBetween(value:Scalar, rule:any): boolean
 
     /**
      * 验证数据长度
@@ -568,7 +568,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-    length(value:ScalarValue, rule:any): boolean
+    length(value:Scalar, rule:any): boolean
 
     /**
      * 验证数据最大长度
@@ -577,7 +577,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-    max(value:ScalarValue, rule:any): boolean
+    max(value:Scalar, rule:any): boolean
 
     /**
      * 验证数据最小长度
@@ -586,7 +586,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-    min(value:ScalarValue, rule:any): boolean
+    min(value:Scalar, rule:any): boolean
 
     /**
      * 验证日期
@@ -596,7 +596,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-    after(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+    after(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
 
     /**
      * 验证日期
@@ -606,7 +606,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-    before(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+    before(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
 
     /**
      * 验证日期
@@ -616,7 +616,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-    afterWith(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+    afterWith(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
 
     /**
      * 验证日期
@@ -626,7 +626,7 @@ declare class Validate
      * @param array $data  数据
      * @return bool
      */
-    beforeWith(value:ScalarValue, rule:any, data?:ArrayMapping<ScalarValue>): boolean
+    beforeWith(value:Scalar, rule:any, data?:ArrayMapping<Scalar>): boolean
 
     /**
      * 验证有效期
@@ -635,7 +635,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-    expire(value:ScalarValue, rule:any): boolean
+    expire(value:Scalar, rule:any): boolean
    
     /**
      * 验证IP许可
@@ -644,7 +644,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-    allowIp(value:ScalarValue, rule:any): boolean
+    allowIp(value:Scalar, rule:any): boolean
 
     /**
      * 验证IP禁用
@@ -653,7 +653,7 @@ declare class Validate
      * @param mixed $rule  验证规则
      * @return bool
      */
-    denyIp(value:ScalarValue, rule:any): boolean
+    denyIp(value:Scalar, rule:any): boolean
 
     /**
      * 使用正则验证数据
@@ -662,7 +662,7 @@ declare class Validate
      * @param mixed $rule  验证规则 正则规则或者预定义正则名
      * @return bool
      */
-    regex(value:ScalarValue, rule:any): boolean
+    regex(value:Scalar, rule:any): boolean
 
     /**
      * 获取错误信息
@@ -677,7 +677,7 @@ declare class Validate
      * @param string $key  数据标识 支持二维
      * @return mixed
      */
-    protected getDataValue(data:ArrayMapping<ScalarValue>, key:string):any;
+    protected getDataValue(data:ArrayMapping<Scalar>, key:string):any;
    
 
     /**
@@ -700,7 +700,7 @@ declare class Validate
      * @param string $title 字段描述名
      * @return string|array
      */
-    protected parseErrorMsg(msg:string, rule:ArrayMapping<ScalarValue>, title:string):string|string[];
+    protected parseErrorMsg(msg:string, rule:ArrayMapping<Scalar>, title:string):string|string[];
     
 
     /**
@@ -711,7 +711,7 @@ declare class Validate
      * @param string $title 字段描述名
      * @return array
      */
-    protected errorMsgIsArray(msg:ArrayMapping<ScalarValue>, rule:ArrayMapping<ScalarValue>, title:string):string[]
+    protected errorMsgIsArray(msg:ArrayMapping<Scalar>, rule:ArrayMapping<Scalar>, title:string):string[]
 
     /**
      * 获取数据验证的场景

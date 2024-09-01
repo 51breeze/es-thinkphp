@@ -53,7 +53,7 @@ declare interface RelationShip<T extends Model=Model>
      * @param  array  $data  数据
      * @return $this
      */
-    setRelation(name:string, value:ScalarValue, data?:Record ):this;
+    setRelation(name:string, value:Scalar, data?:Record ):this;
 
     /**
      * 查询当前模型的关联数据

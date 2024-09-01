@@ -5,7 +5,7 @@
 * @param string $default 默认值
 * @return mixed
 */
-declare function env<T=ScalarValue | ScalarValue[]>(name:string,defaultValue?:any):T;
+declare function env<T=Scalar | Scalar[]>(name:string,defaultValue?:any):T;
 
 /**
 * 抛出HTTP异常
@@ -13,7 +13,7 @@ declare function env<T=ScalarValue | ScalarValue[]>(name:string,defaultValue?:an
 * @param string           $message 错误信息
 * @param array            $header  参数
 */
-declare function abort(code:server.kernel.Response | number , message?:string, header?:ArrayMapping<ScalarValue>):void;
+declare function abort(code:server.kernel.Response | number , message?:string, header?:ArrayMapping<Scalar>):void;
 
 /**
 * 快速获取容器中的实例 支持依赖注入

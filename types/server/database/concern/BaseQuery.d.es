@@ -352,7 +352,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @return integer
       */
       save():int
-      save(data:Record<ScalarValue>,forceInsert:boolean = false):int
+      save(data:Record,forceInsert:boolean = false):int
 
       /**
       * 插入记录
@@ -361,7 +361,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param boolean $getLastInsID 返回自增主键
       * @return integer|string
       */
-      insert(data:Record<ScalarValue>, getLastInsID:boolean=false):int | string
+      insert(data:Record, getLastInsID:boolean=false):int | string
 
       /**
       * 插入记录并获取自增ID
@@ -369,7 +369,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param array $data 数据
       * @return integer|string
       */
-      insertGetId(data:Record<ScalarValue>):int | string
+      insertGetId(data:Record):int | string
 
       /**
       * 批量插入记录
@@ -378,7 +378,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param integer $limit   每次写入数据限制
       * @return integer
       */
-      insertAll(dataSet:Record<ScalarValue>[], limit:int = 0): int
+      insertAll(dataSet:Record[], limit:int = 0): int
 
       /**
       * 通过Select方式插入记录
@@ -396,8 +396,8 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @return integer
       * @throws Exception
       */
-      update(data): int
-      update(data:string | server.database.Raw | Record<WhereQueryValue, string>): int
+      update(): int
+      update(data:string | server.database.Raw | Record): int
 
       /**
       * 删除记录
@@ -408,7 +408,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       */
       delete(): int
       delete(data:true): int
-      delete(data:string | server.database.Raw | Record<WhereQueryValue, string>): int
+      delete(data:string | server.database.Raw | Record): int
 
       /**
       * 查找记录
@@ -420,7 +420,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @throws DataNotFoundException
       */
       select<R=T>(): server.kernel.Collection<R>
-      select<R=T>(data:string | server.database.Raw | Record<WhereQueryValue, string>): server.kernel.Collection<R>
+      select<R=T>(data:string | server.database.Raw | Record): server.kernel.Collection<R>
 
       /**
       * 查找单条记录
@@ -432,7 +432,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @throws DataNotFoundException
       */
       find<R=T>():R | null
-      find<R=T>(data:string | server.database.Raw | Record<WhereQueryValue, string>):R | null
+      find<R=T>(data:string | server.database.Raw | Record):R | null
 
       /**
       * 分析表达式（可用于查询或者写入操作）

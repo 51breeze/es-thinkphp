@@ -85,7 +85,7 @@ declare class HasManyThrough<T extends Model=Model> extends Relation<T>{
      * @param  array   $cache       关联缓存
      * @return void
      */
-    eagerlyResultSet(resultSet:ArrayMapping<ScalarValue>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
+    eagerlyResultSet(resultSet:ArrayMapping<Scalar>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
 
     /**
      * 预载入关联查询（数据）

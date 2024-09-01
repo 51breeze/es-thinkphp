@@ -69,7 +69,7 @@ declare class MorphOne<T extends Model=Model> extends Relation<T>
      * @param  array   $cache       关联缓存
      * @return void
      */
-    eagerlyResultSet(resultSet:ArrayMapping<ScalarValue>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
+    eagerlyResultSet(resultSet:ArrayMapping<Scalar>, relation:string, subRelation:string[], closure?:Function, cache?:array): void
 
     /**
      * 预载入关联查询
@@ -101,7 +101,7 @@ declare class MorphOne<T extends Model=Model> extends Relation<T>
      * @param  bool  $replace 是否自动识别更新和写入
      * @return Model|false
      */
-    save(data:T | ArrayMapping<ScalarValue>, replace?:boolean ):T|false
+    save(data:T | ArrayMapping<Scalar>, replace?:boolean ):T|false
     
 
     /**
@@ -109,7 +109,7 @@ declare class MorphOne<T extends Model=Model> extends Relation<T>
      * @param array|Model $data
      * @return Model
      */
-    make(data?:T | ArrayMapping<ScalarValue>): T
+    make(data?:T | ArrayMapping<Scalar>): T
 
     /**
      * 执行基础查询（进执行一次）
@@ -124,14 +124,14 @@ declare class MorphOne<T extends Model=Model> extends Relation<T>
      * @param  array $attr 要绑定的属性列表
      * @return $this
      */
-    bind(attr:ArrayMapping<ScalarValue>):this
+    bind(attr:ArrayMapping<Scalar>):this
 
     /**
      * 获取绑定属性
      * @access public
      * @return array
      */
-    getBindAttr(): ArrayMapping<ScalarValue>
+    getBindAttr(): ArrayMapping<Scalar>
 
     /**
      * 绑定关联属性到父模型

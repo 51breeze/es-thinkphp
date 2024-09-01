@@ -76,7 +76,7 @@ declare class Definition
      * 获取参数默认值
      * @return array
      */
-    getArgumentDefaults(): ScalarValue[];
+    getArgumentDefaults(): Scalar[];
    
     /**
      * 设置选项
@@ -141,7 +141,7 @@ declare class Definition
      * 获取所有选项的默认值
      * @return array
      */
-    getOptionDefaults(): ScalarValue[];
+    getOptionDefaults(): Scalar[];
 
     /**
      * 获取该指令的介绍
