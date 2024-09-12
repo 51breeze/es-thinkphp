@@ -87,7 +87,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param mixed  $default 默认值
       * @return mixed
       */
-      value<R=string|number>(field:string, defaultValue:any = null):R;
+      value<R=string|number|null>(field:string, defaultValue:any = null):R;
 
       /**
       * 得到某个列的数组
@@ -96,7 +96,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param string       $key   索引
       * @return array
       */
-      column<R=string[] | Record>(field:string | string[], key:string = ''):R
+      column<R=Record>(field:string | string[], key:string = ''):R
 
       /**
       * 查询SQL组装 union
@@ -121,7 +121,8 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param mixed $field 字段信息
       * @return $this
       */
-      field(field:string | string[]):this;
+      field(field:true):this;
+      field(field:server.database.Raw | string | string[]):this;
 
       /**
       * 指定要排除的查询字段
@@ -129,7 +130,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param array|string $field 要排除的字段
       * @return $this
       */
-      withoutField(field:string | string[]):this
+      withoutField(field:server.database.Raw | string | string[]):this
 
       /**
       * 指定其它数据表的查询字段
@@ -140,7 +141,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @param string  $alias     别名前缀
       * @return $this
       */
-      tableField(field:string | string[], tableName:string, prefix:string = '', alias:string = ''):this
+      tableField(field:server.database.Raw | string | string[], tableName:string, prefix:string = '', alias:string = ''):this
 
       /**
       * 设置数据
@@ -408,7 +409,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       */
       delete(): int
       delete(data:true): int
-      delete(data:string | server.database.Raw | Record): int
+      delete(data:FieldValue | FieldValue[]): int
 
       /**
       * 查找记录
@@ -420,7 +421,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @throws DataNotFoundException
       */
       select<R=T>(): server.kernel.Collection<R>
-      select<R=T>(data:string | server.database.Raw | Record): server.kernel.Collection<R>
+      select<R=T>(data:FieldValue | FieldValue[]): server.kernel.Collection<R>
 
       /**
       * 查找单条记录
@@ -432,7 +433,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @throws DataNotFoundException
       */
       find<R=T>():R | null
-      find<R=T>(data:string | server.database.Raw | Record):R | null
+      find<R=T>(data:FieldValue):R | null
 
       /**
       * 分析表达式（可用于查询或者写入操作）
@@ -448,7 +449,7 @@ declare interface BaseQuery<T=any> implements WhereQuery,TimeFieldQuery,Aggregat
       * @return bool
       * @throws Exception
       */
-      parseUpdateData(data:array): boolean
+      parseUpdateData(data:Record): boolean
 
       /**
       * 把主键值转换为查询条件 支持复合主键

@@ -330,3 +330,5 @@ declare function runtime_path(path?:string):string
 * @return string
 */
 declare function root_path(path?:string):string
+
+declare type FieldValue = string | number;
