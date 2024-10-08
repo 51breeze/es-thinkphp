@@ -64,7 +64,7 @@ declare class Request{
     * @param  bool $complete 是否包含完整域名
     * @return string
     */
-    url(complete:boolean):string;
+    url(complete?:boolean):string;
 
     /**
     * 设置当前完整URL 包括QUERY_STRING

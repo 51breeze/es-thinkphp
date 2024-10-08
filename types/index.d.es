@@ -156,7 +156,7 @@ declare  function jsonp<T=any>(data:T, code?:number, header?:Record<string>, opt
 * @param string $lang 语言
 * @return mixed
 */
-declare function lang(name:string, vars:array, lang?:string):any;
+declare function lang(name:string, vars?:(string|number)[] | Record<any>, lang?:string):any;
 
 /**
 * 字符串命名风格转换

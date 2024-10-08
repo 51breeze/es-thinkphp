@@ -9,7 +9,7 @@ class ClassBuilder extends Core.ClassBuilder{
     createClassMemeberNode( memeberStack ){
         const node = this.createToken(memeberStack);
         if(node){
-            this.builder.createMemeberRoute(memeberStack)
+            this.builder.createMemeberRoute(memeberStack, node)
         }
         return node;
     }

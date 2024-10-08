@@ -6,6 +6,12 @@ const resolveModuleTypeCached = new Map();
 const routerInstance = new Router();
 const RouteMethods = ['router','get','post','put','delete','option'];
 
+function isEmptyObject(target){
+    if(!target || typeof target !=='object')return true;
+    for(let k in target)return false;
+    return true;
+}
+
 class Builder extends Core.Builder{
     constructor(compilation){
         super(compilation);
@@ -16,13 +22,30 @@ class Builder extends Core.Builder{
         return routerInstance;
     }
 
-    addRouterConfig(module, method, path, action, params, flag=false){
+    addRouterConfig(module, method, path, action, params, flag=false, node=null, meta=null){
         const router = this.getRouterInstance();
+        let className = this.getModuleNamespace(module, module.id, false);
+
+        let manifests = this.plugin.options.manifests
+        if(manifests && manifests.annotations){
+            let data = {path}
+            if(!isEmptyObject(params)){
+                data.params = params;
+            }
+            if(!isEmptyObject(meta)){
+                data.meta = meta;
+            }
+            Core.Manifest.add(module.compilation, 'annotations',{
+                [className]:{
+                    [action+':'+method]:data
+                }
+            })
+        }
+
         if(router instanceof Core.Router){
             let outputFolder = this.plugin.resolveSourceId(PATH.dirname(module.file)+'/'+module.id+'.route', 'folders');
             if(flag && !outputFolder)return;
             if(!outputFolder)outputFolder = 'route';
-            let className = this.getModuleNamespace(module, module.id, false);
             router.addItem( PATH.join(this.getOutputPath(), outputFolder), className, action, path, method, params);
         }else{
             throw new Error('Invalid router instance.')
@@ -109,19 +132,19 @@ class Builder extends Core.Builder{
         return '*';
     }
 
-    createMemeberRoute(memeberStack, module=null){
+    createMemeberRoute(memeberStack, node){
 
         if( !memeberStack.isMethodDefinition || memeberStack.isAccessor || memeberStack.isConstructor || !memeberStack.compiler.callUtils('isModifierPublic',memeberStack)){
             return;
         }
 
-        module = module || memeberStack.module;
+        let module = memeberStack.module;
         if(!module || !module.isModule || !module.isClass || module.abstract || module.isDeclaratorModule){
             return;
         }
 
         const annotation = memeberStack.annotations.find( annotation=>{
-            return RouteMethods.includes( annotation.name.toLowerCase() );
+            return RouteMethods.includes( annotation.getLowerCaseName() );
         });
 
         const routeFormat = this.plugin.options.formation?.route;
@@ -135,16 +158,36 @@ class Builder extends Core.Builder{
                 return {name:item.value(),required}
             });
 
-            let method = annotation.name.toLowerCase();
+            let method = annotation.getLowerCaseName();
             let path = action;
+            let meta = {};
 
             if(method==="router"){
-                method = args[0] && args[0].value ? args[0].value : 'get';
-                if( args[1] && args[1].value ){
-                    path = args[1].value.trim();
+                let indexers = ['method','path'];
+                let methodArg = memeberStack.getAnnotationArgumentItem('method', args, indexers)
+                let pathArg = memeberStack.getAnnotationArgumentItem('path', args, indexers)
+                method = methodArg ? methodArg.value : 'get';
+                if(pathArg){
+                    path = pathArg.value.trim();
                 }
-            }else if(args[0] && args[0].value){
-                path = args[0].value.trim();
+                args.forEach(arg=>{
+                    if(arg===methodArg || arg===pathArg)return;
+                    if(arg.assigned){
+                        meta[arg.key] = arg.value
+                    }
+                })
+            }else{
+                let indexers = ['path'];
+                let pathArg = memeberStack.getAnnotationArgumentItem('path', args, indexers)
+                if(pathArg){
+                    path = pathArg.value.trim();
+                }
+                args.forEach(arg=>{
+                    if(arg===pathArg)return;
+                    if(arg.assigned){
+                        meta[arg.key] = arg.value
+                    }
+                })
             }
 
             let routePath = path;
@@ -169,12 +212,12 @@ class Builder extends Core.Builder{
             }
 
             if(routePath){
-                this.builder.addRouterConfig(module, method, routePath, action, params);
+                this.addRouterConfig(module, method, routePath, action, params, false, node, meta);
             }
 
         }else{
 
-            const type = this.builder.resolveModuleTypeName(module);
+            const type = this.resolveModuleTypeName(module);
             if(type ==='http' || type ==='controller' ){
 
                 const method = 'any';
@@ -199,7 +242,7 @@ class Builder extends Core.Builder{
                 }
                 
                 if(routePath){
-                    this.builder.addRouterConfig(module, method, routePath, action, params, true);
+                    this.addRouterConfig(module, method, routePath, action, params, true, node);
                 }
             }
         }

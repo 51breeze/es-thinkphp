@@ -87,7 +87,7 @@ declare class Paginator<T>{
       * @param callable $callback
       * @return $this
       */
-      public each(callback:()=>void)
+      public each(callback:(item:T)=>void)
 
       /**
       * 统计数据集条数

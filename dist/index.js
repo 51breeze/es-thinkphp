@@ -73,6 +73,13 @@ var require_Builder = __commonJS({
     var resolveModuleTypeCached = /* @__PURE__ */ new Map();
     var routerInstance = new Router();
     var RouteMethods = ["router", "get", "post", "put", "delete", "option"];
+    function isEmptyObject(target) {
+      if (!target || typeof target !== "object")
+        return true;
+      for (let k in target)
+        return false;
+      return true;
+    }
     var Builder2 = class extends Core2.Builder {
       constructor(compilation) {
         super(compilation);
@@ -81,15 +88,30 @@ var require_Builder = __commonJS({
       getRouterInstance() {
         return routerInstance;
       }
-      addRouterConfig(module3, method, path, action, params, flag = false) {
+      addRouterConfig(module3, method, path, action, params, flag = false, node = null, meta = null) {
         const router = this.getRouterInstance();
+        let className = this.getModuleNamespace(module3, module3.id, false);
+        let manifests = this.plugin.options.manifests;
+        if (manifests && manifests.annotations) {
+          let data = { path };
+          if (!isEmptyObject(params)) {
+            data.params = params;
+          }
+          if (!isEmptyObject(meta)) {
+            data.meta = meta;
+          }
+          Core2.Manifest.add(module3.compilation, "annotations", {
+            [className]: {
+              [action + ":" + method]: data
+            }
+          });
+        }
         if (router instanceof Core2.Router) {
           let outputFolder = this.plugin.resolveSourceId(PATH.dirname(module3.file) + "/" + module3.id + ".route", "folders");
           if (flag && !outputFolder)
             return;
           if (!outputFolder)
             outputFolder = "route";
-          let className = this.getModuleNamespace(module3, module3.id, false);
           router.addItem(PATH.join(this.getOutputPath(), outputFolder), className, action, path, method, params);
         } else {
           throw new Error("Invalid router instance.");
@@ -169,16 +191,16 @@ var require_Builder = __commonJS({
         }
         return "*";
       }
-      createMemeberRoute(memeberStack, module3 = null) {
+      createMemeberRoute(memeberStack, node) {
         if (!memeberStack.isMethodDefinition || memeberStack.isAccessor || memeberStack.isConstructor || !memeberStack.compiler.callUtils("isModifierPublic", memeberStack)) {
           return;
         }
-        module3 = module3 || memeberStack.module;
+        let module3 = memeberStack.module;
         if (!module3 || !module3.isModule || !module3.isClass || module3.abstract || module3.isDeclaratorModule) {
           return;
         }
         const annotation = memeberStack.annotations.find((annotation2) => {
-          return RouteMethods.includes(annotation2.name.toLowerCase());
+          return RouteMethods.includes(annotation2.getLowerCaseName());
         });
         const routeFormat = this.plugin.options.formation?.route;
         if (annotation) {
@@ -188,15 +210,37 @@ var require_Builder = __commonJS({
             const required = !(item.question || item.isAssignmentPattern);
             return { name: item.value(), required };
           });
-          let method = annotation.name.toLowerCase();
+          let method = annotation.getLowerCaseName();
           let path = action;
+          let meta = {};
           if (method === "router") {
-            method = args[0] && args[0].value ? args[0].value : "get";
-            if (args[1] && args[1].value) {
-              path = args[1].value.trim();
+            let indexers = ["method", "path"];
+            let methodArg = memeberStack.getAnnotationArgumentItem("method", args, indexers);
+            let pathArg = memeberStack.getAnnotationArgumentItem("path", args, indexers);
+            method = methodArg ? methodArg.value : "get";
+            if (pathArg) {
+              path = pathArg.value.trim();
             }
-          } else if (args[0] && args[0].value) {
-            path = args[0].value.trim();
+            args.forEach((arg) => {
+              if (arg === methodArg || arg === pathArg)
+                return;
+              if (arg.assigned) {
+                meta[arg.key] = arg.value;
+              }
+            });
+          } else {
+            let indexers = ["path"];
+            let pathArg = memeberStack.getAnnotationArgumentItem("path", args, indexers);
+            if (pathArg) {
+              path = pathArg.value.trim();
+            }
+            args.forEach((arg) => {
+              if (arg === pathArg)
+                return;
+              if (arg.assigned) {
+                meta[arg.key] = arg.value;
+              }
+            });
           }
           let routePath = path;
           if (path.charCodeAt(0) === 64) {
@@ -216,10 +260,10 @@ var require_Builder = __commonJS({
             });
           }
           if (routePath) {
-            this.builder.addRouterConfig(module3, method, routePath, action, params);
+            this.addRouterConfig(module3, method, routePath, action, params, false, node, meta);
           }
         } else {
-          const type = this.builder.resolveModuleTypeName(module3);
+          const type = this.resolveModuleTypeName(module3);
           if (type === "http" || type === "controller") {
             const method = "any";
             const action = memeberStack.key.value();
@@ -240,7 +284,7 @@ var require_Builder = __commonJS({
               });
             }
             if (routePath) {
-              this.builder.addRouterConfig(module3, method, routePath, action, params, true);
+              this.addRouterConfig(module3, method, routePath, action, params, true, node);
             }
           }
         }
@@ -262,7 +306,7 @@ var require_ClassBuilder = __commonJS({
       createClassMemeberNode(memeberStack) {
         const node = this.createToken(memeberStack);
         if (node) {
-          this.builder.createMemeberRoute(memeberStack);
+          this.builder.createMemeberRoute(memeberStack, node);
         }
         return node;
       }
@@ -284,7 +328,7 @@ var require_package = __commonJS({
   "package.json"(exports2, module2) {
     module2.exports = {
       name: "es-thinkphp",
-      version: "0.4.4",
+      version: "0.5.0",
       description: "test",
       main: "dist/index.js",
       typings: "dist/types/typings.json",

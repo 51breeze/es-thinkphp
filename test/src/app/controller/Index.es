@@ -20,9 +20,16 @@ class Index {
       public hello(){
            return `Hello, World!`;
       }
+
+      /**
+      * @group 列表
+      * @label 列表
+      * @auth false
+      */
       
-      @Post('/List')
+      @Post('/List', label='列表', auth=false)
       public list(){
+            asset.Manifest.all()
             const person = new Person();
             return json( person.list(), 200 );
       }

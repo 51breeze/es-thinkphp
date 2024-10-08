@@ -7,6 +7,7 @@ class Creator {
         const compiler = new Compiler(Object.assign({
             debug:false,
             diagnose:true,
+            enableComments:true,
             autoLoadDescribeFile:true,
             output:path.join(__dirname,"./build"),
             workspace:path.join(__dirname,"./src"),
@@ -25,6 +26,11 @@ class Creator {
                 folderAsNamespace:true,
                 publicPath:'public',
                 output:path.join(__dirname,"./build"),
+                comments:true,
+                manifests:{
+                    comments:true,
+                    annotations:true,
+                },
                 resolve:{
                     routeFileName:'app',
                     usings:[
