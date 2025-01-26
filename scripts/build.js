@@ -1,12 +1,12 @@
 const esbuild = require('esbuild');
-const fs = require('fs');
-esbuild.build({
+const config = {
   entryPoints:{
-    index: 'index.js',
+    index: 'lib/index.js',
   },
   bundle: true,
-  outdir: 'dist',
-  external: ['fsevents','es-php'],
+  outdir: './dist',
+  //outExtension:{'.js':'.mjs'},
+  external: ['fsevents','less','node-sass','rollup','rollup-plugin-commonjs','rollup-plugin-node-resolve','fs-extra','lodash','easescript','glob-path','source-map'],
   format: 'cjs',
   platform: 'node',
   minify:false,
@@ -16,21 +16,29 @@ esbuild.build({
       resolveFrom: 'cwd',
       globbyOptions:{
         ignore:[
-          './types/think.d.es',
+          'lib/types/think.d.es',
         ],
       },
       assets: {
-        from: ['./types/**'],
+        from: ['lib/types/**'],
         to: ['./dist/types/'],
       },
       keepStructure: false,
     }),
+    require('esbuild-plugin-copy').copy({
+      resolveFrom: 'cwd',
+      assets: {
+        from: ['./node_modules/@easescript/es-php/dist/polyfills/**'],
+        to: ['./dist/polyfills/'],
+      },
+      keepStructure: false,
+    })
   ],
-}).then( ()=>{
+};
+
+esbuild.build(config).then( ()=>{
   console.log('Build done.\r\n')
-}).catch((e) =>{
-  console.log(e, 'Build error.\r\n')
+}).catch(() =>{
+  console.log('Build error.\r\n')
   process.exit(1);
 });
-
-

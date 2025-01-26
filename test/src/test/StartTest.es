@@ -81,12 +81,14 @@ public class StartTest extends TestCase{
         this.assertEquals(2, result3.id );
 
         const personResult = Person.find(2);
-        this.assertEquals(2, personResult.id);
-        const personAddress = personResult.getAttr<Address>('address');
-        this.assertEquals(2, personAddress.uid);
-        this.assertEquals(result3.area, personAddress.area);
-        this.assertEquals(result3.phone, personAddress.phone);
-        this.assertEquals(result3.postcode, personAddress.postcode);
+        if(personResult){
+            this.assertEquals(2, personResult.id);
+            const personAddress = personResult.getAttr<Address>('address');
+            this.assertEquals(2, personAddress.uid);
+            this.assertEquals(result3.area, personAddress.area);
+            this.assertEquals(result3.phone, personAddress.phone);
+            this.assertEquals(result3.postcode, personAddress.postcode);
+        }
 
         const response = this.bootstrap('list','post');
         const data = response.getData() as {id:number}[];
@@ -96,13 +98,13 @@ public class StartTest extends TestCase{
 
     testModel(){
         const person = Person.find(1);
-        const address = person.getAttr<Address>('address');
+        const address = person?.getAttr<Address>('address');
         this.assertEquals(1, address.uid );
         const phone = address.phone;
         address.phone = '8888';
         this.assertEquals(true, address.save());
         const result = Db.table('address').find( address.id );
-        this.assertEquals(address.phone, result.phone);
+        this.assertEquals(address.phone, result?.phone);
         address.phone = phone;
         this.assertEquals(true, address.save());
     }

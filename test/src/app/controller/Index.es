@@ -29,7 +29,7 @@ class Index {
       
       @Post('/List', label='列表', auth=false)
       public list(){
-            asset.Manifest.all()
+            manifest.Assets.all()
             const person = new Person();
             return json( person.list(), 200 );
       }

@@ -1,17 +1,16 @@
 const Compiler = require("easescript/lib/core/Compiler");
 const Compilation = require("easescript/lib/core/Compilation");
 const path =require("path");
-const plugin = require("../index");
+let plugin = require("../dist/index");
+plugin = plugin.default || plugin
 class Creator {
     constructor(options){
         const compiler = new Compiler(Object.assign({
             debug:false,
-            diagnose:true,
+            diagnose:false,
             enableComments:true,
             autoLoadDescribeFile:true,
-            output:path.join(__dirname,"./build"),
             workspace:path.join(__dirname,"./src"),
-            resolvePaths:[path.join(process.cwd(), 'types')],
             scanTypings:true,
             parser:{
                 locations:true
@@ -19,41 +18,35 @@ class Creator {
         },options || {}));
         
         this._compiler = compiler;
-
-        this.plugin = compiler.applyPlugin( {
-            plugin,
-            options:{
-                folderAsNamespace:true,
-                publicPath:'public',
-                output:path.join(__dirname,"./build"),
+        this.plugin =  plugin({
+            folderAsNamespace:true,
+            publicPath:'public',
+            outDir:path.join(__dirname,"./build"),
+            comments:true,
+            manifests:{
                 comments:true,
-                manifests:{
-                    comments:true,
-                    annotations:true,
+                annotations:true,
+            },
+            resolve:{
+                routeFileName:'app',
+                usings:[
+                    'PHPUnit/Framework/TestCase',
+                ],
+                folders:{
+                    '**/app/controller/*.es':'app/http',
+                    '**/app/model/*.es':'app/model',
+                    '**/assets/***':'static',
+                    'config/**/*.es':'config/{...}',
+                    'lang/**/*.es':'lang/{...}',
+                    '**/*.route':'route',
+                    "*.global":"escore",
                 },
-                resolve:{
-                    routeFileName:'app',
-                    usings:[
-                        'PHPUnit/Framework/TestCase',
-                    ],
-                
-                    folders:{
-                        '**/app/controller/*.es':'app/http',
-                        '**/app/model/*.es':'app/model',
-                        '**/assets/***':'static',
-                        'config/**/*.es':'config/{...}',
-                        'lang/**/*.es':'lang/{...}',
-                        '**/*.route':'route',
-                        "*.global":"escore",
-                    },
-                    namespaces:{}
-                    
-                },
-                includes:[
-                    './config/*',
-                    '.env',
-                ]
-            }
+                namespaces:{}
+            },
+            includes:[
+                './config/*',
+                '.env',
+            ]
         });
     }
 
@@ -61,12 +54,12 @@ class Creator {
         return this._compiler;
     }
 
-    factor(file,source){
+    factor(file){
         return new Promise( async(resolved,reject)=>{
             const compiler = this.compiler;
             await compiler.initialize();
             await compiler.loadTypes([
-                'types/think.d.es',
+                'lib/types/think.d.es',
             ], {
                 scope:'es-thinkphp'
             });
@@ -80,7 +73,6 @@ class Creator {
                 }else{
                     reject({compilation,errors:compiler.errors});
                 }
-
             }catch(error){
                 console.log( error )
                 reject({compilation,errors:[error]});
@@ -88,27 +80,12 @@ class Creator {
         });
     }
 
-    startBySource(source){
-        return this.factor(null, source);
-    }
-
     startByFile(file){
         return this.factor(file);
     }
 
-    expression( stack ){
-        return this.plugin.make( stack );
-    }
-
-    build( compilation , done){
-        return this.plugin.start( compilation, (e)=>{
-            if( e ){
-                console.log(e);
-            }else{
-                console.log("build done!!")
-            }
-            if(done)done();
-        });
+    async build(compilation){
+        return await this.plugin.run(compilation);
     }
 }
 

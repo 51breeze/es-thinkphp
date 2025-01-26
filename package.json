@@ -1,16 +1,16 @@
 {
-  "name": "es-thinkphp",
-  "version": "0.5.0",
-  "description": "test",
+  "name": "@easescript/es-thinkphp",
+  "version": "0.0.1",
+  "description": "Code Transform To ThinkPHP6 For EaseScript Language",
   "main": "dist/index.js",
   "typings": "dist/types/typings.json",
   "scripts": {
     "init": "node ./test/init.js",
-    "dev": "jasmine ./test/index.js",
+    "dev": "npm run build && jasmine ./test/index.js",
     "run": "node ./test/phptest.js",
     "test": "npm run dev & npm run run",
     "build": "npm run manifest & node ./scripts/build.js",
-    "manifest": "esc -o types -f types/think.d.es --manifest --scope es-thinkphp --inherit es-php"
+    "manifest": "esc -o lib/types -f lib/types/think.d.es --manifest --scope es-thinkphp --inherit @easescript/es-php"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/51breeze/es-php#readme",
   "dependencies": {
-    "es-php": "latest"
+    "@easescript/es-php": "latest"
   },
   "devDependencies": {
     "easescript": "latest",
@@ -37,6 +37,8 @@
     "esbuild-plugin-copy": "^2.1.0",
     "jasmine": "^3.10.0",
     "less": "^4.2.0",
+    "dotenv": "^16.4.7",
+    "dotenv-expand": "^12.0.1",
     "rollup": "^4.16.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0"
