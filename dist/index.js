@@ -4471,14 +4471,14 @@ function createMainAnnotationNode2(ctx, stack) {
   );
   return ctx.createExpressionStatement(callMain);
 }
-function merge(target, source, result = {}) {
+function merge2(target, source, result = {}) {
   if (Array.isArray(target)) {
     if (Array.isArray(source)) {
       source.forEach((value, index) => {
         if (Array.isArray(value) && Array.isArray(target[index])) {
-          merge(target[index], value, result);
+          merge2(target[index], value, result);
         } else if (typeof value === "object" && typeof target[index] === "object") {
-          merge(target[index], value, result);
+          merge2(target[index], value, result);
         } else if (!target.includes(value)) {
           target.push(value);
           result.changed = true;
@@ -4489,9 +4489,9 @@ function merge(target, source, result = {}) {
     if (typeof source === "object") {
       Object.keys(source).forEach((key2) => {
         if (Array.isArray(target[key2]) && Array.isArray(source[key2])) {
-          merge(target[key2], source[key2], result);
+          merge2(target[key2], source[key2], result);
         } else if (typeof target[key2] === "object" && typeof source[key2] === "object") {
-          merge(target[key2], source[key2], result);
+          merge2(target[key2], source[key2], result);
         } else {
           if (target[key2] != source[key2]) {
             result.changed = true;
@@ -6137,7 +6137,7 @@ var lib_exports = {};
 __export(lib_exports, {
   Plugin: () => Plugin3,
   default: () => lib_default,
-  getOptions: () => getOptions
+  getOptions: () => getOptions2
 });
 module.exports = __toCommonJS(lib_exports);
 
@@ -6197,6 +6197,9 @@ var package_default = {
 
 // node_modules/@easescript/es-php/lib/core/Plugin.js
 var import_Compilation2 = __toESM(require("easescript/lib/core/Compilation"));
+
+// node_modules/@easescript/transform/lib/index.js
+var import_merge = __toESM(require("lodash/merge"));
 
 // node_modules/@easescript/transform/lib/core/Plugin.js
 var import_Compilation = __toESM(require("easescript/lib/core/Compilation"));
@@ -19502,7 +19505,7 @@ var Annotations = class extends VirtualModule2 {
   }
   append(ctx, object) {
     let result = { changed: false };
-    merge(this.#dataset, object, result);
+    merge2(this.#dataset, object, result);
     if (result.changed) {
       this.changed = true;
       ctx.addBuildAfterDep(this);
@@ -19756,7 +19759,7 @@ var Comments = class extends VirtualModule2 {
   }
   append(ctx, object) {
     let result = { changed: false };
-    merge(this.#dataset, object, result);
+    merge2(this.#dataset, object, result);
     if (result.changed) {
       this.changed = true;
       ctx.addBuildAfterDep(this);
@@ -20032,7 +20035,7 @@ var defaultConfig = {
     }
   }
 };
-function merge2(...args) {
+function merge3(...args) {
   return (0, import_lodash.mergeWith)(...args, (objValue, srcValue) => {
     if (Array.isArray(objValue) && Array.isArray(srcValue)) {
       if (srcValue[0] === null)
@@ -20046,8 +20049,8 @@ function merge2(...args) {
     }
   });
 }
-function getOptions(options) {
-  return merge2({}, defaultConfig, options);
+function getOptions2(...options) {
+  return merge3({}, defaultConfig, ...options);
 }
 
 // lib/core/Plugin.js
@@ -20073,7 +20076,6 @@ function ClassDeclaration_default3(ctx, stack) {
 }
 
 // lib/index.js
-var import_lodash2 = require("lodash");
 var defaultConfig2 = {
   framework: "thinkphp",
   version: "6.0.0",
@@ -20098,7 +20100,6 @@ var defaultConfig2 = {
       "assets/***": "static/{...}",
       "config/***": "config/{...}"
     },
-    types: {},
     namespaces: {
       "server/database/DbManager": "think",
       "server/database/Paginator": "think",
@@ -20124,7 +20125,7 @@ function plugin(options = {}) {
   return new Plugin3(
     package_default.esconfig.scope,
     package_default.version,
-    getOptions((0, import_lodash2.merge)({}, defaultConfig2, options))
+    getOptions2(defaultConfig2, options)
   );
 }
 var lib_default = plugin;
