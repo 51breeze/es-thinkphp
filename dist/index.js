@@ -6144,8 +6144,8 @@ module.exports = __toCommonJS(lib_exports);
 // package.json
 var package_default = {
   name: "@easescript/es-thinkphp",
-  version: "0.0.1",
-  description: "Code Transform To ThinkPHP6 For EaseScript Language",
+  version: "0.0.2",
+  description: "EaseScript Code Transformation Plugin For ThinkPHP6",
   main: "dist/index.js",
   typings: "dist/types/typings.json",
   scripts: {
