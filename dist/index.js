@@ -1939,15 +1939,20 @@ function createESMExports(ctx, exportManage, graph) {
   });
   return { imports, exports, declares };
 }
+function checkMatchStringOfRule(rule, source, ...args) {
+  if (rule == null)
+    return true;
+  if (typeof rule === "function") {
+    return rule(source, ...args);
+  } else if (rule instanceof RegExp) {
+    return rule.test(source);
+  }
+  return rule === source;
+}
 function isExternalDependency(externals, source, module2 = null) {
   if (Array.isArray(externals) && externals.length > 0) {
     return externals.some((rule) => {
-      if (typeof rule === "function") {
-        return rule(source, module2);
-      } else if (rule instanceof RegExp) {
-        return rule.test(source);
-      }
-      return rule === source;
+      return rule == null ? false : checkMatchStringOfRule(rule, source, module2);
     });
   }
   return false;
@@ -1955,12 +1960,7 @@ function isExternalDependency(externals, source, module2 = null) {
 function isExcludeDependency(excludes, source, module2 = null) {
   if (Array.isArray(excludes) && excludes.length > 0) {
     return excludes.some((rule) => {
-      if (typeof rule === "function") {
-        return rule(source, module2);
-      } else if (rule instanceof RegExp) {
-        return rule.test(source);
-      }
-      return rule === source;
+      return rule == null ? false : checkMatchStringOfRule(rule, source, module2);
     });
   }
   return false;
@@ -3601,7 +3601,7 @@ function getAssetsManager(AssetFactory) {
     }
     let asset = records2.get(key2);
     if (!asset) {
-      records2.set(sourceFile, asset = new AssetFactory(sourceFile, type, id));
+      records2.set(key2, asset = new AssetFactory(sourceFile, type, id));
     }
     return asset;
   }
@@ -3807,11 +3807,11 @@ var init_Asset = __esm({
 });
 
 // node_modules/@easescript/es-php/lib/core/Asset.js
-var import_Utils22, import_path7, Asset2;
+var import_Utils23, import_path7, Asset2;
 var init_Asset2 = __esm({
   "node_modules/@easescript/es-php/lib/core/Asset.js"() {
     init_Asset();
-    import_Utils22 = __toESM(require("easescript/lib/core/Utils"));
+    import_Utils23 = __toESM(require("easescript/lib/core/Utils"));
     import_path7 = __toESM(require("path"));
     init_Common2();
     Asset2 = class extends Asset {
@@ -3833,16 +3833,16 @@ var init_Asset2 = __esm({
         }
         if (folder) {
           if (import_path7.default.isAbsolute(folder)) {
-            this.outfile = import_Utils22.default.normalizePath(import_path7.default.join(folder, filename));
+            this.outfile = import_Utils23.default.normalizePath(import_path7.default.join(folder, filename));
           } else {
-            this.outfile = import_Utils22.default.normalizePath(import_path7.default.join(outDir, folder, filename));
+            this.outfile = import_Utils23.default.normalizePath(import_path7.default.join(outDir, folder, filename));
           }
         } else {
           let relativeDir = ctx.plugin.complier.getRelativeWorkspace(sourceFile);
           if (relativeDir) {
             relativeDir = import_path7.default.dirname(relativeDir);
           }
-          this.outfile = import_Utils22.default.normalizePath(import_path7.default.join(outDir, publicDir, relativeDir, filename));
+          this.outfile = import_Utils23.default.normalizePath(import_path7.default.join(outDir, publicDir, relativeDir, filename));
         }
         const vm = ctx.getVModule("manifest.Assets");
         vm.append(ctx, createUniqueHashId(file), this.outfile);
@@ -3879,10 +3879,10 @@ function createModuleReferenceNode2(ctx, stack, className) {
   }
 }
 function createClassRefsNode(ctx, module2, stack = null) {
-  if (!import_Utils23.default.isModule(module2))
+  if (!import_Utils24.default.isModule(module2))
     return null;
   let name = null;
-  if (import_Utils23.default.isStack(stack)) {
+  if (import_Utils24.default.isStack(stack)) {
     if (stack.module === module2) {
       name = module2.id;
     } else {
@@ -3915,7 +3915,7 @@ function createAddressRefsNode(ctx, argument) {
 function createArrayAddressRefsNode(ctx, stack, desc2, name, nameNode) {
   if (!desc2)
     return;
-  let assignAddress = import_Utils23.default.isStack(desc2) && desc2.assignItems && ctx.getAssignAddressRef(desc2);
+  let assignAddress = import_Utils24.default.isStack(desc2) && desc2.assignItems && ctx.getAssignAddressRef(desc2);
   if (assignAddress) {
     let name2 = assignAddress.getName(desc2);
     let rd = assignAddress.createIndexName(stack, desc2);
@@ -4055,7 +4055,7 @@ function addAnnotationManifest(ctx, stack, node) {
         if (valueStack.isIdentifier || valueStack.isMemberExpression) {
           let desc2 = valueStack.description();
           if (desc2) {
-            if (import_Utils23.default.isTypeModule(desc2)) {
+            if (import_Utils24.default.isTypeModule(desc2)) {
               type = ctx.getModuleNamespace(desc2, desc2.id);
               value = ctx.getModuleReferenceName(desc2, stack.module);
             } else {
@@ -4122,7 +4122,7 @@ function createESMImports2(ctx, importManage) {
     if (isAsset(target)) {
       return;
     }
-    let isExpre = import_Utils23.default.isCompilation(target);
+    let isExpre = import_Utils24.default.isCompilation(target);
     let isDefault = false;
     if (isExpre) {
       let targetGraph = ctx.graphs.getBuildGraph(target);
@@ -4179,7 +4179,7 @@ function createESMExports2(ctx, exportManage, graph) {
     graph.addExport(exportSource);
     if (sourceId) {
       let target = importSource.getSourceTarget();
-      let isExpre = import_Utils23.default.isCompilation(target);
+      let isExpre = import_Utils24.default.isCompilation(target);
       refs = import_path8.default.basename(ctx.genUniFileName(sourceId)).replaceAll(".", "_");
       refs = ctx.getGlobalRefName(null, "_" + refs);
       let importNode = ctx.createImportDeclaration(
@@ -4522,13 +4522,13 @@ function canUseNullCoalescingOperator(stack) {
   }
   return !optional;
 }
-var import_path8, import_fs6, import_Namespace9, import_Utils23;
+var import_path8, import_fs6, import_Namespace9, import_Utils24;
 var init_Common2 = __esm({
   "node_modules/@easescript/es-php/lib/core/Common.js"() {
     import_path8 = __toESM(require("path"));
     import_fs6 = __toESM(require("fs"));
     import_Namespace9 = __toESM(require("easescript/lib/core/Namespace"));
-    import_Utils23 = __toESM(require("easescript/lib/core/Utils"));
+    import_Utils24 = __toESM(require("easescript/lib/core/Utils"));
     init_Common();
     init_Asset2();
     init_Common();
@@ -5968,11 +5968,11 @@ var init_ClassBuilder = __esm({
 });
 
 // lib/vms/Routes.js
-var import_Utils40, import_path11, key, Routes, Routes_default;
+var import_Utils41, import_path11, key, Routes, Routes_default;
 var init_Routes = __esm({
   "lib/vms/Routes.js"() {
     init_VirtualModule2();
-    import_Utils40 = __toESM(require("easescript/lib/core/Utils"));
+    import_Utils41 = __toESM(require("easescript/lib/core/Utils"));
     import_path11 = __toESM(require("path"));
     key = Symbol("routes:vm");
     Routes = class extends VirtualModule2 {
@@ -6029,7 +6029,7 @@ var init_Routes = __esm({
         if (outfile == null) {
           outfile = ctx.getOutputAbsolutePath(this.file);
           let filename = ctx.options.routeFileName || "app";
-          outfile = import_Utils40.default.normalizePath(import_path11.default.join(import_path11.default.dirname(outfile), filename + (ctx.options.outExt || ".php")));
+          outfile = import_Utils41.default.normalizePath(import_path11.default.join(import_path11.default.dirname(outfile), filename + (ctx.options.outExt || ".php")));
         }
         graph.code = ctx.getFormatCode(this.gen());
         graph.outfile = outfile;
@@ -6048,7 +6048,7 @@ var require_ClassBuilder = __commonJS({
   "lib/core/ClassBuilder.js"(exports, module2) {
     init_ClassBuilder();
     init_Common();
-    var import_Utils41 = __toESM(require("easescript/lib/core/Utils"));
+    var import_Utils42 = __toESM(require("easescript/lib/core/Utils"));
     init_Routes();
     var RouteMethods = ["router", "get", "post", "put", "delete", "option"];
     var indexers = {
@@ -6057,7 +6057,7 @@ var require_ClassBuilder = __commonJS({
     };
     var ClassBuilder4 = class extends ClassBuilder_default2 {
       parseMethodRoute(ctx, stack) {
-        if (!stack.isMethodDefinition || stack.isAccessor || stack.isConstructor || !import_Utils41.default.isModifierPublic(stack)) {
+        if (!stack.isMethodDefinition || stack.isAccessor || stack.isConstructor || !import_Utils42.default.isModifierPublic(stack)) {
           return;
         }
         const module3 = stack.module;
@@ -6197,12 +6197,14 @@ var package_default = {
 
 // node_modules/@easescript/es-php/lib/core/Plugin.js
 var import_Compilation2 = __toESM(require("easescript/lib/core/Compilation"));
+var import_Diagnostic2 = __toESM(require("easescript/lib/core/Diagnostic"));
 
 // node_modules/@easescript/transform/lib/index.js
 var import_merge = __toESM(require("lodash/merge"));
 
 // node_modules/@easescript/transform/lib/core/Plugin.js
 var import_Compilation = __toESM(require("easescript/lib/core/Compilation"));
+var import_Diagnostic = __toESM(require("easescript/lib/core/Diagnostic"));
 var import_path6 = __toESM(require("path"));
 
 // node_modules/@easescript/transform/lib/core/Builder.js
@@ -7535,7 +7537,21 @@ var Context = class extends Token_default {
     if (!options.delimiter) {
       options.delimiter = "/";
     }
+    if (typeof file === "string") {
+      file = this.replaceImportSource(file);
+    }
     return this.resolveImportSource(file, options);
+  }
+  replaceImportSource(source) {
+    if (source.startsWith("${__filename}")) {
+      let target = this.target;
+      if (isVModule(target)) {
+        target = target.bindModule || target;
+      }
+      let owner = import_Utils4.default.isModule(target) ? target.compilation : target;
+      source = source.replace("${__filename}", import_Utils4.default.normalizePath(owner.file));
+    }
+    return source;
   }
   getSourceFileMappingFolder(file, flag) {
     const result = this.resolveSourceFileMappingPath(file, "folders");
@@ -7562,12 +7578,11 @@ var Context = class extends Token_default {
   getModuleImportSource(source, context, sourceId = null) {
     const config = this.options;
     const isString = typeof source === "string";
+    if (isString) {
+      source = this.replaceImportSource(source);
+    }
     if (isString && isExternalDependency(this.options.dependency.externals, source, context)) {
       return source;
-    }
-    if (isString && source.includes("${__filename}")) {
-      const owner = import_Utils4.default.isModule(context) ? context.compilation : context;
-      source = source.replace("${__filename}", import_Utils4.default.isCompilation(owner) ? owner.file : this.target.file);
     }
     if (isString && source.includes("/node_modules/")) {
       if (import_path2.default.isAbsolute(source))
@@ -7585,8 +7600,8 @@ var Context = class extends Token_default {
     }
     return isString ? source : this.getModuleResourceId(source);
   }
-  getModuleResourceId(module2, query = {}) {
-    return this.compiler.parseResourceId(module2, query);
+  getModuleResourceId(module2, query = {}, extformat = null) {
+    return this.compiler.parseResourceId(module2, query, extformat);
   }
   resolveSourceFileMappingPath(file, group, delimiter = "/") {
     return this.resolveSourceId(file, group, delimiter);
@@ -12300,6 +12315,7 @@ function createBuildContext(plugin2, records2 = /* @__PURE__ */ new Map()) {
 }
 
 // node_modules/@easescript/transform/lib/core/Polyfill.js
+var import_Utils21 = __toESM(require("easescript/lib/core/Utils"));
 var import_fs5 = __toESM(require("fs"));
 var import_path5 = __toESM(require("path"));
 var TAGS_REGEXP = /(?:[\r\n]+|^)\/\/\/(?:\s+)?<(references|namespaces|export|import|createClass)\s+(.*?)\/>/g;
@@ -12377,7 +12393,7 @@ function parsePolyfillModule(file, createVModule) {
   } else {
     vm.addExport("default", vm.id);
   }
-  vm.file = file;
+  vm.file = import_Utils21.default.normalizePath(file);
   vm.setContent(content);
 }
 function createPolyfillModule(dirname, createVModule) {
@@ -12399,20 +12415,18 @@ function createPolyfillModule(dirname, createVModule) {
 
 // node_modules/@easescript/transform/lib/core/Plugin.js
 var import_events = __toESM(require("events"));
-function defineError(complier) {
-  if (defineError.loaded || !complier || !complier.diagnostic)
-    return;
-  defineError.loaded = true;
-  let define = complier.diagnostic.defineError;
-  define(1e4, "", [
+import_Diagnostic.default.register("transform", (definer) => {
+  definer(
+    1e4,
     "\u7ED1\u5B9A\u7684\u5C5E\u6027(%s)\u5FC5\u987B\u662F\u4E00\u4E2A\u53EF\u8D4B\u503C\u7684\u6210\u5458\u5C5E\u6027",
     "Binding the '%s' property must be an assignable members property"
-  ]);
-  define(10101, "", [
+  );
+  definer(
+    10101,
     "\u8DEF\u7531\u53C2\u6570(%s)\u7684\u9ED8\u8BA4\u503C\u53EA\u80FD\u662F\u4E00\u4E2A\u6807\u91CF",
     "Route params the '%s' defalut value can only is a literal type."
-  ]);
-}
+  );
+});
 var plugins = /* @__PURE__ */ new Set();
 var processing = /* @__PURE__ */ new Map();
 async function execute(compilation, asyncBuildHook) {
@@ -12505,7 +12519,6 @@ var Plugin = class extends import_events.default {
       return;
     this.#initialized = true;
     this.#complier = complier;
-    defineError(complier);
     await this.init();
     if (this.options.mode === "development") {
       this.watch();
@@ -12561,14 +12574,14 @@ var Plugin = class extends import_events.default {
 var Plugin_default = Plugin;
 
 // node_modules/@easescript/es-php/lib/core/Builder.js
-var import_Utils39 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils40 = __toESM(require("easescript/lib/core/Utils"));
 
 // node_modules/@easescript/es-php/lib/core/Context.js
 var import_path9 = __toESM(require("path"));
 init_Cache();
 
 // node_modules/@easescript/es-php/lib/core/AddressVariable.js
-var import_Utils21 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils22 = __toESM(require("easescript/lib/core/Utils"));
 var _AddressVariable = class {
   constructor(target, ctx) {
     this.dataset = /* @__PURE__ */ new Map();
@@ -12600,7 +12613,7 @@ var _AddressVariable = class {
   createName(stack, description) {
     if (!description)
       description = stack;
-    if (!import_Utils21.default.isStack(description))
+    if (!import_Utils22.default.isStack(description))
       return null;
     if (!this.refs.has(description)) {
       const name = this.ctx.getLocalRefName(stack, _AddressVariable.REFS_NAME, description);
@@ -12612,7 +12625,7 @@ var _AddressVariable = class {
   createIndexName(stack, description = null) {
     if (!description)
       description = stack;
-    if (!import_Utils21.default.isStack(description))
+    if (!import_Utils22.default.isStack(description))
       return null;
     if (this.indexName === null) {
       const name = this.ctx.getLocalRefName(stack, _AddressVariable.REFS_INDEX, description);
@@ -12662,7 +12675,7 @@ var AddressVariable_default = AddressVariable;
 
 // node_modules/@easescript/es-php/lib/core/Context.js
 var import_Namespace10 = __toESM(require("easescript/lib/core/Namespace"));
-var import_Utils24 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils25 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 init_VirtualModule2();
 var cache = getCacheManager("php");
@@ -12692,7 +12705,7 @@ var Context2 = class extends Context_default {
       let source = this.getModuleNamespace(depModule);
       if (source) {
         source += "\\" + depModule.id;
-      } else if (import_Utils24.default.isModule(context) || import_Utils24.default.isCompilation(context)) {
+      } else if (import_Utils25.default.isModule(context) || import_Utils25.default.isCompilation(context)) {
         let ns = context.namespace;
         if (ns && ns.parent) {
           source = "\\" + depModule.id;
@@ -12713,12 +12726,12 @@ var Context2 = class extends Context_default {
   createAllDependencies() {
     const dependencies = this.dependencies;
     const target = this.target;
-    const compilation = import_Utils24.default.isCompilation(target) ? target : null;
+    const compilation = import_Utils25.default.isCompilation(target) ? target : null;
     const importFlag = this.options.import;
     dependencies.forEach((deps, moduleOrCompi) => {
       const graph = this.getBuildGraph(moduleOrCompi);
       deps.forEach((depModule) => {
-        if (!(import_Utils24.default.isModule(depModule) || isVModule(depModule)))
+        if (!(import_Utils25.default.isModule(depModule) || isVModule(depModule)))
           return;
         if (depModule === target || compilation && compilation.modules.has(depModule.getName())) {
           return;
@@ -12728,7 +12741,7 @@ var Context2 = class extends Context_default {
     });
   }
   createModuleDependencies(module2) {
-    if (!import_Utils24.default.isModule(module2))
+    if (!import_Utils25.default.isModule(module2))
       return;
     let deps = this.getDependencies(module2);
     if (!deps)
@@ -12737,7 +12750,7 @@ var Context2 = class extends Context_default {
     const compilation = module2.compilation;
     const importFlag = this.options.import;
     deps.forEach((depModule) => {
-      if (!(import_Utils24.default.isModule(depModule) || isVModule(depModule)))
+      if (!(import_Utils25.default.isModule(depModule) || isVModule(depModule)))
         return;
       if (compilation && compilation.modules && compilation.modules.has(depModule.getName())) {
         return;
@@ -12748,7 +12761,7 @@ var Context2 = class extends Context_default {
   createModuleImportAndUsing(graph, context, depModule, importFlag = true) {
     if (context === depModule || !this.isNeedBuild(depModule))
       return;
-    let isRM = import_Utils24.default.isModule(depModule);
+    let isRM = import_Utils25.default.isModule(depModule);
     let isVM = this.isVModule(depModule);
     if (!(isVM || isRM))
       return;
@@ -12835,7 +12848,7 @@ var Context2 = class extends Context_default {
   }
   getAvailableOriginType(type) {
     if (type) {
-      const origin = import_Utils24.default.getOriginType(type);
+      const origin = import_Utils25.default.getOriginType(type);
       switch (origin.id) {
         case "String":
         case "Number":
@@ -12856,7 +12869,7 @@ var Context2 = class extends Context_default {
     return null;
   }
   addVariableRefs(stack, desc2, refsName) {
-    if (!import_Utils24.default.isStack(desc2))
+    if (!import_Utils25.default.isStack(desc2))
       return;
     const name = refsName || desc2.value();
     let funScope = stack.scope;
@@ -12994,7 +13007,7 @@ var Context2 = class extends Context_default {
           return true;
         }
       }
-      const raw = import_Utils24.default.getOriginType(type);
+      const raw = import_Utils25.default.getOriginType(type);
       if (raw === import_Namespace10.default.globals.get("Array") || this.isArrayMappingType(raw)) {
         return true;
       }
@@ -13153,7 +13166,7 @@ var Context2 = class extends Context_default {
     });
   }
   getAccessorName(name, desc2, accessor = "get") {
-    if (import_Utils24.default.isStack(desc2) && desc2.module) {
+    if (import_Utils25.default.isStack(desc2) && desc2.module) {
       let module2 = desc2.module;
       let key2 = "accessor:" + accessor + ":" + name;
       let resolveName = cache.get(module2, key2);
@@ -13190,7 +13203,7 @@ var Context2 = class extends Context_default {
         module2 = m;
         key2 = m;
       }
-    } else if (!import_Utils24.default.isModule(module2)) {
+    } else if (!import_Utils25.default.isModule(module2)) {
       return null;
     }
     if (module2 === context || module2 === this.target) {
@@ -13203,7 +13216,7 @@ var Context2 = class extends Context_default {
       context = this.target;
     name = module2.id;
     let hasDefined = false;
-    if (import_Utils24.default.isModule(context)) {
+    if (import_Utils25.default.isModule(context)) {
       if (module2.required || context.imports && context.imports.has(module2.id)) {
         hasDefined = !!module2.required;
         if (!hasDefined) {
@@ -13237,9 +13250,9 @@ var Context2 = class extends Context_default {
     return name;
   }
   getModuleAlias(module2, context) {
-    if (!import_Utils24.default.isModule(module2))
+    if (!import_Utils25.default.isModule(module2))
       return null;
-    let alias = import_Utils24.default.isCompilation(context) ? context.importModuleNameds.get(module2) : import_Utils24.default.isModule(context) ? context.getModuleAlias(module2) : null;
+    let alias = import_Utils25.default.isCompilation(context) ? context.importModuleNameds.get(module2) : import_Utils25.default.isModule(context) ? context.getModuleAlias(module2) : null;
     if (!alias) {
       let mapping = this.#moduleAlias;
       if (mapping) {
@@ -13262,13 +13275,13 @@ var Context2 = class extends Context_default {
     return name;
   }
   getModuleMappingFolder(module2) {
-    let isRM = import_Utils24.default.isModule(module2);
+    let isRM = import_Utils25.default.isModule(module2);
     let isVM = isRM ? false : isVModule(module2);
     if (!(isRM || isVM))
       return null;
     if (isVM) {
       let bindM = module2.bindModule;
-      if (bindM && import_Utils24.default.isModule(bindM)) {
+      if (bindM && import_Utils25.default.isModule(bindM)) {
         module2 = bindM;
         isRM = true;
         isVM = false;
@@ -13291,8 +13304,8 @@ var Context2 = class extends Context_default {
     const config = this.options;
     const isString = typeof source === "string";
     if (isString && source.includes("${__filename}")) {
-      const owner = import_Utils24.default.isModule(context) ? context.compilation : context;
-      source = source.replace("${__filename}", import_Utils24.default.isCompilation(owner) ? owner.file : this.target.file);
+      const owner = import_Utils25.default.isModule(context) ? context.compilation : context;
+      source = source.replace("${__filename}", import_Utils25.default.isCompilation(owner) ? owner.file : this.target.file);
     }
     if (isString && source.includes("/node_modules/")) {
       if (import_path9.default.isAbsolute(source))
@@ -13357,7 +13370,7 @@ var Context2 = class extends Context_default {
   inferType(stack, context = null) {
     if (!stack)
       return stack;
-    if (!context && import_Utils24.default.isStack(stack)) {
+    if (!context && import_Utils25.default.isStack(stack)) {
       context = stack.getContext();
     }
     if (context) {
@@ -13432,7 +13445,7 @@ var Context2 = class extends Context_default {
     if (specifiers && specifiers.length > 0) {
       let setScopeVariable = null;
       let multi = specifiers.length > 1;
-      if (origin && import_Utils24.default.isCompilation(origin) && import_Utils24.default.isCompilation(this.target) && this.target.mainModule) {
+      if (origin && import_Utils25.default.isCompilation(origin) && import_Utils25.default.isCompilation(this.target) && this.target.mainModule) {
         let hashId = createUniqueHashId(this.target.file);
         let added = false;
         setScopeVariable = (local, value) => {
@@ -13953,7 +13966,7 @@ function ArrayPattern_default2(ctx, stack) {
 
 // node_modules/@easescript/es-php/lib/tokens/FunctionExpression.js
 var import_Namespace13 = __toESM(require("easescript/lib/core/Namespace"));
-var import_Utils25 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils26 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 function createInitNode(ctx, name, initValue, defaultValue, operator2, forceType = null) {
   let init = defaultValue ? ctx.createBinaryExpression(initValue, defaultValue, operator2) : initValue;
@@ -14062,7 +14075,7 @@ function createParamNodes(ctx, stack, params) {
         _alias = _alias.inherit.type();
       }
       if (!_alias || !_alias.isLiteralObjectType) {
-        acceptType = import_Utils25.default.getOriginType(oType);
+        acceptType = import_Utils26.default.getOriginType(oType);
       }
     }
     let typeName = "";
@@ -14077,7 +14090,7 @@ function createParamNodes(ctx, stack, params) {
     } else {
       nameNode = ctx.createToken(item);
     }
-    if (acceptType && import_Utils25.default.isModule(acceptType) && !acceptType.isEnum) {
+    if (acceptType && import_Utils26.default.isModule(acceptType) && !acceptType.isEnum) {
       const originType = ctx.getAvailableOriginType(acceptType);
       if (originType === "String" || originType === "Array" || originType === "Object") {
         typeName = originType.toLowerCase();
@@ -14191,7 +14204,7 @@ function ArrowFunctionExpression_default2(ctx, stack, type) {
 }
 
 // node_modules/@easescript/es-php/lib/tokens/AssignmentExpression.js
-var import_Utils27 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils28 = __toESM(require("easescript/lib/core/Utils"));
 
 // node_modules/@easescript/es-php/lib/transforms/Base64.js
 var Base64_default = {
@@ -14284,7 +14297,7 @@ var Error_default = {
 
 // node_modules/@easescript/es-php/lib/transforms/Function.js
 var import_Namespace15 = __toESM(require("easescript/lib/core/Namespace"));
-var import_Utils26 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils27 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 init_Object();
 function createCallNode(stack, ctx, target, args) {
@@ -14330,7 +14343,7 @@ var methods2 = {
     let flagNode = ctx.createLiteral(null);
     if (_arguments[0]) {
       const type = ctx.inferType(_arguments[0]);
-      if (type.isLiteralArrayType || import_Namespace15.default.globals.get("Array") === import_Utils26.default.getOriginType(type)) {
+      if (type.isLiteralArrayType || import_Namespace15.default.globals.get("Array") === import_Utils27.default.getOriginType(type)) {
         flagNode = ctx.createLiteral(true);
       } else if (!type.isAnyType) {
         flagNode = ctx.createLiteral(false);
@@ -14880,7 +14893,7 @@ function createNode2(ctx, stack) {
     if (desc2 && desc2.isStack && (desc2.isMethodSetterDefinition || desc2.isPropertyDefinition)) {
       const property = stack.left.property.value();
       let typename = ctx.getAvailableOriginType(objectType) || objectType.toString();
-      if ((objectType.isUnionType || objectType.isIntersectionType) && import_Utils27.default.isModule(desc2.module)) {
+      if ((objectType.isUnionType || objectType.isIntersectionType) && import_Utils28.default.isModule(desc2.module)) {
         typename = desc2.module.id;
       }
       const map = {
@@ -14914,11 +14927,11 @@ function createNode2(ctx, stack) {
       if (!hasDynamic && desc2 && (desc2.isProperty && desc2.computed || desc2.isPropertyDefinition && desc2.dynamic)) {
         hasDynamic = true;
       }
-      if (!hasDynamic && !import_Utils27.default.isLiteralObjectType(objectType)) {
+      if (!hasDynamic && !import_Utils28.default.isLiteralObjectType(objectType)) {
         isReflect = true;
       }
     } else if (desc2 && desc2.isAnyType) {
-      isReflect = !import_Utils27.default.isLiteralObjectType(objectType);
+      isReflect = !import_Utils28.default.isLiteralObjectType(objectType);
     }
   }
   if (desc2 && !isReflect && stack.right) {
@@ -15054,7 +15067,7 @@ function AwaitExpression_default2(ctx, stack) {
 }
 
 // node_modules/@easescript/es-php/lib/tokens/BinaryExpression.js
-var import_Utils28 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils29 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 var mapset = {
   "String": "is_string",
@@ -15069,7 +15082,7 @@ function createNode3(ctx, stack) {
   if (maybeArrayRef) {
     if (stack.isIdentifier || stack.isMemberExpression) {
       let desc2 = stack.description();
-      if (import_Utils28.default.isTypeModule(desc2)) {
+      if (import_Utils29.default.isTypeModule(desc2)) {
         return ctx.createToken(stack);
       }
     }
@@ -15206,7 +15219,7 @@ function BreakStatement_default2(ctx, stack) {
 
 // node_modules/@easescript/es-php/lib/tokens/CallExpression.js
 init_Common2();
-var import_Utils29 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils30 = __toESM(require("easescript/lib/core/Utils"));
 var import_Namespace19 = __toESM(require("easescript/lib/core/Namespace"));
 function createArgumentNodes(ctx, stack, args, declareParams) {
   return args.map((item, index) => {
@@ -15273,7 +15286,7 @@ function CallExpression(ctx, stack) {
           _args,
           stack
         );
-      } else if (import_Utils29.default.isStack(desc2)) {
+      } else if (import_Utils30.default.isStack(desc2)) {
         let name = ctx.getAvailableOriginType(objectType) || objectType.toString();
         if ((objectType.isUnionType || objectType.isIntersectionType) && (desc2.isMethodDefinition || desc2.isCallDefinition) && desc2.module && desc2.module.isModule) {
           name = desc2.module.id;
@@ -15363,7 +15376,7 @@ function CallExpression(ctx, stack) {
             false
           );
         }
-      } else if ((desc2.isCallDefinition || import_Utils29.default.isModule(desc2)) && args.length === 1) {
+      } else if ((desc2.isCallDefinition || import_Utils30.default.isModule(desc2)) && args.length === 1) {
         const name = desc2.isCallDefinition && desc2.module ? desc2.module.id : ctx.getAvailableOriginType(desc2) || desc2.toString();
         if (name && transforms_default.has(name)) {
           const object = transforms_default.get(name);
@@ -15716,14 +15729,14 @@ function EnumDeclaration_default2(ctx, stack) {
 }
 
 // node_modules/@easescript/es-php/lib/tokens/EnumProperty.js
-var import_Utils30 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils31 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 function EnumProperty_default2(ctx, stack) {
   const node = ctx.createNode(stack);
   node.key = ctx.createToken(stack.key);
   node.init = ctx.createToken(stack.init);
   node.comments = createCommentsNode2(ctx, stack, node);
-  node.modifier = ctx.createIdentifier(import_Utils30.default.getModifierValue(stack) || "public");
+  node.modifier = ctx.createIdentifier(import_Utils31.default.getModifierValue(stack) || "public");
   return node;
 }
 
@@ -15843,7 +15856,7 @@ function ForInStatement_default2(ctx, stack) {
 
 // node_modules/@easescript/es-php/lib/tokens/ForOfStatement.js
 var import_Namespace21 = __toESM(require("easescript/lib/core/Namespace"));
-var import_Utils31 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils32 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 function createConditionNode(ctx, obj, refs) {
   const assignment = ctx.createAssignmentPattern(
@@ -15887,9 +15900,9 @@ function createAddressRefsNode2(addressRefObject, ctx, desc2, value, stack) {
 }
 function ForOfStatement_default2(ctx, stack) {
   let type = stack.right.type();
-  if (!(type.isLiteralArrayType || type.isTupleType || type === import_Namespace21.default.globals.get("array") || ctx.isArrayMappingType(import_Utils31.default.getOriginType(type)))) {
+  if (!(type.isLiteralArrayType || type.isTupleType || type === import_Namespace21.default.globals.get("array") || ctx.isArrayMappingType(import_Utils32.default.getOriginType(type)))) {
     let node2 = ctx.createNode(stack, "ForStatement");
-    let isIterableIteratorType = import_Utils31.default.isIterableIteratorType(type, import_Namespace21.default.globals.get("Iterator"));
+    let isIterableIteratorType = import_Utils32.default.isIterableIteratorType(type, import_Namespace21.default.globals.get("Iterator"));
     let declDesc = stack.left.isVariableDeclaration ? stack.left.declarations[0] : null;
     let init = ctx.createToken(stack.left);
     let obj = ctx.genLocalRefName(stack, AddressVariable_default.REFS_VALUE);
@@ -15996,7 +16009,7 @@ function FunctionDeclaration_default2(ctx, stack, type) {
 }
 
 // node_modules/@easescript/es-php/lib/tokens/Identifier.js
-var import_Utils32 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils33 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 var globals2 = ["String", "Number", "Boolean", "Object", "Array"];
 function Identifier_default2(ctx, stack) {
@@ -16049,7 +16062,7 @@ function Identifier_default2(ctx, stack) {
     }
     return propertyNode;
   }
-  if (import_Utils32.default.isTypeModule(desc2)) {
+  if (import_Utils33.default.isTypeModule(desc2)) {
     if (desc2 !== stack.module && stack.value() !== "arguments") {
       ctx.addDepend(desc2);
     }
@@ -16385,7 +16398,7 @@ function JSXClosingFragment_default2(ctx, stack) {
 
 // node_modules/@easescript/es-php/lib/core/ESX.js
 var import_Namespace23 = __toESM(require("easescript/lib/core/Namespace"));
-var import_Utils33 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils34 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 function createFragmentVNode2(ctx, children, props = null) {
   const items = [
@@ -16518,7 +16531,7 @@ function createForEachNode2(ctx, refs, element, item, key2) {
   return node;
 }
 function getComponentDirectiveAnnotation2(module2) {
-  if (!import_Utils33.default.isModule(module2))
+  if (!import_Utils34.default.isModule(module2))
     return null;
   const annots = getModuleAnnotations(module2, ["define"]);
   for (let annot of annots) {
@@ -16535,7 +16548,7 @@ function getComponentDirectiveAnnotation2(module2) {
 }
 var directiveInterface2 = null;
 function isDirectiveInterface2(module2) {
-  if (!import_Utils33.default.isModule(module2))
+  if (!import_Utils34.default.isModule(module2))
     return false;
   directiveInterface2 = directiveInterface2 || import_Namespace23.default.globals.get("web.components.Directive");
   if (directiveInterface2 && directiveInterface2.isInterface) {
@@ -16544,7 +16557,7 @@ function isDirectiveInterface2(module2) {
   return false;
 }
 function getComponentEmitAnnotation2(module2) {
-  if (!import_Utils33.default.isModule(module2))
+  if (!import_Utils34.default.isModule(module2))
     return null;
   const dataset = /* @__PURE__ */ Object.create(null);
   const annots = getModuleAnnotations(desc, ["define"]);
@@ -16929,7 +16942,7 @@ function createElementPropsNode2(ctx, data, stack) {
   const props = items.length > 0 ? ctx.createObjectExpression(items) : null;
   if (props && stack && stack.isComponent) {
     const desc2 = stack.description();
-    if (desc2 && import_Utils33.default.isModule(desc2)) {
+    if (desc2 && import_Utils34.default.isModule(desc2)) {
       let has = getModuleAnnotations(desc2, ["hook"]).some((annot) => {
         let result = parseHookAnnotation(annot, ctx.plugin.version, ctx.options.metadata.versions);
         return result && result.type === "polyfills:props";
@@ -17532,7 +17545,7 @@ function createElementNode2(ctx, stack, data, children) {
       name = ctx.createLiteral("div");
     } else {
       const desc2 = stack.description();
-      if (import_Utils33.default.isModule(desc2)) {
+      if (import_Utils34.default.isModule(desc2)) {
         ctx.addDepend(desc2, stack.module);
         name = ctx.createIdentifier(
           ctx.getModuleReferenceName(desc2, stack.module)
@@ -17983,7 +17996,7 @@ function LogicalExpression_default2(ctx, stack) {
 }
 
 // node_modules/@easescript/es-php/lib/tokens/MemberExpression.js
-var import_Utils34 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils35 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 function trans(ctx, stack, description, aliasAnnotation, objectType) {
   var type = objectType;
@@ -18046,7 +18059,7 @@ function MemberExpression2(ctx, stack) {
   let module2 = stack.module;
   let description = stack.descriptor();
   let computed = false;
-  if (description && import_Utils34.default.isTypeModule(description)) {
+  if (description && import_Utils35.default.isTypeModule(description)) {
     ctx.addDepend(description);
     let pp = stack.parentStack;
     if (pp.isMemberExpression && pp.object === stack || (pp.isNewExpression || pp.isCallExpression) && pp.callee === stack) {
@@ -18086,7 +18099,7 @@ function MemberExpression2(ctx, stack) {
     }
     let isReflect = !!objectType.isAnyType;
     let hasDynamic = description && description.isComputeType && description.isPropertyExists();
-    if (!hasDynamic && !import_Utils34.default.isLiteralObjectType(objectType)) {
+    if (!hasDynamic && !import_Utils35.default.isLiteralObjectType(objectType)) {
       isReflect = true;
     }
     if (isReflect) {
@@ -18207,7 +18220,7 @@ function MemberExpression2(ctx, stack) {
 var MemberExpression_default2 = MemberExpression2;
 
 // node_modules/@easescript/es-php/lib/tokens/MethodDefinition.js
-var import_Utils35 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils36 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 function MethodDefinition_default2(ctx, stack, type) {
   const alias = getMethodOrPropertyAlias(ctx, stack);
@@ -18215,7 +18228,7 @@ function MethodDefinition_default2(ctx, stack, type) {
   node.async = stack.expression.async ? true : false;
   node.static = stack.static ? ctx.createIdentifier("static") : null;
   node.final = stack.final ? ctx.createIdentifier("final") : null;
-  node.modifier = ctx.createIdentifier(import_Utils35.default.getModifierValue(stack));
+  node.modifier = ctx.createIdentifier(import_Utils36.default.getModifierValue(stack));
   node.kind = "method";
   if (alias && node.key) {
     node.key.value = alias;
@@ -18250,7 +18263,7 @@ function MethodSetterDefinition_default2(ctx, stack, type) {
 
 // node_modules/@easescript/es-php/lib/tokens/NewExpression.js
 var import_Namespace24 = __toESM(require("easescript/lib/core/Namespace"));
-var import_Utils36 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils37 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 function createArgumentNodes2(ctx, stack, args, declareParams) {
   return args.map((item, index) => {
@@ -18278,8 +18291,8 @@ function NewExpression_default2(ctx, stack) {
     type = desc2.module;
   }
   if (type) {
-    type = import_Utils36.default.getOriginType(type);
-    if (import_Utils36.default.isTypeModule(type)) {
+    type = import_Utils37.default.getOriginType(type);
+    if (import_Utils37.default.isTypeModule(type)) {
       ctx.addDepend(type);
     }
     if (type === import_Namespace24.default.globals.get("Array")) {
@@ -18495,14 +18508,14 @@ function Property_default2(ctx, stack) {
 }
 
 // node_modules/@easescript/es-php/lib/tokens/PropertyDefinition.js
-var import_Utils37 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils38 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 function PropertyDefinition_default2(ctx, stack) {
   let alias = getMethodOrPropertyAlias(ctx, stack);
   let isStatic = !!(stack.module.static || stack.static);
   const node = ctx.createNode(stack);
   node.declarations = (stack.declarations || []).map((item) => ctx.createToken(item));
-  node.modifier = ctx.createIdentifier(import_Utils37.default.getModifierValue(stack));
+  node.modifier = ctx.createIdentifier(import_Utils38.default.getModifierValue(stack));
   if (stack.annotations && stack.annotations.length > 0) {
     stack.annotations.forEach((annot) => {
       const name = annot.getLowerCaseName();
@@ -18896,7 +18909,7 @@ function UnaryExpression_default2(ctx, stack) {
 }
 
 // node_modules/@easescript/es-php/lib/tokens/UpdateExpression.js
-var import_Utils38 = __toESM(require("easescript/lib/core/Utils"));
+var import_Utils39 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 function trans2(ctx, stack, description, alias, objectType) {
   const type = objectType;
@@ -18952,11 +18965,11 @@ function UpdateExpression_default2(ctx, stack) {
     let isReflect = false;
     if (stack.argument.computed) {
       const hasDynamic = desc2 && desc2.isComputeType && desc2.isPropertyExists();
-      if (!hasDynamic && !import_Utils38.default.isLiteralObjectType(stack.argument.object.type())) {
+      if (!hasDynamic && !import_Utils39.default.isLiteralObjectType(stack.argument.object.type())) {
         isReflect = true;
       }
     } else if (desc2 && desc2.isAnyType) {
-      isReflect = !import_Utils38.default.isLiteralObjectType(stack.argument.object.type());
+      isReflect = !import_Utils39.default.isLiteralObjectType(stack.argument.object.type());
     }
     if (isReflect) {
       let method = operator2 === "++" ? "incre" : "decre";
@@ -18976,7 +18989,7 @@ function UpdateExpression_default2(ctx, stack) {
       let objectDescription = stack.object.description();
       let objectType = ctx.inferType(stack.object);
       let isNewObject = !!stack.object.isNewExpression;
-      let isStatic = stack.object.isSuperExpression || objectType.isClassType || !isNewObject && import_Utils38.default.isClassType(objectDescription);
+      let isStatic = stack.object.isSuperExpression || objectType.isClassType || !isNewObject && import_Utils39.default.isClassType(objectDescription);
       let alias = getMethodOrPropertyAlias(ctx, stack);
       let result = trans2(ctx, stack, desc2, alias, objectType);
       if (result)
@@ -19420,7 +19433,7 @@ function createBuildContext2(plugin2, records2 = /* @__PURE__ */ new Map()) {
     const deps = /* @__PURE__ */ new Set();
     ctx.dependencies.forEach((dataset) => {
       dataset.forEach((dep) => {
-        if (import_Utils39.default.isModule(dep)) {
+        if (import_Utils40.default.isModule(dep)) {
           if (!dep.isStructTable && dep.isDeclaratorModule) {
             dep = ctx.getVModule(dep.getName());
             if (dep) {
@@ -19431,7 +19444,7 @@ function createBuildContext2(plugin2, records2 = /* @__PURE__ */ new Map()) {
           }
         } else if (isVModule(dep)) {
           deps.add(dep);
-        } else if (import_Utils39.default.isCompilation(dep)) {
+        } else if (import_Utils40.default.isCompilation(dep)) {
           deps.add(dep);
         }
       });
@@ -19882,23 +19895,19 @@ var vms_default = {
 
 // node_modules/@easescript/es-php/lib/core/Plugin.js
 var import_path10 = __toESM(require("path"));
-function defineError2(complier) {
-  if (defineError2.loaded || !complier || !complier.diagnostic)
-    return;
-  defineError2.loaded = true;
-  let define = complier.diagnostic.defineError;
-  define(2e4, "", [
+import_Diagnostic2.default.register("php", (definer) => {
+  definer(
+    2e4,
     "\u7C7B(%s)\u547D\u540D\u7A7A\u95F4\u5FC5\u987B\u4E0E\u6587\u4EF6\u8DEF\u5F84\u4E00\u81F4",
     "The '%s' class namespace must be consistent with the file path"
-  ]);
-}
+  );
+});
 var Plugin2 = class extends Plugin_default {
   #context = null;
   get context() {
     return this.#context;
   }
   async init() {
-    defineError2(this.complier);
     this.#context = createBuildContext2(this, this.records);
     createPolyfillModule(
       import_path10.default.join(__dirname, "./polyfills"),
