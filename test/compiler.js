@@ -37,7 +37,7 @@ class Creator {
                     '**/app/model/*.es':'app/model',
                     '**/assets/***':'static',
                     'config/**/*.es':'config/{...}',
-                    'lang/**/*.es':'lang/{...}',
+                    'lang/*.es':'app/lang/{...}',
                     '**/*.route':'route',
                     "*.global":"escore",
                 },
@@ -45,6 +45,7 @@ class Creator {
             },
             includes:[
                 './config/*',
+                './lang/*',
                 '.env',
             ]
         });

@@ -583,26 +583,40 @@ function parseMacroMethodArguments(args, name) {
   });
   return parseMacroArguments(args, name);
 }
+function parseAnnotationArguments(args, indexes, defaults = {}) {
+  let annotArgs = getAnnotationArguments(args, indexes);
+  let results = {};
+  annotArgs.forEach((arg, index) => {
+    let key2 = indexes[index];
+    let value = arg ? arg.value : defaults[key2];
+    results[key2] = value;
+  });
+  return [annotArgs, results];
+}
 function parseReadfileAnnotation(ctx, stack) {
   let args = stack.getArguments();
   let indexes = annotationIndexers.readfile;
-  let stackArgs = {};
-  let annotArgs = indexes.map((key2) => {
-    return stackArgs[key2] = getAnnotationArgument(key2, args, indexes);
+  let [annotArgs, values] = parseAnnotationArguments(args, indexes, {
+    load: true,
+    extractDir: true,
+    relative: true
   });
-  let dirStack = annotArgs[0] && annotArgs[0].stack;
-  let [_path, _load, _suffix, _relative, _lazy, _only, _source] = annotArgs.map((item) => {
-    return item ? item.value : null;
-  });
-  if (!_path) {
+  let {
+    path: dir,
+    load,
+    suffix: _suffix,
+    relative,
+    lazy,
+    only,
+    source,
+    extractDir
+  } = values;
+  let suffixPattern = null;
+  if (!dir) {
+    ctx.error(`Readfile annotation arguments is not defined. the 'path' arguments.`, annotArgs[0] && annotArgs[0].stack || stack);
     return null;
   }
-  let dir = String(_path).trim();
-  let [load, relative, lazy, only, source] = [_load, _relative, _lazy, _only, _source].map((value) => {
-    value = String(value).trim();
-    return value == "true" || value === "TRUE";
-  });
-  let suffixPattern = null;
+  dir = String(dir).trim();
   if (dir.charCodeAt(0) === 64) {
     dir = dir.slice(1);
     let segs = dir.split(".");
@@ -621,7 +635,7 @@ function parseReadfileAnnotation(ctx, stack) {
   let rawDir = dir;
   dir = stack.compiler.resolveManager.resolveSource(dir, stack.compilation.file);
   if (!dir) {
-    ctx.error(`Readfile not found the '${rawDir}' folders`, dirStack || stack);
+    ctx.error(`Readfile not found the '${rawDir}' folders`, annotArgs[0] && annotArgs[0].stack || stack);
     return null;
   }
   if (_suffix) {
@@ -651,16 +665,28 @@ function parseReadfileAnnotation(ctx, stack) {
       return true;
     return suffix.some((item) => file.endsWith(item));
   };
-  let files = stack.compiler.resolveFiles(dir).filter(checkSuffix).map(import_Utils.default.normalizePath);
-  if (!files.length)
-    return null;
+  const getFileDirs = (file) => {
+    let index = file.lastIndexOf("/");
+    let dirname = file.slice(0, index);
+    if (dirname !== dir && dirname.startsWith(dir)) {
+      return [dirname, ...getFileDirs(dirname)];
+    }
+    return [];
+  };
+  let files = stack.compiler.resolveFiles(dir).filter(checkSuffix).map((file) => {
+    file = import_Utils.default.normalizePath(file);
+    if (extractDir) {
+      return [...getFileDirs(file), file];
+    }
+    return [file];
+  }).flat();
   files.sort((a, b) => {
     a = a.replaceAll(".", "/").split("/").length;
     b = b.replaceAll(".", "/").split("/").length;
     return a - b;
   });
   return {
-    args: stackArgs,
+    args: annotArgs,
     dir,
     only,
     suffix,
@@ -1275,7 +1301,7 @@ function createHttpAnnotationNode(ctx, stack) {
       ctx.createIdentifier(
         ctx.getGlobalRefName(
           stack,
-          ctx.builder.getModuleReferenceName(System, stack.module)
+          ctx.getModuleReferenceName(System, stack.module)
         )
       ),
       ctx.createIdentifier("createHttpRequest")
@@ -1468,7 +1494,7 @@ function createRouteConfigNode(ctx, module2, method, paramArg) {
   if (formatRoute) {
     url = formatRoute(url, {
       action: actionName,
-      pathArg: value,
+      path: value,
       method: allowMethodNames,
       params: declareParams,
       className: module2.getName()
@@ -1494,7 +1520,7 @@ function createRouteConfigNode(ctx, module2, method, paramArg) {
     Object.keys(props).map((name) => {
       const value2 = props[name];
       if (value2) {
-        return ctx.createProperty(name, value2);
+        return ctx.createProperty(ctx.createIdentifier(name), value2);
       }
       return null;
     }).filter((item) => !!item)
@@ -1574,7 +1600,7 @@ function createReadfileAnnotationNode(ctx, stack) {
         properties2.push(ctx.createProperty(ctx.createIdentifier("isFile"), ctx.createLiteral(true)));
       }
       if (object.content) {
-        properties2.push(ctx.createProperty(ctx.createIdentifier("content"), ctx.createChunkExpression(object.content)));
+        properties2.push(ctx.createProperty(ctx.createIdentifier("content"), ctx.createChunkExpression(object.content, false)));
       }
       if (object.children) {
         properties2.push(ctx.createProperty(ctx.createIdentifier("children"), ctx.createArrayExpression(make(object.children))));
@@ -1753,10 +1779,14 @@ function createCJSExports(ctx, exportManage, graph) {
           );
         }
       } else if (spec.type === "default") {
+        let local = spec.local;
+        if (spec.local.type === "ExpressionStatement") {
+          local = spec.local.expression;
+        }
         properties2.push(
           ctx.createProperty(
             ctx.createIdentifier("default"),
-            spec.local,
+            local,
             spec.stack
           )
         );
@@ -2163,7 +2193,7 @@ var init_Common = __esm({
       syntax: ["plugin", "expect"],
       plugin: ["name", "expect"],
       version: ["name", "version", "operator", "expect"],
-      readfile: ["dir", "load", "suffix", "relative", "lazy", "only", "source"],
+      readfile: ["path", "load", "suffix", "relative", "lazy", "only", "source", "extractDir"],
       http: ["classname", "action", "param", "data", "method", "config"],
       router: ["classname", "action", "param"],
       alias: ["name", "version"],
@@ -3915,6 +3945,9 @@ function createAddressRefsNode(ctx, argument) {
 function createArrayAddressRefsNode(ctx, stack, desc2, name, nameNode) {
   if (!desc2)
     return;
+  if (desc2.isDeclarator || desc2.isProperty && (desc2.parentStack.isObjectPattern || desc2.parentStack.isObjectExpression)) {
+    ctx.addVariableRefs(stack, desc2);
+  }
   let assignAddress = import_Utils24.default.isStack(desc2) && desc2.assignItems && ctx.getAssignAddressRef(desc2);
   if (assignAddress) {
     let name2 = assignAddress.getName(desc2);
@@ -3943,6 +3976,17 @@ function createExpressionTransformBooleanValueNode(ctx, stack, assignName = null
         tokenValue
       )
     );
+  } else if (stack.isMemberExpression) {
+    let desc2 = stack.descriptor();
+    if (desc2 && desc2.isMethodDefinition && !(desc2.isMethodGetterDefinition || desc2.isMethodSetterDefinition)) {
+      let value = ctx.createToken(stack);
+      if (value && value.type === "ArrayExpression" && value.elements.length === 2) {
+        return ctx.createCallExpression(
+          ctx.createIdentifier("method_exists"),
+          value.elements
+        );
+      }
+    }
   }
   type = type || stack.type();
   originType = originType || ctx.getAvailableOriginType(type);
@@ -4717,7 +4761,7 @@ var require_Generator = __commonJS({
             this.withBracketR();
             break;
           case "ArrayPattern":
-            this.withString("list");
+            this.withString("@list");
             this.withParenthesL();
             if (token.elements.length > 0) {
               this.withSequence(token.elements, !!token.newLine);
@@ -6196,7 +6240,6 @@ var package_default = {
 };
 
 // node_modules/@easescript/es-php/lib/core/Plugin.js
-var import_Compilation2 = __toESM(require("easescript/lib/core/Compilation"));
 var import_Diagnostic2 = __toESM(require("easescript/lib/core/Diagnostic"));
 
 // node_modules/@easescript/transform/lib/index.js
@@ -12429,7 +12472,7 @@ import_Diagnostic.default.register("transform", (definer) => {
 });
 var plugins = /* @__PURE__ */ new Set();
 var processing = /* @__PURE__ */ new Map();
-async function execute(compilation, asyncBuildHook) {
+async function execute(compilation, asyncHook) {
   if (processing.has(compilation)) {
     return await new Promise((resolve) => {
       processing.get(compilation).push(resolve);
@@ -12437,7 +12480,7 @@ async function execute(compilation, asyncBuildHook) {
   } else {
     let queues = [];
     processing.set(compilation, queues);
-    let result = await asyncBuildHook(compilation);
+    let result = await asyncHook(compilation);
     while (queues.length > 0) {
       let resolve = queues.shift();
       resolve(result);
@@ -12453,6 +12496,7 @@ var Plugin = class extends import_events.default {
   #name = null;
   #options = null;
   #initialized = false;
+  #watched = false;
   #context = null;
   #complier = null;
   #version = "0.0.0";
@@ -12496,6 +12540,9 @@ var Plugin = class extends import_events.default {
   }
   //开发模式下调用，用来监听文件变化时删除缓存
   watch() {
+    if (this.#watched)
+      return;
+    this.#watched = true;
     this.complier.on("onChanged", (compilation) => {
       this.records.delete(compilation);
       let cache2 = this.context.cache;
@@ -12507,6 +12554,8 @@ var Plugin = class extends import_events.default {
     });
   }
   async init() {
+    if (this.#context)
+      return;
     this.#context = createBuildContext(this, this.records);
     createPolyfillModule(
       import_path6.default.join(__dirname, "./polyfills"),
@@ -12517,12 +12566,12 @@ var Plugin = class extends import_events.default {
   async beforeStart(complier) {
     if (this.#initialized)
       return;
-    this.#initialized = true;
     this.#complier = complier;
     await this.init();
     if (this.options.mode === "development") {
       this.watch();
     }
+    this.#initialized = true;
   }
   //当任务处理完成后调用。在加载插件或者打包插件时会调用这个方法，用来释放一些资源
   async afterDone() {
@@ -12571,7 +12620,6 @@ var Plugin = class extends import_events.default {
     return await execute(compilation, this.context.build);
   }
 };
-var Plugin_default = Plugin;
 
 // node_modules/@easescript/es-php/lib/core/Builder.js
 var import_Utils40 = __toESM(require("easescript/lib/core/Utils"));
@@ -14353,7 +14401,7 @@ var methods2 = {
     if (object.type === "MemberExpression") {
       object = ctx.createArrayExpression([
         object.object,
-        object.createLiteral(object.property.value)
+        ctx.createLiteral(object.property.value)
       ]);
     }
     return ctx.createCallExpression(
@@ -14811,16 +14859,28 @@ var methods6 = {
   merge(stack, ctx, object, args) {
     let target = object;
     if (object.type !== "Identifier") {
+      let refs = ctx.genLocalRefName(stack, AddressVariable_default.REFS_FUN_ARG);
       target = ctx.createAssignmentExpression(
-        ctx.createVarIdentifier(
-          ctx.genLocalRefName(stack, AddressVariable_default.REFS_FUN_ARG)
-        ),
+        ctx.createVarIdentifier(refs),
         object
       );
+      ctx.insertTokenToBlock(
+        stack,
+        ctx.createExpressionStatement(
+          target
+        )
+      );
+      target = ctx.createVarIdentifier(refs);
     }
     return ctx.createCallExpression(
       createStaticReferenceNode2(ctx, stack, "System", "merge"),
       [target].concat(args)
+    );
+  },
+  combine(stack, ctx, object, args) {
+    return ctx.createCallExpression(
+      createStaticReferenceNode2(ctx, stack, "System", "combine"),
+      args
     );
   }
 };
@@ -15229,10 +15289,16 @@ function createArgumentNodes(ctx, stack, args, declareParams) {
       if (!(declareParam.isRestElement || declareParam.isObjectPattern || declareParam.isArrayPattern)) {
         if (ctx.isAddressRefsType(declareParam.type())) {
           const name = ctx.genLocalRefName(item, AddressVariable_default.REFS_FUN_ARG);
-          return ctx.createAssignmentExpression(
-            ctx.createVarIdentifier(name),
-            node
+          ctx.insertTokenToBlock(
+            stack,
+            ctx.createExpressionStatement(
+              ctx.createAssignmentExpression(
+                ctx.createVarIdentifier(name),
+                node
+              )
+            )
           );
+          return ctx.createVarIdentifier(name);
         }
       }
     }
@@ -16515,7 +16581,7 @@ function createForEachNode2(ctx, refs, element, item, key2) {
         ctx.createArrowFunctionExpression([
           ctx.createIdentifier("acc"),
           ctx.createIdentifier("item")
-        ], ctx.createCallee(
+        ], ctx.createCallExpression(
           ctx.createMemberExpression([
             ctx.createIdentifier("acc"),
             ctx.createIdentifier("concat")
@@ -16560,7 +16626,7 @@ function getComponentEmitAnnotation2(module2) {
   if (!import_Utils34.default.isModule(module2))
     return null;
   const dataset = /* @__PURE__ */ Object.create(null);
-  const annots = getModuleAnnotations(desc, ["define"]);
+  const annots = getModuleAnnotations(module2, ["define"]);
   annots.forEach((annot) => {
     const args = annot.getArguments();
     if (args.length > 1) {
@@ -18342,29 +18408,27 @@ function ObjectExpression_default2(ctx, stack) {
   const node = ctx.createNode(stack);
   let spreadIndex = [];
   node.properties = stack.properties.map((stack2, index) => {
-    let item = ctx.createToken(stack2);
-    if (item && stack2.isSpreadElement) {
+    if (stack2.isSpreadElement) {
       spreadIndex.push(index);
+      return ctx.createToken(stack2);
     }
-    return item;
+    return ctx.createToken(stack2);
   });
   if (spreadIndex.length > 0) {
     const segs = [];
     let start = 0;
-    let end = 0;
-    while (end = spreadIndex.shift() && end > start) {
-      segs.push(ctx.createObjectExpression(node.properties.slice(start, end)));
-      segs.push(node.properties[end]);
-      start = end + 1;
+    while (spreadIndex.length > 0) {
+      let index = spreadIndex.shift();
+      if (start > 0 && start < index) {
+        segs.push(ctx.createObjectExpression(node.properties.slice(start, index)));
+      }
+      start = index + 1;
+      segs.push(node.properties[index]);
     }
     if (start < node.properties.length) {
-      if (node.properties.length === 1) {
-        segs.push(node.properties[0]);
-      } else {
-        segs.push(ctx.createObjectExpression(node.properties.slice(start, node.properties.length)));
-      }
+      segs.push(ctx.createObjectExpression(node.properties.slice(start, node.properties.length)));
     }
-    return System_default.merge(stack, ctx, ctx.createArrayExpression(), segs);
+    return System_default.combine(stack, ctx, null, segs);
   }
   return node;
 }
@@ -18516,6 +18580,7 @@ function PropertyDefinition_default2(ctx, stack) {
   const node = ctx.createNode(stack);
   node.declarations = (stack.declarations || []).map((item) => ctx.createToken(item));
   node.modifier = ctx.createIdentifier(import_Utils38.default.getModifierValue(stack));
+  let hasEmbed = false;
   if (stack.annotations && stack.annotations.length > 0) {
     stack.annotations.forEach((annot) => {
       const name = annot.getLowerCaseName();
@@ -18523,6 +18588,7 @@ function PropertyDefinition_default2(ctx, stack) {
       if (name === "readfile") {
         value = createReadfileAnnotationNode2(ctx, annot, stack) || ctx.createLiteral(null);
       } else if (name === "embed") {
+        hasEmbed = true;
         value = createEmbedAnnotationNode2(ctx, annot, stack);
       } else if (name === "env") {
         value = createEnvAnnotationNode(ctx, annot, stack);
@@ -18587,6 +18653,22 @@ function RestElement_default2(ctx, stack) {
 function ReturnStatement_default2(ctx, stack) {
   const node = ctx.createNode(stack);
   node.argument = ctx.createToken(stack.argument);
+  if (node.argument && node.argument.type === "ArrayExpression") {
+    let pp = stack.getParentStack((parent) => parent.isFunctionExpression);
+    if (pp && pp.isFunctionExpression) {
+      const returnType = pp.getReturnedType();
+      if (ctx.isAddressRefsType(returnType, pp)) {
+        let refs = ctx.getLocalRefName(stack, AddressVariable_default.REFS_ASSIGN);
+        ctx.insertTokenToBlock(stack, ctx.createExpressionStatement(
+          ctx.createAssignmentExpression(
+            ctx.createVarIdentifier(refs),
+            node.argument
+          )
+        ));
+        node.argument = ctx.createVarIdentifier(refs);
+      }
+    }
+  }
   return node;
 }
 
@@ -18614,9 +18696,12 @@ function SpreadElement_default2(ctx, stack) {
         ctx.createToken(stack.argument)
       ]
     );
+    node2.isSpreadElement = true;
     return node2;
   } else if (stack.parentStack.isObjectExpression) {
-    return ctx.createToken(stack.argument);
+    let node2 = ctx.createToken(stack.argument);
+    node2.isSpreadElement = true;
+    return node2;
   }
   const node = ctx.createNode(stack);
   node.argument = ctx.createToken(stack.argument);
@@ -19274,7 +19359,7 @@ async function buildProgram2(ctx, compilation, graph) {
     graph.code = ctx.getFormatCode(generator.code);
     graph.sourcemap = generator.sourceMap;
     if (emitFile) {
-      graph.outfile = ctx.getOutputAbsolutePath(doc);
+      graph.outfile = ctx.getOutputAbsolutePath(mainModule ? mainModule : doc.file);
     }
   }
   return graph;
@@ -19902,7 +19987,7 @@ import_Diagnostic2.default.register("php", (definer) => {
     "The '%s' class namespace must be consistent with the file path"
   );
 });
-var Plugin2 = class extends Plugin_default {
+var Plugin2 = class extends Plugin {
   #context = null;
   get context() {
     return this.#context;
@@ -19917,6 +20002,9 @@ var Plugin2 = class extends Plugin_default {
       let vm = this.#context.virtuals.createVModule(key2, vms_default[key2]);
       this.#context.addBuildAfterDep(vm);
     });
+    process.nextTick(() => {
+      this.buildIncludes();
+    });
   }
   async buildIncludes() {
     const includes = this.options.includes || [];
@@ -19927,37 +20015,12 @@ var Plugin2 = class extends Plugin_default {
       const compilation = await this.complier.createCompilation(file, null, true);
       if (compilation) {
         await compilation.ready();
+        await this.build(compilation);
       }
     }));
   }
-  async run(compilation) {
-    if (!import_Compilation2.default.is(compilation)) {
-      throw new Error("compilation is invalid");
-    }
-    if (!this.initialized) {
-      await this.beforeStart(compilation.compiler);
-    }
-    return await this.#context.buildDeps(compilation);
-  }
-  async build(compilation, vmId) {
-    if (!import_Compilation2.default.is(compilation)) {
-      throw new Error("compilation is invalid");
-    }
-    if (!this.initialized) {
-      await this.beforeStart(compilation.compiler);
-    }
-    if (vmId) {
-      let vm = this.#context.virtuals.getVModule(vmId);
-      if (vm) {
-        compilation = vm;
-      } else {
-        throw new Error(`The '${vmId}' virtual module does not exists.`);
-      }
-    }
-    return await this.#context.build(compilation);
-  }
 };
-var Plugin_default2 = Plugin2;
+var Plugin_default = Plugin2;
 
 // node_modules/@easescript/es-php/lib/index.js
 var import_lodash = require("lodash");
@@ -20064,7 +20127,7 @@ function getOptions2(...options) {
 
 // lib/core/Plugin.js
 init_Routes();
-var Plugin3 = class extends Plugin_default2 {
+var Plugin3 = class extends Plugin_default {
   async init() {
     await super.init();
     this.context.virtuals.createVModule(Routes_default.id, Routes_default);
