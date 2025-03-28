@@ -11,6 +11,7 @@ import {Person as _Person} from '../../config.es';
 import "../../assets/main.js";
 import "../../assets/style.css";
 
+@Router('home')
 class Index {
 
       @Embed('../../assets/less/index.less')
@@ -27,9 +28,8 @@ class Index {
       * @auth false
       */
       
-      @Post('/List', label='列表', auth=false)
+      @Post(label='列表', auth=false)
       public list(){
-            manifest.Assets.all()
             const person = new Person();
             return json( person.list(), 200 );
       }

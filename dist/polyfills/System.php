@@ -380,6 +380,20 @@ final class System{
         return $method;
     }
 
+    static function forMap($target, \Closure $callback){
+        $array = [];
+        foreach($target as $key=>$value){
+            array_push($array, $callback($value,$key));
+        }
+        return $array;
+    }
+
+    static function forEach($target, \Closure $callback){
+        foreach($target as $key=>$value){
+            $callback($value,$key);
+        }
+    }
+
     static function toArray( $target ){
         $array = [];
         $type = 0;
@@ -536,6 +550,9 @@ final class System{
     }
 
     public static function getQualifiedObjectName( $object ){
+        if(is_null($object)){
+            return null;
+        }
         return get_class($object);
     }
 }

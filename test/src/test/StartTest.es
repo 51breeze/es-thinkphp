@@ -24,7 +24,7 @@ public class StartTest extends TestCase{
     }
 
     testIndex(){
-        const response = this.bootstrap('');
+        const response = this.bootstrap('home');
         this.assertEquals(`Hello, World!`,  response.getData() );
     }
 
@@ -90,7 +90,7 @@ public class StartTest extends TestCase{
             this.assertEquals(result3.postcode, personAddress.postcode);
         }
 
-        const response = this.bootstrap('list','post');
+        const response = this.bootstrap('home/list','post');
         const data = response.getData() as {id:number}[];
         this.assertEquals(2, data.length);
         this.assertEquals([1,2], data.map( item=>item.id ) );
