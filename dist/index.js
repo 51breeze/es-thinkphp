@@ -6561,7 +6561,7 @@ module.exports = __toCommonJS(lib_exports);
 // package.json
 var package_default = {
   name: "@easescript/es-thinkphp",
-  version: "0.1.0",
+  version: "0.1.1",
   description: "EaseScript Code Transformation Plugin For ThinkPHP6",
   main: "dist/index.js",
   typings: "dist/types/typings.json",
@@ -8556,14 +8556,11 @@ var TableBuilder = class {
   constructor(plugin2) {
     this.#plugin = plugin2;
     this.#plugin.on("compilation:changed", (compilation) => {
-      let mainModule = compilation.mainModule;
-      if (mainModule.isStructTable) {
-        compilation.modules.forEach((module2) => {
-          if (module2.isStructTable) {
-            this.removeTable(module2.id);
-          }
-        });
-      }
+      compilation.modules.forEach((module2) => {
+        if (module2.isStructTable) {
+          this.removeTable(module2.id);
+        }
+      });
     });
   }
   createTable(ctx, stack) {
@@ -12971,13 +12968,15 @@ var Plugin = class extends import_events.default {
       return;
     this.#watched = true;
     this.complier.on("onChanged", (compilation) => {
-      this.records.delete(compilation);
-      let cache2 = this.context.cache;
-      if (cache2) {
-        compilation.modules.forEach((module2) => cache2.clear(module2));
-        cache2.clear(compilation);
+      if (compilation) {
+        this.records.delete(compilation);
+        let cache2 = this.context.cache;
+        if (cache2) {
+          compilation.modules.forEach((module2) => cache2.clear(module2));
+          cache2.clear(compilation);
+        }
+        this.emit("compilation:changed", compilation);
       }
-      this.emit("compilation:changed", compilation);
     });
   }
   async init() {
