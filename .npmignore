@@ -2,7 +2,6 @@
 package-lock.json
 /test
 /core
-/lib
 /helper 
 /polyfill
 /scripts

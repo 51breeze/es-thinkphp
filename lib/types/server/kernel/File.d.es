@@ -4,7 +4,7 @@ package server.kernel;
  * 文件上传类
  * @package think
  */
-declare class File{
+declare class File extends SplFileInfo{
 
    constructor(path:string, checkPath?:boolean);
 
@@ -67,6 +67,8 @@ declare class File{
      */
     extension(): string
 
+    setExtension(ext:string):void;
+
     /**
      * 自动生成文件名
      * @access public
@@ -74,4 +76,22 @@ declare class File{
      * @return string
      */
     hashName(rule?:string): string
+
+     /**
+     * 获取上传文件类型信息
+     * @return string
+     */
+    getOriginalMime(): string
+
+    /**
+     * 上传文件名
+     * @return string
+     */
+    getOriginalName(): string
+
+    /**
+     * 获取上传文件扩展名
+     * @return string
+     */
+    getOriginalExtension(): string
 }

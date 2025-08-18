@@ -6,7 +6,7 @@ declare class Collection<T=any>{
 
       isEmpty(): boolean
 
-      toArray(): ArrayProtector<T[]>
+      toArray(): ArrayProtector<T>[]
 
       all(): T[]
 
