@@ -5140,7 +5140,6 @@ var require_Generator = __commonJS({
           this.#context = context;
           if (disableSourceMaps !== true) {
             this.#file = context.target.file;
-            this.#sourceMap = context.options.sourceMaps ? this.createSourceMapGenerator() : null;
           }
         }
       }
@@ -5162,7 +5161,7 @@ var require_Generator = __commonJS({
       createSourceMapGenerator() {
         let compilation = this.context.compilation;
         let generator = new import_source_map2.default.SourceMapGenerator();
-        if (compilation.source) {
+        if (compilation && compilation.source) {
           generator.setSourceContent(compilation.file, compilation.source);
         }
         return generator;
@@ -7156,7 +7155,7 @@ var ImportManage = class {
       const source = this.#locals.get(local);
       if (source) {
         if (source !== importSource) {
-          throw new Error(`declare '${local}' is not redefined`);
+          throw new Error(`declare '${local}' is redefined`);
         }
       } else {
         this.#locals.set(local, importSource);
@@ -7650,6 +7649,10 @@ var Context = class extends Token_default {
       }
       return this.target.importModuleNameds.has(module2);
     } else if (import_Utils7.default.isModule(this.target)) {
+      const compi = this.target.compilation;
+      if (compi && compi.modules.has(module2.getName())) {
+        return true;
+      }
       const vm = this.getVModule(this.target.getName());
       if (vm) {
         return !!vm.getReferenceName(module2.getName());
@@ -10855,13 +10858,33 @@ var InterfaceBuilder = class extends ClassBuilder_default {
       if (stack.isStructTableColumnDefinition) {
         const node = ctx.createNode(stack, "PropertyDefinition");
         const typeName = import_Utils16.default.getStructTableMethodTypeName(stack.typename?.value() || "varchar");
+        let defaultValue = null;
+        if (stack.properties) {
+          const defaultProperty = stack.properties.find((prop) => {
+            if (!prop.isStructTablePropertyDefinition)
+              return false;
+            return prop.key.isIdentifier && prop.init && String(prop.key.value()).toLowerCase() === "default";
+          });
+          if (defaultProperty) {
+            const initStack = defaultProperty.init;
+            if (initStack.isMemberExpression) {
+              const desc2 = initStack.description();
+              if (desc2 && desc2.isEnumProperty) {
+                defaultValue = ctx.createLiteral(String(desc2.init.value()));
+              }
+            } else if (initStack.isLiteral) {
+              defaultValue = ctx.createToken(initStack);
+            }
+          }
+        }
         node.modifier = "public";
         node.kind = "column";
         node.key = ctx.createIdentifier(stack.key.value(), stack.key);
         node.comments = createCommentsNode(ctx, stack);
         node.question = !!stack.question;
-        node.init = ctx.createLiteral(typeName === "string" ? "" : null);
+        node.init = defaultValue || ctx.createLiteral(typeName === "string" ? "" : null);
         let format = "* @Formal(varchar,255)";
+        let defaultV = defaultValue && defaultValue.type === "Literal" ? defaultValue.value : null;
         if (stack.typename) {
           const formatNode = ctx.createToken(stack.typename);
           const generator = new Generator_default();
@@ -10873,6 +10896,9 @@ var InterfaceBuilder = class extends ClassBuilder_default {
           format = `* @Formal(${generator.toString()})`;
         }
         let comments = [stack.question ? "* @Optional" : "* @Requred", format];
+        if (defaultV) {
+          comments.push('* @Default "' + String(defaultV) + '"');
+        }
         if (node.comments) {
           const lines = String(node.comments.value).split(/[\r\n]+/);
           lines.splice(lines.length - 2, 0, ...comments);
