@@ -99,7 +99,7 @@ class DataEntity
                 return $min <= $len && $max >= $len;
             case 'char' :
                 $len = $args[0] ?? 0;
-                return $len>0 ? strlen(strval($value))===$len : true;
+                return $len>0 ? strlen(strval($value))<=$len : true;
 
         }
         return true;

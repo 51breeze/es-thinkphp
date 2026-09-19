@@ -2380,7 +2380,10 @@ function createJSXAttrHookNode(ctx, stack, desc2) {
             } else if (/\.(\w+)($|\?)/.test(value)) {
               const file = stack.compiler.resolveManager.resolveFile(value, stack.compilation.file);
               if (file) {
-                const local = "_" + import_path.default.basename(file, import_path.default.extname(file)) + createUniqueHashId(file, 12);
+                let basename = import_path.default.basename(file);
+                let index = basename.indexOf(".");
+                let name = index >= 0 ? basename.slice(0, index) : basename;
+                const local = "_" + toCamelCase(name) + createUniqueHashId(file, 8);
                 const source = ctx.getSourceFileMappingFolder(file) || file;
                 ctx.addImport(source, local);
                 return ctx.createIdentifier(local);
@@ -5077,6 +5080,9 @@ function merge2(target, source, result = {}) {
   return target;
 }
 function canUseNullCoalescingOperator(stack) {
+  if (stack.parentStack.isMemberExpression) {
+    return false;
+  }
   let parentStack = stack.getParentStack((p) => !p.isMemberExpression);
   if (parentStack.isLogicalExpression) {
     let operator2 = parentStack.operator;
@@ -5863,9 +5869,9 @@ var require_Generator = __commonJS({
             this.withBraceR();
             break;
           case "TemplateElement":
-            this.withString("'");
-            this.withString(token.value.replace(/(?<!\\)\u0027/g, "\\'"));
-            this.withString("'");
+            this.withString('"');
+            this.withString(token.value.replace(/(?<!\\)\u0022/g, '\\"'));
+            this.withString('"');
             break;
           case "TemplateLiteral":
             const expressions = token.expressions;
@@ -6693,7 +6699,7 @@ module.exports = __toCommonJS(lib_exports);
 // package.json
 var package_default = {
   name: "@easescript/es-thinkphp",
-  version: "0.2.0",
+  version: "0.2.1",
   description: "EaseScript Code Transformation Plugin For ThinkPHP6",
   main: "dist/index.js",
   typings: "dist/types/typings.json",
@@ -9333,7 +9339,7 @@ function CallExpression_default(ctx, stack) {
       }
       ctx.addDepend(parent, module2);
     }
-    if (ctx.useClassConstructor(module2)) {
+    if (useClass) {
       return ctx.createCallExpression(
         ctx.createSuperExpression(void 0, stack.callee),
         stack.arguments.map((item) => ctx.createToken(item)),
@@ -9558,10 +9564,30 @@ var ClassBuilder = class {
         this.getExportReferenceNode()
       );
     } else {
-      ctx.addExport(
-        module2.id,
-        this.getExportReferenceNode()
-      );
+      const exportNode = this.getExportReferenceNode();
+      if (exportNode) {
+        if (exportNode.type === "Identifier") {
+          ctx.addExport(
+            module2.id,
+            exportNode
+          );
+        } else {
+          const refName = "__" + module2.id + "_export";
+          const refNode = ctx.createVariableDeclaration("const", [
+            ctx.createVariableDeclarator(
+              ctx.createIdentifier(refName),
+              exportNode
+            )
+          ]);
+          ctx.addNodeToAfterBody(refNode);
+          ctx.addExport(
+            module2.id,
+            ctx.createIdentifier(refName)
+          );
+        }
+      } else {
+        ctx.addExport(module2.id);
+      }
     }
   }
   createBody(ctx, module2, stack) {
@@ -9674,7 +9700,7 @@ var ClassBuilder = class {
             ctx.createCallExpression(
               createStaticReferenceNode(ctx, this.stack, "Class", "getKeySymbols"),
               [
-                ctx.createLiteral(ctx.getHashId())
+                ctx.createLiteral(ctx.getHashId(8, this.module))
               ]
             )
           )
@@ -11367,7 +11393,8 @@ function createChildNode(ctx, stack, childNode, prev = null) {
       cmd.push(name);
     } else if (name === "if") {
       const node = ctx.createNode("ConditionalExpression");
-      node.test = ctx.createToken(valueArgument.expression);
+      const test = ctx.createToken(valueArgument.expression);
+      node.test = test && test.type === "ConditionalExpression" ? ctx.createParenthesizedExpression(test) : test;
       node.consequent = content[0];
       content[0] = node;
       cmd.push(name);
@@ -11378,7 +11405,8 @@ function createChildNode(ctx, stack, childNode, prev = null) {
         cmd.push(name);
       }
       const node = ctx.createNode("ConditionalExpression");
-      node.test = ctx.createToken(valueArgument.expression);
+      const test = ctx.createToken(valueArgument.expression);
+      node.test = test && test.type === "ConditionalExpression" ? ctx.createParenthesizedExpression(test) : test;
       node.consequent = content[0];
       content[0] = node;
     } else if (name === "else") {
@@ -12009,20 +12037,30 @@ function createElementKeyPropertyNode(ctx, stack) {
       }
     }
     if (all || isCondition || fills.includes(direName)) {
-      let count = ctx.cache.get(stack.compilation, "createElementKeyPropertyNode::count");
-      if (count == null)
-        count = 0;
-      ctx.cache.set(stack.compilation, "createElementKeyPropertyNode::count", ++count);
-      return ctx.createProperty(
-        ctx.createIdentifier("key"),
-        isForContext ? ctx.createBinaryExpression(
-          ctx.createLiteral(count + "-"),
-          ctx.createIdentifier(key2 || "key"),
-          "+"
-        ) : ctx.createLiteral(count)
+      return createElementKeyNode(ctx, stack, isForContext ? ctx.createIdentifier(key2 || "key") : null);
+    }
+  }
+}
+function createElementKeyNode(ctx, stack, prefixNode = null) {
+  let count = ctx.cache.get(stack.compilation, "createElementKeyPropertyNode::count");
+  if (count == null)
+    count = 0;
+  ctx.cache.set(stack.compilation, "createElementKeyPropertyNode::count", ++count);
+  if (prefixNode) {
+    if (prefixNode.type === "Literal") {
+      prefixNode.value += "-" + count;
+    } else {
+      prefixNode = ctx.createBinaryExpression(
+        prefixNode,
+        ctx.createLiteral("-" + count),
+        "+"
       );
     }
   }
+  return ctx.createProperty(
+    ctx.createIdentifier("key"),
+    prefixNode || ctx.createLiteral(count)
+  );
 }
 function createComponentDirectiveProperties(ctx, stack, data, callback = null) {
   if (stack) {
@@ -12229,7 +12267,7 @@ function createDirectiveElementNode(ctx, stack, children) {
     case "elseif": {
       const condition = ctx.createToken(stack.attributes[0].parserAttributeValueStack());
       const node = ctx.createNode("ConditionalExpression");
-      node.test = condition;
+      node.test = condition && condition.type === "ConditionalExpression" ? ctx.createParenthesizedExpression(condition) : condition;
       node.consequent = children;
       return node;
     }
@@ -13995,7 +14033,7 @@ var import_Utils32 = __toESM(require("easescript/lib/core/Utils"));
 init_Common2();
 init_VirtualModule2();
 var cache = getCacheManager("php");
-var globalModules = ["Array", "Object", "Boolean", "Math", "Number", "String"];
+var globalModules = ["Array", "Object", "Boolean", "Math", "Number", "String", "Error"];
 var Context2 = class extends Context_default {
   #usings = /* @__PURE__ */ new Map();
   #statments = [];
@@ -14050,6 +14088,28 @@ var Context2 = class extends Context_default {
   }
   createModuleUsing(depModule, context) {
     if (!globalModules.includes(depModule.id)) {
+      const defines = getModuleAnnotations(depModule, ["define"]);
+      if (defines.length > 0) {
+        const has = defines.some((define) => {
+          const data = parseDefineAnnotation(define);
+          if (data.use != null && data.use !== false) {
+            let local = this.getModuleAlias(depModule, context);
+            let source2 = data.use;
+            if (source2 === "") {
+              source2 = "\\" + depModule.id;
+            } else if (source2.includes(".")) {
+              source2 = source2.split(".").join("\\");
+            } else if (source2.includes("/")) {
+              source2 = source2.split("/").join("\\");
+            }
+            this.addUsing(source2, local);
+            return true;
+          }
+        });
+        if (has) {
+          return;
+        }
+      }
       let source = this.getModuleNamespace(depModule);
       if (source) {
         source += "\\" + depModule.id;
@@ -14597,7 +14657,9 @@ var Context2 = class extends Context_default {
       context = this.target;
     name = module2.id;
     let hasDefined = false;
+    let inNs = false;
     if (import_Utils32.default.isModule(context)) {
+      inNs = !!context.namespace.parent;
       if (module2.required || context.imports && context.imports.has(module2.id)) {
         hasDefined = !!module2.required;
         if (!hasDefined) {
@@ -14623,10 +14685,14 @@ var Context2 = class extends Context_default {
     } else {
       name = module2.id;
       if (module2.namespace && module2.namespace.parent) {
+        inNs = false;
         name = module2.getName("_");
       }
       name = this.getGlobalRefName(null, name, module2);
       this.setModuleAlias(module2, name);
+    }
+    if (inNs && this.isGlobalModule(module2) && !this.isVModule(module2)) {
+      return "\\" + name;
     }
     return name;
   }
@@ -14655,6 +14721,20 @@ var Context2 = class extends Context_default {
     moduleAlias.set(module2, name);
     return name;
   }
+  isGlobalModule(module2) {
+    return module2.isDeclaratorModule && module2.getStacks().some((stack) => {
+      const compilation = stack.compilation;
+      if (compilation && compilation.isGlobalFlag) {
+        const scopes = compilation.pluginScopes;
+        if (scopes) {
+          if (scopes.scope === "global") {
+            return true;
+          }
+        }
+      }
+      return false;
+    });
+  }
   getModuleMappingFolder(module2) {
     let isRM = import_Utils32.default.isModule(module2);
     let isVM = isRM ? false : isVModule(module2);
@@ -14670,25 +14750,11 @@ var Context2 = class extends Context_default {
       }
     }
     let file = module2.file;
-    let nonGlobal = false;
-    if (isRM && !isVM) {
-      nonGlobal = module2.getStacks().some((stack) => {
-        const compilation = stack.compilation;
-        return compilation && compilation.pluginScopes.scope === "es-php";
-      });
-    }
-    if (!nonGlobal) {
-      if (isRM && module2.isDeclaratorModule) {
-        let compilation = module2.compilation;
-        if (compilation) {
-          if (compilation.isGlobalFlag && compilation.pluginScopes.scope === "global") {
-            file += ".global";
-          }
-        }
-      } else if (isCom && module2.isGlobalFlag) {
-        if (module2.pluginScopes?.scope === "global") {
-          file += ".global";
-        }
+    if (isRM && this.isGlobalModule(module2)) {
+      file += ".global";
+    } else if (isCom && module2.isGlobalFlag) {
+      if (module2.pluginScopes?.scope === "global") {
+        file += ".global";
       }
     }
     return this.resolveSourceFileMappingPath(file, "folders");
@@ -14739,14 +14805,16 @@ var Context2 = class extends Context_default {
       return "";
     let folder = this.getModuleMappingNamespace(module2);
     if (folder) {
+      folder = folder.replace(/(^|\\)(interface|class)(\\|$)/, "$1_$2$3");
       if (suffix) {
         return "\\" + folder + "\\" + suffix;
       }
       return folder;
     }
     if (module2.namespace && module2.namespace.isNamespace) {
-      const items = module2.namespace.getChain();
+      let items = module2.namespace.getChain();
       if (items.length > 0) {
+        items = items.map((item) => item === "interface" ? "_interface" : item);
         if (suffix) {
           return "\\" + items.concat(suffix).join("\\");
         }
@@ -14812,6 +14880,7 @@ var Context2 = class extends Context_default {
   }
   createNamespaceStatement(source) {
     const node = this.createNode("NamespaceStatement");
+    source = source.replace(/(^|\\)(interface|class)(\\|$)/, "$1_$2$3");
     node.source = source;
     return node;
   }
@@ -15519,8 +15588,8 @@ function FunctionExpression_default2(ctx, stack, type) {
     const promiseModule = import_Namespace14.default.globals.get("Promise");
     const promiseRefs = ctx.getModuleReferenceName(promiseModule, stack.module || stack.compilation);
     ctx.addDepend(promiseModule, stack.module || stack.compilation);
-    if (block.type !== "BlockStatement") {
-      block = ctx.createBlockStatement([block]);
+    if (!block || block.type !== "BlockStatement") {
+      block = ctx.createBlockStatement(block ? [block] : []);
     }
     const content = ctx.createFunctionExpression(block);
     if (params.length > 0) {
@@ -16389,6 +16458,16 @@ function createNode2(ctx, stack) {
     }
   }
   if (desc2 && !isReflect && stack.right) {
+    if (operator2 && operator2.charCodeAt(0) === 43) {
+      let leftType = stack.left.type();
+      let rightType = stack.right.type();
+      leftType = ctx.getAvailableOriginType(leftType);
+      rightType = ctx.getAvailableOriginType(rightType);
+      const isNumber = leftType === "Number" && leftType === rightType;
+      if (!isNumber) {
+        node.operator = operator2.length > 1 ? "." + operator2.substr(1) : ".";
+      }
+    }
     const addressRefObject = desc2.isVariableDeclarator || desc2.isParamDeclarator ? ctx.getAssignAddressRef(desc2) : null;
     if (addressRefObject && stack.left.isIdentifier) {
       const index = addressRefObject.add(stack.right);
@@ -16595,12 +16674,9 @@ function BinaryExpression_default2(ctx, stack) {
     let rightType = stack.right.type();
     let oLeftType = leftType;
     let oRightType = rightType;
-    let isNumber = leftType.isLiteralType && rightType.isLiteralType;
-    if (isNumber) {
-      leftType = ctx.getAvailableOriginType(leftType);
-      rightType = ctx.getAvailableOriginType(rightType);
-      isNumber = leftType === "Number" && leftType === rightType;
-    }
+    leftType = ctx.getAvailableOriginType(leftType);
+    rightType = ctx.getAvailableOriginType(rightType);
+    let isNumber = leftType === "Number" && leftType === rightType;
     if (!isNumber) {
       if (oLeftType.toString() === "string" || oRightType.toString() === "string") {
         operator2 = operator2.length > 1 ? "." + operator2.substr(1) : ".";
@@ -17043,7 +17119,7 @@ function ConditionalExpression_default2(ctx, stack) {
 
 // node_modules/@easescript/es-php/lib/tokens/ContinueStatement.js
 function ContinueStatement_default2(ctx, stack) {
-  const node = ctx.createToken(stack);
+  const node = ctx.createNode(stack);
   node.label = ctx.createToken(stack.label);
   return node;
 }
@@ -17489,14 +17565,7 @@ function Identifier_default2(ctx, stack) {
       }
     }
   }
-  let desc2 = null;
-  if (stack.parentStack.isMemberExpression) {
-    if (stack.parentStack.object === stack) {
-      desc2 = stack.description();
-    }
-  } else {
-    desc2 = stack.description();
-  }
+  let desc2 = stack.description();
   if (desc2 && desc2.isImportDeclaration) {
     desc2 = desc2.description();
   }
@@ -17540,7 +17609,8 @@ function Identifier_default2(ctx, stack) {
     }
   }
   let isDeclarator = desc2 && (desc2.isDeclarator || desc2.isProperty && (desc2.parentStack.isObjectPattern || desc2.parentStack.isObjectExpression));
-  if (isDeclarator) {
+  let isConst = desc2 && desc2.isDeclaratorVariable && desc2.kind === "const";
+  if (!isConst && isDeclarator) {
     if (desc2.parentStack.isImportDeclaration && stack.compilation.mainModule && stack.module) {
       return ctx.createCallExpression(
         createStaticReferenceNode2(ctx, stack, "System", "getScopeVariable"),
@@ -17571,51 +17641,50 @@ function Identifier_default2(ctx, stack) {
       ctx.addVariableRefs(stack, desc2);
     }
   } else if (desc2 && (desc2.isFunctionDeclaration || desc2.isDeclaratorVariable)) {
-    isDeclarator = true;
-    if (desc2.isDeclaratorVariable) {
-      if (desc2.kind === "const") {
-        isDeclarator = false;
-      }
-    }
+    isDeclarator = !isConst;
   }
   if (stack.parentStack.isNewExpression) {
     if (!desc2 || !(desc2.isDeclaratorVariable || isDeclarator)) {
       return ctx.createLiteral(stack.raw());
     }
   }
-  if (stack.parentStack.isMemberExpression) {
-    isDeclarator = false;
-    if (stack.parentStack.computed && stack.parentStack.property === stack) {
+  if (!isConst) {
+    if (desc2 && (desc2.isFunctionDeclaration || desc2.isDeclaratorVariable)) {
       isDeclarator = true;
-    } else if (stack.parentStack.object === stack) {
+    } else if (stack.parentStack.isMemberExpression) {
+      isDeclarator = false;
+      if (stack.parentStack.computed && stack.parentStack.property === stack) {
+        isDeclarator = true;
+      } else if (stack.parentStack.object === stack) {
+        isDeclarator = true;
+      }
+    } else if (stack.parentStack.isJSXExpressionContainer && stack.scope.define(stack.value())) {
+      if (desc2 && desc2.isIdentifier) {
+        ctx.addVariableRefs(desc2);
+      }
       isDeclarator = true;
     }
-  } else if (stack.parentStack.isJSXExpressionContainer && stack.scope.define(stack.value())) {
-    if (desc2 && desc2.isIdentifier) {
-      ctx.addVariableRefs(desc2);
-    }
-    isDeclarator = true;
-  }
-  if (desc2 && (desc2.isVariableDeclarator || desc2.isParamDeclarator)) {
-    isDeclarator = true;
-    let isRefs = true;
-    if (stack.parentStack.isMemberExpression) {
-      isRefs = stack.parentStack.object === stack;
-    } else if (stack.parentStack.isVariableDeclarator) {
-      isRefs = stack.parentStack.init === stack;
-    } else if (stack.parentStack.isAssignmentExpression) {
-      isRefs = stack.parentStack.right === stack;
-    }
-    if (isRefs) {
-      const assignAddress = ctx.getAssignAddressRef(desc2);
-      if (assignAddress) {
-        const name = assignAddress.getName(desc2) || stack.value();
-        const index = assignAddress.createIndexName(stack, desc2);
-        if (index) {
-          return ctx.createComputeMemberExpression([
-            ctx.createVarIdentifier(name),
-            ctx.createVarIdentifier(index)
-          ]);
+    if (desc2 && (desc2.isVariableDeclarator || desc2.isParamDeclarator)) {
+      isDeclarator = true;
+      let isRefs = true;
+      if (stack.parentStack.isMemberExpression) {
+        isRefs = stack.parentStack.object === stack;
+      } else if (stack.parentStack.isVariableDeclarator) {
+        isRefs = stack.parentStack.init === stack;
+      } else if (stack.parentStack.isAssignmentExpression) {
+        isRefs = stack.parentStack.right === stack;
+      }
+      if (isRefs) {
+        const assignAddress = ctx.getAssignAddressRef(desc2);
+        if (assignAddress) {
+          const name = assignAddress.getName(desc2) || stack.value();
+          const index = assignAddress.createIndexName(stack, desc2);
+          if (index) {
+            return ctx.createComputeMemberExpression([
+              ctx.createVarIdentifier(name),
+              ctx.createVarIdentifier(index)
+            ]);
+          }
         }
       }
     }
@@ -18661,28 +18730,28 @@ function Literal_default2(ctx, stack) {
   } else {
     node.value = stack.value();
   }
-  if (code === 34) {
-    node.raw = `'${node.value.replace("'", "\\'")}'`;
-  }
   const type = stack.type();
-  if (type && type.toString().toLowerCase() === "regexp") {
-    ctx.addDepend(type.inherit, stack.module || stack.compilation);
-    let pattern = node.raw.trim();
-    let index = node.raw.lastIndexOf("/");
-    if (pattern.charCodeAt(0) !== 47 || !(index > 0)) {
-      throw new Error("Invalid regexp " + pattern);
-    } else {
-      let glog = pattern.slice(index + 1);
-      pattern = pattern.slice(1, index);
-      const args = [pattern, glog].filter((item) => !!item);
-      const newNode = ctx.createNewExpression(
-        ctx.createIdentifier(ctx.getModuleReferenceName(type.inherit, stack.module)),
-        args.map((item) => ctx.createLiteral(item))
-      );
-      if (stack.parentStack.isMemberExpression) {
-        return ctx.createParenthesizedExpression(newNode);
+  if (type) {
+    const value = type.toString();
+    if (value && value.toLowerCase() === "regexp") {
+      ctx.addDepend(type.inherit, stack.module || stack.compilation);
+      let pattern = node.raw.trim();
+      let index = node.raw.lastIndexOf("/");
+      if (pattern.charCodeAt(0) !== 47 || !(index > 0)) {
+        throw new Error("Invalid regexp " + pattern);
       } else {
-        return newNode;
+        let glog = pattern.slice(index + 1);
+        pattern = pattern.slice(1, index);
+        const args = [pattern, glog].filter((item) => !!item);
+        const newNode = ctx.createNewExpression(
+          ctx.createIdentifier(ctx.getModuleReferenceName(type.inherit, stack.module)),
+          args.map((item) => ctx.createLiteral(item))
+        );
+        if (stack.parentStack.isMemberExpression) {
+          return ctx.createParenthesizedExpression(newNode);
+        } else {
+          return newNode;
+        }
       }
     }
   }
@@ -19334,9 +19403,6 @@ function Property_default2(ctx, stack) {
     node.key = ctx.createLiteral(stack.key.value());
   } else {
     node.key = ctx.createToken(stack.key);
-    if (node.computed && node.key.type === "Identifier") {
-      node.key.isVariable = true;
-    }
   }
   node.init = ctx.createToken(stack.init);
   if (stack.hasInit && ctx.isPassableReferenceExpress(stack.init, stack.type())) {
@@ -19345,11 +19411,11 @@ function Property_default2(ctx, stack) {
       let refNode = ctx.createVariableDeclaration("const", [
         ctx.createVariableDeclarator(
           ctx.createIdentifier(name),
-          createAddressRefsNode(node.init)
+          createAddressRefsNode(ctx, node.init)
         )
       ]);
       ctx.insertTokenToBlock(stack, refNode);
-      node.init = createAddressRefsNode(ctx, ctx.createVarIdentifierNode(name));
+      node.init = createAddressRefsNode(ctx, ctx.createVarIdentifier(name));
     } else {
       node.init = createAddressRefsNode(ctx, node.init);
     }
@@ -20752,7 +20818,8 @@ var defaultConfig = {
     excludes: []
   },
   metadata: {
-    env: {}
+    env: {},
+    platform: "server"
   },
   transform: {
     createToken: null,
